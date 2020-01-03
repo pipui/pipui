@@ -23,3 +23,5 @@ PipUI — Кроссбраузерный фреймворк веб-интерф�
 <link rel="stylesheet" href="./css/pipui-responsive.min.css" />
 <script src="./js/pipui.min.js"></script>
 ```
+
+Полную документацию можно найти на странице https://pipui.ru/docs/
