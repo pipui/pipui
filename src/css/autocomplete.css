@@ -1,0 +1,47 @@
+.sk88-autocomplete {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	background-color: #fff;
+	width: 200px;
+	color: #616161;
+	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+	border-radius: 0 0 2px 2px;
+	padding: 4px 0;
+}
+
+.sk88-autocomplete > ul {
+	overflow: auto;
+	max-height: 160px;
+}
+
+.sk88-autocomplete > ul::-webkit-scrollbar{
+	width: 4px;
+	height: 4px;
+	background-color: #E0E0E0;
+	border-radius: 2px;
+	left: 5px;
+}
+
+.sk88-autocomplete > ul::-webkit-scrollbar-track{
+	border-radius: 2px;
+}
+
+.sk88-autocomplete > ul::-webkit-scrollbar-thumb{
+	background-color: #616161;
+	border-radius: 2px;
+}
+
+.sk88-autocomplete > ul > li {
+	list-style: none;
+	display: block;
+	box-sizing: border-box;
+	padding: 4px 12px;
+	cursor: pointer;
+}
+
+.sk88-autocomplete > ul > li:hover,
+.sk88-autocomplete > ul > li.active {
+	background-color: #2196F3;
+	color: #fff;
+}

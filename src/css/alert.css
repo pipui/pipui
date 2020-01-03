@@ -1,0 +1,106 @@
+.alert {
+	position: fixed;
+	bottom: 0;
+	left: 25%;
+	z-index: 9999;
+	padding: 12px;
+	text-align: center;
+	visibility: hidden;
+	width: 50%;
+}
+
+.alert:empty {
+	display: none;
+}
+
+.alert > .alert-id {
+	text-align: left;
+	display: block;
+	vertical-align: top;
+	width: max-content;
+	min-width: 300px;
+	max-width: 100%;
+	visibility: visible;
+	color: #fff;
+	background-color: #212121;
+	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+	padding: 12px;
+	margin: auto auto 12px auto;
+	border-radius: 2px;
+}
+
+.alert[data-placement^="top-"] {
+	bottom: auto;
+	top: 0;
+}
+
+.alert[data-placement^="bottom-"] {
+	top: auto;
+	bottom: 0;
+}
+
+.alert[data-placement$="-left"] {
+	right: auto;
+	left: 0;
+}
+
+.alert[data-placement$="-right"] {
+	left: auto;
+	right: 0;
+}
+
+.alert[data-placement^="center-"] {
+	bottom: auto;
+	top: calc(50% - 39px);
+}
+
+.alert[data-placement$="-center"] {
+	right: auto;
+	left: 25%;
+}
+
+.alert[data-placement$="-left"] > .alert-id {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.alert[data-placement$="-right"] > .alert-id {
+	margin-left: auto;
+	margin-right: 0;
+}
+
+.alert[data-placement$="-center"] > .alert-id {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.alert[data-placement^="top-"] > .alert-id:first-child {
+	margin-top: 0 !important;
+}
+
+.alert[data-placement^="center-"] > .alert-id:last-child {
+	margin-bottom: 0 !important;
+}
+
+.alert[data-placement^="bottom-"] > .alert-id:last-child {
+	margin-bottom: 0 !important;
+}
+
+.alert > .alert-id > .alert-footer {
+	padding-top: 12px;
+	display: grid;
+	grid-template-columns: calc(100% - 112px) 100px;
+	grid-gap: 12px;
+	align-items: center;
+}
+
+.alert > .alert-id > .alert-footer > .block-left {
+}
+
+.alert > .alert-id > .alert-footer > .block-right {
+	text-align: right;
+}
+
+.alert > .alert-id > .alert-footer .btn {
+	margin-top: 0;
+}

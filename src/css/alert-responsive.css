@@ -1,0 +1,23 @@
+@media (max-width: 767px) {
+	.alert {
+		width: 100%;
+	}
+
+	.alert > .alert-id {
+		max-width: 100%;
+		width: 100%;
+		min-width: 100%;
+	}
+
+	.alert[data-placement$="-center"] {
+		right: auto;
+		left: 0;
+	}
+}
+
+@media (max-width: 319px) {
+	.alert > .alert-id > .alert-footer {
+		grid-template-columns: 100%;
+		text-align: center;
+	}
+}

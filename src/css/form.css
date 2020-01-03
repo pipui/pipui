@@ -1,0 +1,216 @@
+select, button, label, input[type="checkbox"], input[type="radio"], input[type="file"] { cursor: pointer; }
+
+button {
+	outline: none;
+}
+
+input,
+textarea,
+select {
+	box-sizing: border-box;
+	line-height: 36px;
+	height: 36px;
+	padding: 0 8px;
+	border: 0;
+	outline: none;
+	display: block;
+	width: 100%;
+	border-radius: 2px;
+	margin-bottom: 20px;
+	color: #424242;
+	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+	text-align: left;
+	position: relative;
+	background-color: #fff;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	box-shadow: rgba(0, 0, 0, 0.16) 0 3px 10px, rgba(0, 0, 0, 0.23) 0 3px 10px;
+}
+
+input[readonly],
+textarea[readonly],
+select[readonly] {
+	background-color: #eee;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+	cursor: not-allowed;
+	background-color: #eee;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	box-shadow: none;
+	height: auto;
+	width: auto;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+input[type="range"] {
+	padding: 0;
+	box-shadow: none;
+}
+
+textarea {
+	line-height: normal;
+	height: auto;
+	min-height: 100px;
+	padding: 4px 8px;
+	max-width: 100%;
+}
+
+.input-block-file {
+	display: inline-block;
+}
+
+.input-block-file input[type="file"] {
+	display: none;
+}
+
+input[type="file"] {
+	line-height: normal;
+	padding: 8px;
+}
+
+input[type="file"].styled {
+	display: none;
+}
+
+select[multiple] {
+	padding: 8px;
+	min-height: 100px;
+}
+
+select[multiple] option {
+	padding: 4px 8px;
+	border-radius: 2px;
+}
+
+label {
+	display: block;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	margin: 0;
+	top: -1px;
+}
+
+.input-block {
+	position: relative;
+	padding-bottom: 24px;
+	text-align: left;
+	min-height: 28px;
+}
+
+.input-block .input-helper {
+	display: block;
+	opacity: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	box-sizing: border-box;
+	max-width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 24px;
+	font-size: 12px;
+	color: #9E9E9E;
+	padding: 0 8px;
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.input-block:hover .input-helper {
+	opacity: 1;
+}
+
+.input-block input,
+.input-block textarea,
+.input-block select{
+	margin: 0;
+}
+
+.input-block > label {
+	box-sizing: border-box;
+	display: block;
+	width: 100%;
+	left: 0;
+	top: 0;
+	line-height: 28px;
+	font-size: 12px;
+	padding: 0 8px;
+	color: #424242;
+	font-weight: 500;
+}
+
+.input-block > label > input[type="checkbox"],
+.input-block > label > input[type="radio"] {
+	margin: 0;
+	top: -1px;
+}
+
+.input-append,
+.input-prepend {
+	position: relative;
+}
+
+.input-append > input,
+.input-append > select,
+.input-append > textarea {
+	padding-right: 36px;
+}
+
+.input-prepend > input,
+.input-prepend > select,
+.input-prepend > textarea {
+	padding-left: 36px;
+}
+
+.input-append > .append,
+.input-prepend > .prepend {
+	position: absolute;
+	top: 1px;
+	min-width: 34px;
+	line-height: 33px;
+	padding: 0 4px;
+	height: 34px;
+	text-align: center;
+	z-index: 1;
+	color: rgba(0,0,0,0.3);
+	border-radius: 0 2px 2px 0;
+}
+
+.input-append > .append {
+	right: 1px;
+}
+
+.input-prepend > .prepend {
+	left: 1px;
+}
+
+.input-prepend input[type="checkbox"],
+.input-append input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	bottom: 1px;
+	margin: 0;
+}
+
+.input-prepend > label,
+.input-append > label {
+	box-sizing: border-box;
+	padding: 0 8px;
+	width: 100%;
+	display: block;
+	line-height: 36px;
+	text-align: left;
+	color: #616161;
+}

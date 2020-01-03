@@ -1,0 +1,190 @@
+.bb-bold {
+	font-weight: bold;
+}
+
+.bb-italic {
+	font-style: italic;
+}
+
+.bb-underline {
+	text-decoration: underline;
+}
+
+.bb-strike {
+	text-decoration: line-through;
+}
+
+.bb-text-left {
+	display: block;
+	text-align: left;
+}
+
+.bb-text-center {
+	display: block;
+	text-align: center;
+}
+
+.bb-text-right {
+	display: block;
+	text-align: right;
+}
+
+.bb-line {
+	display: block;
+	width: 100%;
+	line-height: 36px;
+	height: 36px;
+	position: relative;
+}
+
+.bb-line:after {
+	display: block;
+	content: "";
+	height: 1px;
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	background-color: rgba(158,158,158,0.2);
+}
+
+.bb-spoiler-wrapper {
+	padding: 16px 0;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler {
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler.open {
+	box-shadow: rgba(0, 0, 0, 0.16) 0 3px 10px, rgba(0, 0, 0, 0.23) 0 3px 10px;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 2px;
+	padding: 0 16px;
+	height: 36px;
+	line-height: 36px;
+	position: relative;
+	color: #9E9E9E;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger:after {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0 16px;
+	font-family: 'FontAwesome', sans-serif;
+	content: '\f107';
+	font-size: 18px;
+	text-align: center;
+	height: 36px;
+	line-height: 36px;
+	transform: rotate(0deg);
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler.open > .bb-spoiler-trigger {
+	color: #757575;
+}
+
+.bb-spoiler-wrapper > .bb-spoiler.open > .bb-spoiler-trigger:after {
+	transform: rotate(180deg);
+}
+
+.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-text {
+	display: none;
+	padding: 8px 16px 16px 16px;
+}
+
+.bb-image {
+	display: block;
+	max-width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 16px 0;
+}
+
+.bb-quote-wrapper {
+	padding: 16px 0;
+	position: relative;
+}
+
+.bb-quote-wrapper:after {
+	position: absolute;
+	top: 8px;
+	right: 16px;
+	color: #E0E0E0;
+	display: block;
+	font-family: FontAwesome, sans-serif;
+	content: "\f10e";
+	font-size: 20px;
+}
+
+.bb-quote-wrapper > .bb-quote {
+	padding: 16px;
+	background-color: #F5F5F5;
+	border-radius: 2px;
+	color: rgba(0,0,0,0.6);
+}
+
+.bb-quote-wrapper > .bb-quote > .bb-quote-title {
+	position: absolute;
+	top: 8px;
+	right: 40px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	background-color: #EEEEEE;
+	border-radius: 2px;
+	line-height: 20px;
+	height: 20px;
+	font-size: 10px;
+	padding: 0 8px;
+	color: #BDBDBD;
+	max-width: calc(100% - 40px);
+	text-align: center;
+}
+
+.bb-code {
+	padding: 16px 0;
+	position: relative;
+}
+
+.bb-code > .bb-code-text {
+	padding: 16px;
+	background-color: #FFEBEE;
+	border-radius: 2px;
+	color: #E57373;
+	line-height: 20px;
+	word-break: break-all;
+}
+
+.bb-code > .bb-code-language {
+	position: absolute;
+	top: 8px;
+	right: 16px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border-radius: 2px;
+	line-height: 20px;
+	height: 20px;
+	font-size: 16px;
+	color: #EF9A9A;
+	max-width: calc(100% - 16px);
+	text-align: center;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.bb-youtube {
+	margin: 16px auto;
+	display: block;
+	text-align: center;
+}
