@@ -30,12 +30,23 @@
 	.navbar .navbar-wrapper .nav-submenu {
 		position: static;
 		width: 100%;
-		background-color: transparent;
 		box-shadow: none;
+		background-color: rgba(0,0,0,0.04);
 	}
 
 	.navbar .navbar-wrapper .nav-submenu .nav-item,
 	.navbar .navbar-wrapper .nav-submenu .nav-link {
-		color: #9E9E9E;
+		color: #757575;
+	}
+
+	.navbar .navbar-wrapper .nav-item,
+	.navbar .navbar-wrapper .nav-link {
+		line-height: 63px;
+		height: 64px;
+		padding: 0 16px;
+	}
+
+	.navbar .navbar-wrapper .nav-link:after {
+		bottom: 8px;
 	}
 }
