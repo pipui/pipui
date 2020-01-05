@@ -51,7 +51,7 @@ $(function(){
 
 		var li = trigger.closest('.nav-li');
 
-		if(!trigger.length){
+		if(!trigger.length && !target.closest('.nav-submenu').length){
 			$('.navbar .nav-submenu.active, .navbar .nav-sub.active').removeClass('active left-pos right-pos');
 		}else{
 			var navbar = target.closest('.navbar');
@@ -75,7 +75,7 @@ $(function(){
 
 		var right = navbar.outerWidth() - left;
 
-		if(!that.hasClass('active')){
+		if(!that.hasClass('active') || !submenu.hasClass('active')){
 			if(left>right){
 				submenu.addClass('right-pos');
 			}else{
