@@ -4,6 +4,11 @@
 	height: 80px;
 	z-index: 10;
 	color: #424242;
+	word-break: break-word;
+}
+
+.navbar.navbar-text-light {
+	color: #F5F5F5;
 }
 
 .navbar .navbar-wrapper {
@@ -72,23 +77,38 @@
 	min-width: 80px;
 }
 
+.navbar.navbar-text-light .navbar-wrapper .nav-brand,
+.navbar.navbar-text-light .navbar-wrapper .nav-mobile,
+.navbar.navbar-text-light .navbar-wrapper .nav-item,
+.navbar.navbar-text-light .navbar-wrapper .nav-link{
+	color: #FAFAFA;
+}
+
 .navbar .navbar-wrapper .nav-link {
 	font-weight: bold;
 	color: #424242;
 	position: relative;
 }
 
+.navbar.navbar-text-light .navbar-wrapper .nav-link {
+	color: #F5F5F5;
+}
+
 .navbar .navbar-wrapper .nav-link:after {
 	content: "";
 	display: block;
 	position: absolute;
-	bottom: 20px;
+	bottom: 24px;
 	left: 14px;
 	width: 0;
 	height: 4px;
 	background-color: #424242;
 	border-radius: 2px;
 	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.navbar.navbar-text-light .navbar-wrapper .nav-link:after {
+	background-color: #F5F5F5;
 }
 
 .navbar .navbar-wrapper .nav-link:active:after,
@@ -104,6 +124,10 @@
 	display: inline-block;
 	vertical-align: top;
 	text-align: center;
+}
+
+.navbar.navbar-text-light .navbar-wrapper .nav-brand {
+	color: #F5F5F5;
 }
 
 .navbar .navbar-wrapper .nav-mobile {
@@ -122,12 +146,17 @@
 	color: #000;
 }
 
+.navbar.navbar-text-light .navbar-wrapper .nav-link:hover,
+.navbar.navbar-text-light .navbar-wrapper .nav-link.active {
+	color: #fff;
+}
+
 .navbar .navbar-wrapper .nav-submenu {
 	display: none;
 	position: absolute;
-	top: calc(100% + 4px);
+	top: calc(100% + 8px);
 	right: 0;
-	width: 200px;
+	width: 240px;
 	background-color: #fff;
 	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
 	border-radius: 2px;
@@ -146,7 +175,7 @@
 
 .navbar .navbar-wrapper .nav-submenu > li {
 	list-style: none;
-	font-size: 14px;
+	font-size: 12px;
 	display: block;
 	min-width: 48px;
 	height: 100%;
@@ -158,9 +187,10 @@
 .navbar .navbar-wrapper .nav-submenu .nav-item,
 .navbar .navbar-wrapper .nav-submenu .nav-link {
 	display: block;
-	line-height: 47px;
-	height: 48px;
+	padding: 16px 20px;
 	color: #424242;
+	line-height: 20px;
+	height: auto;
 }
 
 .navbar .navbar-wrapper .nav-submenu .nav-item {
@@ -174,11 +204,13 @@
 	height: 100%;
 	width: 0;
 	border-radius: 0;
+	background-color: #424242;
 }
 
 .navbar .navbar-wrapper .nav-submenu .nav-link:hover,
 .navbar .navbar-wrapper .nav-submenu .nav-link.active {
 	background-color: rgba(0,0,0,0.04);
+	color: #000;
 }
 
 .navbar .navbar-wrapper .nav-submenu .nav-link:hover:after,
@@ -194,4 +226,17 @@
 .navbar .navbar-wrapper .nav-submenu .nav-submenu.left-pos {
 	right: auto;
 	left: 100%;
+}
+
+.navbar .navbar-wrapper .navbar-menu > li > .nav-submenu:before {
+	display: block;
+	content: "";
+	position: absolute;
+	top: -8px;
+	right: 28px;
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #424242;
 }
