@@ -821,3 +821,20 @@ h6,.h6 {
 .w-space-pre-wrap-i { white-space: pre-wrap !important; }
 .w-space-pre-line-i { white-space: pre-line !important; }
 .w-space-unset-i { white-space: unset !important; }
+
+.scroll-styled::-webkit-scrollbar{
+	width: 8px;
+	height: 8px;
+	background-color: #E0E0E0;
+	border-radius: 2px;
+	left: 5px;
+}
+
+.scroll-styled::-webkit-scrollbar-track{
+	border-radius: 2px;
+}
+
+.scroll-styled::-webkit-scrollbar-thumb{
+	background-color: #616161;
+	border-radius: 2px;
+}
