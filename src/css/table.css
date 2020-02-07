@@ -2,6 +2,7 @@
 	display: table;
 	width: 100%;
 	box-sizing: border-box;
+	word-break: break-word;
 }
 
 .table.table-fixed {
@@ -45,7 +46,6 @@
 	vertical-align: top;
 	border-bottom: 1px solid #eee;
 	height: 100%;
-	word-break: break-all;
 }
 
 .table .table-caption {

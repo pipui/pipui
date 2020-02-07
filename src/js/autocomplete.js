@@ -1,230 +1,377 @@
-pipui.autocomplete = {
-	min: 3,
+(function($){
 
-	timeout: undefined,
+	var ac_methods = {
+		'typing': function(input){
 
-	getID: function(el){
-		var id = el.attr('data-autocomplete-id');
+			var fields = new FormData();
 
-		if(typeof id == 'undefined'){
-			id = Math.random();
-			el.attr('data-autocomplete-id', id);
-		}
+			input.each(function(){
+				var that = $(this);
 
-		return id;
-	},
+				var val = that.val();
 
-	hideAll: function(){
-		$('.pipui-autocomplete').hide();
+				var id = that.attr('data-ac-id');
 
-		$('.pipui-autocomplete > ul > li.active').removeClass('active');
-	}
-};
+				var options = ac_options[id];
 
-$(function(){
-	$('body').on('focus', 'input[data-autocomplete], textarea[data-autocomplete]', function(){
-		$(this).attr('autocomplete', 'off');
-	}).on('input', 'input[data-autocomplete], textarea[data-autocomplete]', function(){
+				if(typeof options.debug == 'boolean' && options.debug){
+					console.log('[PipUI] autocomplete > Typing (Element ID: '+id+')');
+				}
 
-		var that = $(this);
+				if(typeof options.step == 'function'){
+					options.step(that, val, options);
+				}
 
-		var id = pipui.autocomplete.getID(that);
+				if(val.length < options.min){
 
-		var list = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul');
+					ac_methods.complete(that, [], options);
 
-		if(!list.length){
-			that.after('<div class="pipui-autocomplete" data-autocomplete-id="'+id+'"><ul></ul></div>');
-
-			list = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul')
-		}
-
-		that.attr('data-autocomplete-end', that[0].selectionEnd);
-
-		var separator = that.attr('data-autocomplete-sep');
-
-		var wrapper = list.closest('.pipui-autocomplete');
-
-		var value = $.trim(that.val());
-
-		var min = parseInt(that.attr('data-autocomplete-min'));
-
-		if(isNaN(min) || min<=0){ min = pipui.autocomplete.min; }
-
-		if(separator){
-			var prev = value.substr(0, that[0].selectionEnd);
-
-			var split = prev.split(separator);
-
-			var pos = split.length-1;
-
-			value = $.trim(split[pos]);
-		}
-
-		var len = value.length;
-
-		var url = $.trim(that.attr('data-autocomplete'));
-
-		if(len < min || url == ''){
-			wrapper.hide();
-			list.html('');
-			return;
-		}
-
-		if(typeof pipui.autocomplete.timeout != 'undefined'){
-			clearTimeout(pipui.autocomplete.timeout);
-		}
-
-		pipui.autocomplete.timeout = setTimeout(function(){
-			qx.load_elements(url, {'value': value}, function(data){
-				list.html('');
-
-				if(!data.type){
-					wrapper.hide();
 					return;
 				}
 
-				if(!data.list.length){
-					wrapper.hide();
-				}else{
-					$.each(data.list, function(k, v){
-						list.append('<li data-id="'+v.id+'" data-value="'+v.value+'">'+v.value+'</li>');
-					});
+				if(typeof options.timeout != 'undefined'){
+					clearTimeout(ac_options[id].timeout);
 
-					var pos = that.position();
+					if(typeof options.debug == 'boolean' && options.debug){
+						console.log('[PipUI] autocomplete > Clear timeout (Element ID: '+id+')');
+					}
+				}
 
-					wrapper.css({
-						'display': 'block',
-						'top': (pos.top+that.outerHeight())+'px',
-						'left': pos.left+'px'
+				if(val.length < options.min){
+
+					if(typeof options.debug == 'boolean' && options.debug){
+						console.log('[PipUI] autocomplete > Bad min length (Element ID: '+id+')');
+					}
+
+					return;
+				}
+
+				fields.append('value', val);
+
+				if(typeof options.params == 'object'){
+					$.each(options.params, function(k, v){
+						fields.append(k, v);
 					});
 				}
 
-			}, false, function(data){
-				wrapper.hide();
-				list.html('');
-				console.log(data);
+				ac_options[id].timeout = setTimeout(function(){
+
+					if(typeof options.debug == 'boolean' && options.debug){
+						console.log('[PipUI] autocomplete > Request to server (Element ID: '+id+')');
+					}
+
+					if(options.url.length){
+						$.ajax({
+							url: options.url,
+							dataType: options.type,
+							type: options.method,
+							async: true,
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: fields,
+
+							error: function(data){
+								if(typeof options.error == 'function'){
+									options.error(data);
+								}
+
+								ac_methods.error(that, data, options);
+
+								if(typeof options.debug == 'boolean' && options.debug){
+									console.log('[PipUI] autocomplete > Bad response (Element ID: '+id+')');
+								}
+							},
+
+							success: function(data){
+								if(typeof options.complete == 'function'){
+									options.complete(data);
+								}
+
+								ac_options[id].data = data;
+
+								ac_methods.complete(that, data, options);
+
+								if(typeof options.debug == 'boolean' && options.debug){
+									console.log('[PipUI] autocomplete > Success response (Element ID: '+id+')');
+								}
+							},
+
+							complete: function(){
+								if(typeof options.debug == 'boolean' && options.debug){
+									console.log('[PipUI] autocomplete > Full complete (Element ID: '+id+')');
+								}
+							}
+						});
+					}else{
+						if(options.data.length){
+							if(typeof options.complete == 'function'){
+								options.complete(options.data);
+							}
+
+							ac_methods.complete(that, options.data, options);
+						}
+					}
+
+
+				}, options.timer);
 			});
-		}, 300);
-	}).on('keydown', 'input[data-autocomplete], textarea[data-autocomplete]', function(e){
+		},
 
-		if(e.keyCode==40 || e.keyCode==38){
-			e.preventDefault();
+		'complete': function(input, data, options){
+			var len = data.length;
 
-			var id = pipui.autocomplete.getID($(this));
+			var val = input.val().toLowerCase();
 
-			var list = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li');
+			var num = 0;
 
-			if(!list.length){ return; }
+			var html = '';
 
-			var current = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li.active');
+			for(var i = 0; i < len; i++){
+				if(data[i].toLowerCase().indexOf(val) != -1){
+					var hover = !num ? 'hover' : '';
 
-			var next = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li:first-child');
-
-			if(!current.length){
-				if(e.keyCode==40){
-					next = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li:first-child');
-				}else{
-					next = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li:last-child');
+					html += '<li class="autocomplete-item"><a class="autocomplete-link '+hover+'" href="#">'+data[i]+'</a></li>';
+					num++;
 				}
-			}else{
-				if(e.keyCode==40){
-					next = current.next();
 
-					if(!next.length){
-						next = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li:first-child');
-					}
+				if(num >= options.results){
+					break;
 				}else{
-					next = current.prev();
 
-					if(!next.length){
-						next = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li:last-child');
-					}
 				}
 			}
 
-			list.removeClass('active');
+			var pos = input.offset();
 
-			next.addClass('active');
+			var h = input.outerHeight();
 
-			var ac = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul');
+			var top = pos.top+h;
+			var left = pos.left;
 
-			var scroll = ac.scrollTop();
+			var menu = $('.autocomplete[data-ac-id="'+options.id+'"]');
 
-			var top = next.position().top;
+			menu.css({'left': left, 'top': top}).html(html);
 
-			ac.scrollTop(scroll + top - 4);
+			if(!num){
+				menu.removeClass('visible');
+			}else{
+				menu.addClass('visible');
+			}
+		},
+
+		'error': function(){
+			console.log('[PipUI] autocomplete > WRONG DATA FORMAT');
 		}
-	}).on('keypress', 'input[data-autocomplete], textarea[data-autocomplete]', function(e){
-		if(e.keyCode == 13){
+	};
+
+	var ac_options = {};
+
+	$.fn.autocomplete = function(url, options){
+
+		if(typeof url == 'object'){
+			options = url;
+		}else if(typeof url == 'string'){
+			options.url = url;
+		}
+
+		if(typeof options == 'undefined'){
+			options = {};
+		}
+
+		var ac = this;
+
+		var id = Math.random();
+
+		if(typeof options.debug == 'boolean' && options.debug){
+			console.log('[PipUI] autocomplete > Run');
+		}
+
+		ac.update = function(){
+			this.addClass('autocomplete-trigger').each(function(){
+				var that = $(this);
+
+				var id = that.attr('data-ac-id');
+
+				if(typeof id == 'undefined'){
+					id = Math.random();
+
+					that.attr('data-ac-id', id);
+
+					ac_options[id] = $.extend({}, {
+						'id': id,
+						'type': 'json',
+						'method': 'GET',
+						'data': [],
+						'url': '',
+						'timer': 300,
+						'min': 2,
+						'results': 10,
+						'step': undefined,
+						'complete': undefined,
+						'error': undefined,
+						'debug': false,
+						'params': {}
+					}, options);
+
+					if(typeof options.debug == 'boolean' && options.debug){
+						console.log('[PipUI] autocomplete > Set options (Element ID: '+id+')');
+					}
+				}
+
+				var url = that.attr('data-ac');
+
+				if(typeof url == 'string' && url.length){
+					ac_options[id].url = url;
+				}
+
+				var method = that.attr('data-ac-method');
+
+				if(typeof method == 'string' && method.length){
+					ac_options[id].method = method;
+				}
+
+				var type = that.attr('data-ac-type');
+
+				if(typeof type == 'string' && type.length){
+					ac_options[id].type = type;
+				}
+
+				var menu = $('.autocomplete[data-ac-id="'+id+'"]');
+
+				if(!menu.length){
+					$('body').append('<ul class="autocomplete scroll-styled" data-ac-id="'+id+'"></ul>');
+
+					if(typeof options.debug == 'boolean' && options.debug){
+						console.log('[PipUI] autocomplete > Init menu (Element ID: '+id+')');
+					}
+				}
+			});
+
+			ac_methods.typing($('input[data-ac-id]:focus, textarea[data-ac-id]:focus'));
+
+			return this;
+		};
+
+		return ac.update();
+	};
+
+	$(function(){
+		$('body').on('focus', 'input[data-ac], textarea[data-ac]', function(){
+			var that = $(this);
+
+			if(!that.hasClass('autocomplete-trigger')){
+				that.autocomplete();
+			}
+
+
+			var id = that.attr('data-ac-id');
+
+			var ac = $('.autocomplete[data-ac-id="'+id+'"]');
+
+			if(ac.html().length){
+				ac.addClass('visible');
+			}
+
+		}).on('input', 'input[data-ac-id], textarea[data-ac-id]', function(){
+			ac_methods.typing($(this));
+		}).on('mouseenter', '.autocomplete > .autocomplete-item > .autocomplete-link', function(){
+
+			$('.autocomplete > .autocomplete-item > .autocomplete-link').removeClass('hover');
+
+			$(this).addClass('hover');
+		}).on('click', '.autocomplete > .autocomplete-item > .autocomplete-link', function(e){
 			e.preventDefault();
 
 			var that = $(this);
 
-			var id = pipui.autocomplete.getID($(this));
+			var ac = that.closest('.autocomplete');
 
-			var current = $('.pipui-autocomplete[data-autocomplete-id="'+id+'"] > ul > li.active');
+			var id = ac.attr('data-ac-id');
 
-			if(!current.length){ return; }
+			$('.autocomplete-trigger[data-ac-id="'+id+'"]').val(that.text());
 
-			var newvalue = current.attr('data-value');
+			ac.removeClass('visible');
+		}).on('click', function(e){
+			var that = $(e.target);
 
-			var separator = that.attr('data-autocomplete-sep');
+			var ac = that.closest('.autocomplete');
+			var input = that.closest('.autocomplete-trigger');
 
-			if(separator){
-				var value = that.val();
-
-				var prev = value.substr(0, that[0].selectionEnd);
-
-				var pos = prev.split(separator).length-1;
-
-				var split = value.split(separator);
-
-				split[pos] = newvalue;
-
-				newvalue = pipui.array_unique(split).join(separator);
+			if(!ac.length && !input.length){
+				$('.autocomplete').removeClass('visible');
 			}
+		}).on('keydown', '.autocomplete-trigger', function(e){
 
-			that.val(newvalue);
+			var that = $(this);
+			var id, ac, current;
 
-			pipui.autocomplete.hideAll();
+			if(e.keyCode == 40 || e.keyCode == 38){
+				e.preventDefault();
 
-			that[0].focus();
-		}
-	}).on('click', '.pipui-autocomplete > ul > li', function(e){
-		e.preventDefault();
+				id = that.closest('.autocomplete-trigger').attr('data-ac-id');
 
-		var that = $(this);
+				ac = $('.autocomplete[data-ac-id="'+id+'"]');
 
-		var id = that.closest('.pipui-autocomplete').attr('data-autocomplete-id');
+				current = ac.find('.autocomplete-item > .autocomplete-link.hover');
 
-		var input = $('input[data-autocomplete-id="'+id+'"], input[data-autocomplete-id="'+id+'"]');
+				if(!current.length){
+					if(e.keyCode == 38){
+						ac.find('.autocomplete-item:last-child > .autocomplete-link').addClass('hover');
+					}else{
+						ac.find('.autocomplete-item:first-child > .autocomplete-link').addClass('hover');
+					}
+				}else{
+					ac.addClass('visible');
 
-		var newvalue = that.attr('data-value');
+					var next = current.closest('.autocomplete-item').next().children('.autocomplete-link');
+					var prev = current.closest('.autocomplete-item').prev().children('.autocomplete-link');
 
-		var separator = input.attr('data-autocomplete-sep');
+					current.removeClass('hover');
 
-		if(separator){
-			var value = input.val();
+					if(e.keyCode == 40){
+						if(!next.length){
+							ac.find('.autocomplete-item:first-child > .autocomplete-link').addClass('hover');
+						}else{
+							next.addClass('hover');
+						}
+					}else{
+						if(!prev.length){
+							ac.find('.autocomplete-item:last-child > .autocomplete-link').addClass('hover');
+						}else{
+							prev.addClass('hover');
+						}
+					}
+				}
+			}else if(e.keyCode == 13){
+				e.preventDefault();
 
-			var prev = value.substr(0, input[0].selectionEnd);
+				var trigger = that.closest('.autocomplete-trigger');
 
-			var pos = prev.split(separator).length-1;
+				id = trigger.attr('data-ac-id');
 
-			var split = value.split(separator);
+				ac = $('.autocomplete[data-ac-id="'+id+'"]');
 
-			split[pos] = newvalue;
+				current = ac.find('.autocomplete-item > .autocomplete-link.hover');
 
-			newvalue = pipui.array_unique(split).join(separator);
-		}
+				if(current.length){
+					trigger.val(current.text());
+					ac.removeClass('visible');
+				}
 
-		input.val(newvalue);
+			}
+		});
 
-		pipui.autocomplete.hideAll();
+		$(window).on('resize scroll', function(){
+			var ac = $('.autocomplete.visible');
 
-		input[0].focus();
-	}).on('blur', 'input[data-autocomplete], textarea[data-autocomplete]', function(){
-		setTimeout(function(){
-			pipui.autocomplete.hideAll();
-		}, 100);
+			if(ac.length){
+				var trigger = $('.autocomplete-trigger[data-ac-id="'+ac.attr('data-ac-id')+'"]');
+
+				var pos = trigger.offset();
+
+				ac.css({'top': (pos.top+trigger.outerHeight())+'px', 'left': pos.left});
+			}
+		});
 	});
-});
+}(jQuery));

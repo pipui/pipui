@@ -2,6 +2,7 @@
 	display: block;
 	width: 100%;
 	height: 80px;
+	min-height: 80px;
 	z-index: 10;
 	color: #424242;
 	word-break: break-word;

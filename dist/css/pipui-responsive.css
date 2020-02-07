@@ -1,4 +1,4 @@
-/* PipUI v1.2.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.2.0 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** button-responsive.css *****/
@@ -85,6 +85,23 @@
 	.navbar.navbar-text-light .navbar-wrapper .nav-submenu .nav-link.active {
 		background-color: rgba(255,255,255,0.04);
 		color: #fff;
+	}
+}
+
+@media (max-width: 279px) {
+	.navbar .navbar-wrapper .nav-brand {
+		display: none;
+	}
+
+	.navbar .navbar-wrapper {
+		padding-top: 80px;
+	}
+
+	.navbar .navbar-wrapper .nav-mobile {
+		width: 80px;
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
 }
 

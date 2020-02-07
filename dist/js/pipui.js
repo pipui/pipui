@@ -1,4 +1,4 @@
-/* PipUI v1.2.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.2.0 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
@@ -1236,17 +1236,14 @@ $(function(){
 		var fade = that.attr('data-toggle-fade');
 
 		if(fade == 'fade'){
-			console.log(1);
 			item.fadeToggle('fast', function(){
 				if(classToggle){ $(this).toggleClass(classToggle); }
 			});
 		}else if(fade == 'slide'){
-			console.log(2);
 			item.slideToggle('fast', function(){
 				if(classToggle){ $(this).toggleClass(classToggle); }
 			});
 		}else{
-			console.log(3);
 			item.toggle(function(){
 				if(classToggle){ $(this).toggleClass(classToggle); }
 			});
@@ -1334,13 +1331,13 @@ pipui.pagination = {
 
 		var current = parseInt(e.attr('data-pagination-current'));
 
-		if(isNaN(current)){
+		if(isNaN(current) || current <= 0){
 			current = 1;
 		}
 
 		var pages = parseInt(e.attr('data-pagination-pages'));
 
-		if(isNaN(pages)){
+		if(isNaN(pages) || pages <= 0){
 			pages = 1;
 		}
 

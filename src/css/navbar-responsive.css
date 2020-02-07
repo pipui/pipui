@@ -71,3 +71,20 @@
 		color: #fff;
 	}
 }
+
+@media (max-width: 279px) {
+	.navbar .navbar-wrapper .nav-brand {
+		display: none;
+	}
+
+	.navbar .navbar-wrapper {
+		padding-top: 80px;
+	}
+
+	.navbar .navbar-wrapper .nav-mobile {
+		width: 80px;
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+}

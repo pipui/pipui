@@ -8,13 +8,13 @@ pipui.pagination = {
 
 		var current = parseInt(e.attr('data-pagination-current'));
 
-		if(isNaN(current)){
+		if(isNaN(current) || current <= 0){
 			current = 1;
 		}
 
 		var pages = parseInt(e.attr('data-pagination-pages'));
 
-		if(isNaN(pages)){
+		if(isNaN(pages) || pages <= 0){
 			pages = 1;
 		}
 
