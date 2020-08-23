@@ -605,3 +605,323 @@
 
 
 
+/***** breakpoint-responsive.css *****/
+@media (max-width: 1919px) {
+	.breakpoint-1920 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1920-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1599px) {
+	.breakpoint-1600 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1600-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1535px) {
+	.breakpoint-1536 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1536-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1439px) {
+	.breakpoint-1440 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1440-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1399px) {
+	.breakpoint-1400 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1400-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1279px) {
+	.breakpoint-1280 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1280-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1199px) {
+	.breakpoint-1200 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1200-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1079px) {
+	.breakpoint-1080 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1080-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 1023px) {
+	.breakpoint-1024 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-1024-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 991px) {
+	.breakpoint-992 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-992-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 899px) {
+	.breakpoint-900 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-900-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 863px) {
+	.breakpoint-864 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-864-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 799px) {
+	.breakpoint-800 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-800-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 767px) {
+	.breakpoint-768 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-768-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 719px) {
+	.breakpoint-720 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-720-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 639px) {
+	.breakpoint-640 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-640-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 559px) {
+	.breakpoint-560 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-560-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 479px) {
+	.breakpoint-480 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-480-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 399px) {
+	.breakpoint-400 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-400-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
+
+@media (max-width: 319px) {
+	.breakpoint-320 {
+		width: 100%;
+		display: block;
+		grid-template-columns: 100%;
+		grid-column: unset;
+	}
+
+	.breakpoint-320-i {
+		width: 100% !important;
+		display: block !important;
+		grid-template-columns: 100% !important;
+		grid-column: unset !important;
+	}
+}
