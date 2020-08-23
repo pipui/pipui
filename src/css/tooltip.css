@@ -28,6 +28,11 @@
 	opacity: 1;
 }
 
+.tooltip:not(.show){
+	left: -9999px !important;
+	top: -9999px !important;
+}
+
 .tooltip:after {
 	content: "";
 	display: block;

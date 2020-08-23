@@ -13,7 +13,7 @@
 
 .modal > .wrapper {
 	display: grid;
-	width: 50%;
+	width: 600px;
 	margin: auto;
 	align-items: center;
 	grid-template-columns: 100%;

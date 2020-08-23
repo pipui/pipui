@@ -26,7 +26,7 @@ pipui.tabs = {
 };
 
 $(function(){
-	$('body').on('click', '.tabs > .tab-links .tab-link', function(e){
+	$('body').on('click', '.tabs > .tab-links .tab-link:not([data-link])', function(e){
 		e.preventDefault();
 
 		pipui.tabs.active($(this).attr('data-id'));

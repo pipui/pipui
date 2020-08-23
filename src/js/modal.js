@@ -49,6 +49,8 @@ $(function(){
 
 		var modal = that.attr('data-modal');
 
+		$('.modal').fadeOut('fast');
+
 		if(!modal){ modal = that.attr('href'); }
 
 		if(modal){ pipui.modal.open(modal); }

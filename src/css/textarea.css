@@ -6,7 +6,6 @@
 
 .textarea > textarea {
 	line-height: 20px;
-	white-space: nowrap;
 	padding-left: 48px;
 	z-index: 1;
 	background-color: transparent;

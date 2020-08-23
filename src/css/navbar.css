@@ -86,7 +86,7 @@
 }
 
 .navbar .navbar-wrapper .nav-link {
-	font-weight: bold;
+	font-weight: 500;
 	color: #424242;
 	position: relative;
 }
@@ -102,7 +102,7 @@
 	bottom: 24px;
 	left: 14px;
 	width: 0;
-	height: 4px;
+	height: 2px;
 	background-color: #424242;
 	border-radius: 2px;
 	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
@@ -120,7 +120,7 @@
 
 .navbar .navbar-wrapper .nav-brand {
 	font-size: 26px;
-	font-weight: bold;
+	font-weight: 500;
 	color: #424242;
 	display: inline-block;
 	vertical-align: top;
@@ -135,11 +135,6 @@
 	display: none;
 	text-align: center;
 	float: right;
-}
-
-.navbar .navbar-wrapper .nav-brand:hover,
-.navbar .navbar-wrapper .nav-brand.active {
-	color: #8BC34A;
 }
 
 .navbar .navbar-wrapper .nav-link:hover,

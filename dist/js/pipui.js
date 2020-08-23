@@ -1,4 +1,4 @@
-/* PipUI v1.2.0 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.3.0 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
@@ -151,6 +151,8 @@ $(function(){
 		var that = $(this);
 
 		var modal = that.attr('data-modal');
+
+		$('.modal').fadeOut('fast');
 
 		if(!modal){ modal = that.attr('href'); }
 
@@ -559,7 +561,7 @@ pipui.tabs = {
 };
 
 $(function(){
-	$('body').on('click', '.tabs > .tab-links .tab-link', function(e){
+	$('body').on('click', '.tabs > .tab-links .tab-link:not([data-link])', function(e){
 		e.preventDefault();
 
 		pipui.tabs.active($(this).attr('data-id'));
@@ -2882,5 +2884,31 @@ $(function(){
 			tooltip.removeClass('show');
 		}
 
+	});
+});
+
+
+
+
+/***** alertblock.js *****/
+pipui.alertblock = {
+	show: function(element){
+		if(typeof element == 'string'){ element = $(element); }
+
+		element.fadeIn('fast');
+	},
+
+	hide: function(element){
+		if(typeof element == 'string'){ element = $(element); }
+
+		element.fadeOut('fast');
+	}
+};
+
+$(function(){
+	$('body').on('click', '.alertblock .alertblock-close', function(e){
+		e.preventDefault();
+
+		pipui.alertblock.hide($(this).closest('.alertblock'));
 	});
 });
