@@ -1,4 +1,4 @@
-/* PipUI v1.3.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.3.2 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
@@ -1738,7 +1738,7 @@ $(function(){
 							}
 						});
 					}else{
-						if(options.data.length){
+						if(options.data){
 							if(typeof options.complete == 'function'){
 								options.complete(options.data);
 							}

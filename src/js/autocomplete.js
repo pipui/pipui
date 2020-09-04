@@ -104,7 +104,7 @@
 							}
 						});
 					}else{
-						if(options.data.length){
+						if(options.data){
 							if(typeof options.complete == 'function'){
 								options.complete(options.data);
 							}
