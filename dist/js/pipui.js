@@ -1,4 +1,4 @@
-/* PipUI v1.3.0 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.3.1 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
@@ -1753,28 +1753,28 @@ $(function(){
 		},
 
 		'complete': function(input, data, options){
-			var len = data.length;
-
 			var val = input.val().toLowerCase();
 
 			var num = 0;
 
 			var html = '';
 
-			for(var i = 0; i < len; i++){
-				if(data[i].toLowerCase().indexOf(val) != -1){
+			$.each(data, function(k, v){
+				if(options.by.length){
+					v = v[options.by];
+				}
+
+				if(v.toLowerCase().indexOf(val) != -1){
 					var hover = !num ? 'hover' : '';
 
-					html += '<li class="autocomplete-item"><a class="autocomplete-link '+hover+'" href="#">'+data[i]+'</a></li>';
+					html += '<li class="autocomplete-item"><a class="autocomplete-link '+hover+'" href="#">'+v+'</a></li>';
 					num++;
 				}
 
 				if(num >= options.results){
-					break;
-				}else{
-
+					return false;
 				}
-			}
+			});
 
 			var pos = input.offset();
 
@@ -1825,7 +1825,7 @@ $(function(){
 			this.addClass('autocomplete-trigger').each(function(){
 				var that = $(this);
 
-				var id = that.attr('data-ac-id');
+				id = that.attr('data-ac-id');
 
 				if(typeof id == 'undefined'){
 					id = Math.random();
@@ -1845,6 +1845,7 @@ $(function(){
 						'complete': undefined,
 						'error': undefined,
 						'debug': false,
+						'by': '',
 						'params': {}
 					}, options);
 
