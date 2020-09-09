@@ -1,8 +1,10 @@
-/* PipUI v1.3.2 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.3.1 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
 var pipui = {
+	a: 10,
+
 	array_unique: function(array){
 		var result = [];
 
@@ -13,6 +15,24 @@ var pipui = {
 		}
 
 		return result;
+	},
+
+	indexOfCase: function(haystack, needle){
+		var index = -1;
+
+		needle = needle.toLowerCase();
+
+		if(typeof haystack == 'object'){
+			for(var i = 0; i < haystack.length; i++){
+				if(haystack[i].toLowerCase() == needle){
+					index = i; break;
+				}
+			}
+		}else{
+			index = haystack.toLowerCase().indexOf(needle);
+		}
+
+		return index;
 	},
 
 	top_space: function(e){
@@ -29,8 +49,46 @@ var pipui = {
 
 	right_space: function(e){
 		return window.innerWidth - e.offset().left - e.outerWidth() + window.pageXOffset;
+	},
+
+	append: function(e, content){
+		if(typeof content == 'object'){
+			e.append(content);
+		}else{
+			e.insertAdjacentHTML('beforeend', content);
+		}
+	},
+
+	prepend: function(e, content){
+		if(typeof content == 'object'){
+			e.prepend(content);
+		}else{
+			e.insertAdjacentHTML('afterbegin', content);
+		}
+	},
+
+	after: function(e, content){
+		if(typeof content == 'object'){
+			e.parentNode.insertBefore(content, e.nextSibling);
+		}else{
+			e.insertAdjacentHTML('afterend', content);
+		}
+	},
+
+	before: function(e, content){
+		if(typeof content == 'object'){
+			e.parentNode.insertBefore(content, e);
+		}else{
+			e.insertAdjacentHTML('beforebegin', content);
+		}
+	},
+
+	replaceAll: function(str, match, replacement){
+		return str.split(match).join(replacement);
 	}
 };
+
+var p = pipui;
 
 $(function(){
 	$('body').on('click', '.preventDefault', function(e){
@@ -1632,384 +1690,545 @@ $(function(){
 
 
 /***** autocomplete.js *****/
-(function($){
+pipui.autocomplete = function(e){
+	var _input = undefined;
 
-	var ac_methods = {
-		'typing': function(input){
+	var _type = 'plain';
 
-			var fields = new FormData();
+	var _data = [];
 
-			input.each(function(){
-				var that = $(this);
+	var _id = Math.random();
 
-				var val = that.val();
+	var _url, _key, _timeout_typing, _block, _xhr, _params;
 
-				var id = that.attr('data-ac-id');
+	var _method = 'GET';
 
-				var options = ac_options[id];
+	var _timer = 400;
 
-				if(typeof options.debug == 'boolean' && options.debug){
-					console.log('[PipUI] autocomplete > Typing (Element ID: '+id+')');
-				}
+	var _min = 3;
 
-				if(typeof options.step == 'function'){
-					options.step(that, val, options);
-				}
+	var _results = 10;
 
-				if(val.length < options.min){
+	var _debug = false;
 
-					ac_methods.complete(that, [], options);
+	var self = this;
 
-					return;
-				}
+	var _value = '';
 
-				if(typeof options.timeout != 'undefined'){
-					clearTimeout(ac_options[id].timeout);
+	var _result = [];
 
-					if(typeof options.debug == 'boolean' && options.debug){
-						console.log('[PipUI] autocomplete > Clear timeout (Element ID: '+id+')');
-					}
-				}
+	var _templateBlock = '<div class="autocomplete" data-ac-id="{ID}"><ul class="autocomplete-list">{ITEMS}</ul></div>';
 
-				if(val.length < options.min){
+	var _templateSelector = '<li class="autocomplete-item"><a href="#" class="autocomplete-link" data-index="{KEY}" rel="nofollow">{VALUE}</a></li>';
 
-					if(typeof options.debug == 'boolean' && options.debug){
-						console.log('[PipUI] autocomplete > Bad min length (Element ID: '+id+')');
-					}
+	var _rendered = '';
 
-					return;
-				}
+	this.setParams = function(formdata){
+		_params = formdata;
 
-				fields.append('value', val);
-
-				if(typeof options.params == 'object'){
-					$.each(options.params, function(k, v){
-						fields.append(k, v);
-					});
-				}
-
-				ac_options[id].timeout = setTimeout(function(){
-
-					if(typeof options.debug == 'boolean' && options.debug){
-						console.log('[PipUI] autocomplete > Request to server (Element ID: '+id+')');
-					}
-
-					if(options.url.length){
-						$.ajax({
-							url: options.url,
-							dataType: options.type,
-							type: options.method,
-							async: true,
-							cache: false,
-							contentType: false,
-							processData: false,
-							data: fields,
-
-							error: function(data){
-								if(typeof options.error == 'function'){
-									options.error(data);
-								}
-
-								ac_methods.error(that, data, options);
-
-								if(typeof options.debug == 'boolean' && options.debug){
-									console.log('[PipUI] autocomplete > Bad response (Element ID: '+id+')');
-								}
-							},
-
-							success: function(data){
-								if(typeof options.complete == 'function'){
-									options.complete(data);
-								}
-
-								ac_options[id].data = data;
-
-								ac_methods.complete(that, data, options);
-
-								if(typeof options.debug == 'boolean' && options.debug){
-									console.log('[PipUI] autocomplete > Success response (Element ID: '+id+')');
-								}
-							},
-
-							complete: function(){
-								if(typeof options.debug == 'boolean' && options.debug){
-									console.log('[PipUI] autocomplete > Full complete (Element ID: '+id+')');
-								}
-							}
-						});
-					}else{
-						if(options.data){
-							if(typeof options.complete == 'function'){
-								options.complete(options.data);
-							}
-
-							ac_methods.complete(that, options.data, options);
-						}
-					}
-
-
-				}, options.timer);
-			});
-		},
-
-		'complete': function(input, data, options){
-			var val = input.val().toLowerCase();
-
-			var num = 0;
-
-			var html = '';
-
-			$.each(data, function(k, v){
-				if(options.by.length){
-					v = v[options.by];
-				}
-
-				if(v.toLowerCase().indexOf(val) != -1){
-					var hover = !num ? 'hover' : '';
-
-					html += '<li class="autocomplete-item"><a class="autocomplete-link '+hover+'" href="#">'+v+'</a></li>';
-					num++;
-				}
-
-				if(num >= options.results){
-					return false;
-				}
-			});
-
-			var pos = input.offset();
-
-			var h = input.outerHeight();
-
-			var top = pos.top+h;
-			var left = pos.left;
-
-			var menu = $('.autocomplete[data-ac-id="'+options.id+'"]');
-
-			menu.css({'left': left, 'top': top}).html(html);
-
-			if(!num){
-				menu.removeClass('visible');
-			}else{
-				menu.addClass('visible');
-			}
-		},
-
-		'error': function(){
-			console.log('[PipUI] autocomplete > WRONG DATA FORMAT');
-		}
+		return self;
 	};
 
-	var ac_options = {};
+	this.setTemplateBlock = function(html){
+		_templateBlock = html;
 
-	$.fn.autocomplete = function(url, options){
+		return self;
+	};
 
-		if(typeof url == 'object'){
-			options = url;
-		}else if(typeof url == 'string'){
-			options.url = url;
+	this.setTemplateSelector = function(html){
+
+		_templateSelector = html;
+
+		return self;
+	};
+
+	this.getResult = function(){
+		return _result;
+	};
+
+	this.setType = function(type){
+		_type = typeof type != 'string' ? 'plain' : type;
+
+		return self;
+	};
+
+	this.setURL = function(url){
+		_url = typeof url != 'string' ? '' : url;
+
+		return self;
+	};
+
+	this.setData = function(object){
+		_data = typeof object != 'object' ? [] : object;
+
+		return self;
+	};
+
+	this.setMin = function(min){
+		_min = typeof min != 'number' || min < 1 ? 1 : parseInt(min);
+
+		return self;
+	};
+
+	this.setMethod = function(method){
+		_method = typeof method != 'string' ? '' : method;
+
+		return self;
+	};
+
+	this.setTimer = function(timeout){
+		_timer = typeof timeout != 'number' || timeout < 0 ? 0 : parseInt(timeout);
+
+		return self;
+	};
+
+	this.setResults = function(amount){
+		_results = typeof amount != 'number' || amount < 1 ? 1 : parseInt(amount);
+
+		return self;
+	};
+
+	this.setKey = function(key){
+		_key = typeof key != 'string' ? undefined : key;
+
+		return self;
+	};
+
+	this.setInput = function(input){
+		if(typeof input == 'object'){
+			_input = input;
+		}else if(typeof input == 'string'){
+			_input = document.querySelector(input);
+		}else{
+			if(_debug){ console.warn('[PipUI] Autocomplete: invalid input object'); }
+
+			return self;
 		}
 
-		if(typeof options == 'undefined'){
-			options = {};
+		var url = input.getAttribute('data-ac-url');
+		if(url){ self.setURL(url); }
+
+		var method = input.getAttribute('data-ac-method');
+		if(method){ self.setMethod(method); }
+
+		var type = input.getAttribute('data-ac-type');
+		if(type){ self.setType(type); }
+
+		var key = input.getAttribute('data-ac-key');
+		if(key){ self.setKey(key); }
+
+		var data = input.getAttribute('data-ac-data');
+		if(data){ self.setData(data.split(',')).setType('array'); }
+
+		var min = input.getAttribute('data-ac-min');
+		if(min){
+			min = parseInt(min);
+
+			if(!isNaN(min) && min > 0){
+				self.setMin(min);
+			}
 		}
 
-		var ac = this;
+		var timer = input.getAttribute('data-ac-timer');
+		if(timer){
+			timer = parseInt(timer);
 
-		var id = Math.random();
-
-		if(typeof options.debug == 'boolean' && options.debug){
-			console.log('[PipUI] autocomplete > Run');
+			if(!isNaN(timer)){
+				self.setTimer(timer);
+			}
 		}
 
-		ac.update = function(){
-			this.addClass('autocomplete-trigger').each(function(){
-				var that = $(this);
+		var results = input.getAttribute('data-ac-results');
+		if(results){
+			results = parseInt(results);
 
-				id = that.attr('data-ac-id');
+			if(!isNaN(results) && results > 0){
+				self.setResults(results);
+			}
+		}
 
-				if(typeof id == 'undefined'){
-					id = Math.random();
+		return self;
+	};
 
-					that.attr('data-ac-id', id);
+	this.setInput(e);
 
-					ac_options[id] = $.extend({}, {
-						'id': id,
-						'type': 'json',
-						'method': 'GET',
-						'data': [],
-						'url': '',
-						'timer': 300,
-						'min': 2,
-						'results': 10,
-						'step': undefined,
-						'complete': undefined,
-						'error': undefined,
-						'debug': false,
-						'by': '',
-						'params': {}
-					}, options);
+	this.getBlock = function(){
+		_block = typeof _block != 'undefined' ? _block : document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
 
-					if(typeof options.debug == 'boolean' && options.debug){
-						console.log('[PipUI] autocomplete > Set options (Element ID: '+id+')');
-					}
+		if(!_block){
+			p.append(document.body, _rendered);
+
+			_block = document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
+		}
+
+		return _block;
+	};
+
+	this.hide = function(){
+		var e = self.getBlock();
+
+		if(e){
+			e.classList.remove('visible');
+		}
+
+		return self;
+	};
+
+	this.show = function(){
+		var e = self.getBlock();
+
+		if(e){
+			e.classList.add('visible');
+		}
+
+		return self;
+	};
+
+	this.prepend = function(e){
+		_result.unshift(e);
+
+		return self;
+	};
+
+	this.append = function(e){
+		_result.push(e);
+
+		return self;
+	};
+
+	this.choice = undefined;
+
+	this.complete = function(e, xhr){
+		if(xhr.status == 200){
+			if(_type == 'json' || _type == 'array'){
+				self.setData(JSON.parse(e));
+			}else{
+				self.setData(e.split(','));
+			}
+		}else{
+			self.setData([]);
+		}
+
+		self.search(_value, _data);
+
+		if(self.getResult().length){
+			self.updateDOM().updatePosition().show();
+		}else{
+			self.hide();
+		}
+
+		return self;
+	};
+
+	this.error = function(e, xhr){
+		if(_debug){ console.warn('[PipUI] Autocomplete: [CODE: '+xhr.status+'] - '+e); }
+
+		return self;
+	};
+
+	this.request = function(){
+		_xhr = new XMLHttpRequest();
+
+		_xhr.open(_method, _url, true);
+
+		var params = typeof _params == 'object' ? _params : new FormData();
+
+		if(!params.has('value')){
+			params.append('value', _value);
+		}
+
+		_xhr.send(params);
+
+		_xhr.onload = function(){
+			if(_xhr.status != 200){
+				if(typeof self.error == 'function'){
+					self.error(_xhr.responseText, _xhr);
+				}else{
+					if(_debug){ console.warn('[PipUI] Autocomplete: '+_xhr.responseText); }
 				}
+			}
 
-				var url = that.attr('data-ac');
-
-				if(typeof url == 'string' && url.length){
-					ac_options[id].url = url;
-				}
-
-				var method = that.attr('data-ac-method');
-
-				if(typeof method == 'string' && method.length){
-					ac_options[id].method = method;
-				}
-
-				var type = that.attr('data-ac-type');
-
-				if(typeof type == 'string' && type.length){
-					ac_options[id].type = type;
-				}
-
-				var menu = $('.autocomplete[data-ac-id="'+id+'"]');
-
-				if(!menu.length){
-					$('body').append('<ul class="autocomplete scroll-styled" data-ac-id="'+id+'"></ul>');
-
-					if(typeof options.debug == 'boolean' && options.debug){
-						console.log('[PipUI] autocomplete > Init menu (Element ID: '+id+')');
-					}
-				}
-			});
-
-			ac_methods.typing($('input[data-ac-id]:focus, textarea[data-ac-id]:focus'));
-
-			return this;
+			self.complete(_xhr.response, _xhr);
 		};
 
-		return ac.update();
+		_xhr.onerror = function(){
+			if(typeof self.error == 'function'){
+				self.error('error', _xhr);
+			}else{
+				if(_debug){ console.warn('[PipUI] Autocomplete: request error '); }
+			}
+		};
+
+		return self;
 	};
 
-	$(function(){
-		$('body').on('focus', 'input[data-ac], textarea[data-ac]', function(){
-			var that = $(this);
+	this.updatePosition = function(){
+		var e = self.getBlock();
 
-			if(!that.hasClass('autocomplete-trigger')){
-				that.autocomplete();
+		if(e && _input){
+			var pos = _input.getBoundingClientRect();
+			e.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
+			e.style.left = (pos.left+window.pageXOffset)+'px';
+		}
+
+		return self;
+	};
+
+	this.clickEvent = function(target){
+
+		var value = target.getAttribute('data-value');
+
+		_input.value = value ? value : target.innerHTML;
+
+		self.hide();
+
+		target.classList.remove('hover');
+
+		if(typeof self.choice == 'function'){
+			self.choice(target);
+		}
+
+		return self;
+	};
+
+	this.updateClickEvents = function(){
+		var links = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
+
+		if(!links || !links.length){
+			return self;
+		}
+
+		for(var i = 0; i < links.length; i++){
+			if(typeof links[i].onclick != 'function'){
+				(function(e){
+					e.onclick = function(f){
+						f.preventDefault();
+
+						self.clickEvent(f.target);
+					}
+				})(links[i]);
+			}
+		}
+
+		return self;
+	};
+
+	this.updateDOM = function(){
+		var results = self.getResult();
+
+		var length = results.length;
+
+		if(!length){ self.hide(); return self; }
+
+		var list = '';
+
+		for(var i = 0; i < length; i++){
+
+			var item = undefined;
+
+			if(_type == 'plain' || _type == 'array'){
+				item = p.replaceAll(_templateSelector, '{VALUE}', results[i]);
+				item = p.replaceAll(item, '{KEY}', i.toString());
+			}else{
+				for(var key in results[i]){
+					if(!results[i].hasOwnProperty(key)){ continue; }
+
+					if(typeof item == 'undefined'){
+						item = p.replaceAll(_templateSelector, '{'+key+'}', results[i][key]);
+					}else{
+						item = p.replaceAll(item, '{'+key+'}', results[i][key]);
+					}
+				}
 			}
 
+			list += item;
+		}
 
-			var id = that.attr('data-ac-id');
+		var block = self.getBlock();
 
-			var ac = $('.autocomplete[data-ac-id="'+id+'"]');
+		if(block){
+			block.remove();
+		}
 
-			if(ac.html().length){
-				ac.addClass('visible');
+		_block = undefined;
+
+		_rendered = p.replaceAll(_templateBlock, '{ID}', _id);
+		_rendered = p.replaceAll(_rendered, '{ITEMS}', list);
+
+		self.getBlock();
+		self.updateClickEvents();
+
+		return self;
+	};
+
+	this.search = function(str, data){
+
+		_result = [];
+
+		if(_type == 'plain' && data.length){
+			data = data.split(',');
+		}
+
+		var keys = data;
+
+		if(!Array.isArray(data)){ keys = Object.keys(data); }
+
+		if(!keys.length){ return _result; }
+
+		var value;
+
+		var num = 0;
+
+		for(var key in data){
+			if(!data.hasOwnProperty(key)){ continue; }
+
+			value = typeof _key != 'undefined' ? data[key][_key] : data[key];
+
+			if(p.indexOfCase(value, str) === -1){ continue; }
+
+			num++;
+
+			self.append(data[key]);
+
+			if(num >= _results){ break; }
+		}
+
+		return _result;
+	};
+
+	this.typing = function(value){
+		if(_debug){ console.info('[PipUI] Autocomplete: Typing... '+value+' | Delay: '+_timer); }
+
+		_value = value;
+
+		if(_value.length < _min){
+			_result = [];
+
+			self.hide();
+
+			return self;
+		}
+
+		if(typeof _timeout_typing != 'undefined'){
+			clearTimeout(_timeout_typing);
+		}
+
+		_timeout_typing = setTimeout(function(){
+			if(_debug){ console.info('[PipUI] Autocomplete: Typing complete'); }
+
+			if(typeof _url != 'undefined'){
+				self.request();
+			}else{
+				self.search(value, _data);
+				if(self.getResult().length){
+					self.updateDOM().updatePosition().show();
+				}else{
+					self.hide();
+				}
 			}
+		}, _timer);
 
-		}).on('input', 'input[data-ac-id], textarea[data-ac-id]', function(){
-			ac_methods.typing($(this));
-		}).on('mouseenter', '.autocomplete > .autocomplete-item > .autocomplete-link', function(){
+		return self;
+	};
 
-			$('.autocomplete > .autocomplete-item > .autocomplete-link').removeClass('hover');
+	var initEvents = function(){
+		_input.oninput = function(){
+			self.typing(this.value);
+		};
 
-			$(this).addClass('hover');
-		}).on('click', '.autocomplete > .autocomplete-item > .autocomplete-link', function(e){
-			e.preventDefault();
-
-			var that = $(this);
-
-			var ac = that.closest('.autocomplete');
-
-			var id = ac.attr('data-ac-id');
-
-			$('.autocomplete-trigger[data-ac-id="'+id+'"]').val(that.text());
-
-			ac.removeClass('visible');
-		}).on('click', function(e){
-			var that = $(e.target);
-
-			var ac = that.closest('.autocomplete');
-			var input = that.closest('.autocomplete-trigger');
-
-			if(!ac.length && !input.length){
-				$('.autocomplete').removeClass('visible');
+		_input.onfocus = function(){
+			if(this.value.length >= _min){
+				self.typing(this.value);
 			}
-		}).on('keydown', '.autocomplete-trigger', function(e){
+		};
 
-			var that = $(this);
-			var id, ac, current;
-
-			if(e.keyCode == 40 || e.keyCode == 38){
+		_input.addEventListener('keydown', function(e){
+			if(_value.length >= _min && e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
 				e.preventDefault();
 
-				id = that.closest('.autocomplete-trigger').attr('data-ac-id');
+				if(e.keyCode == 40 || e.keyCode == 38){
+					var items = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
 
-				ac = $('.autocomplete[data-ac-id="'+id+'"]');
+					var length = items ? items.length : 0;
 
-				current = ac.find('.autocomplete-item > .autocomplete-link.hover');
+					var current = -1;
 
-				if(!current.length){
-					if(e.keyCode == 38){
-						ac.find('.autocomplete-item:last-child > .autocomplete-link').addClass('hover');
-					}else{
-						ac.find('.autocomplete-item:first-child > .autocomplete-link').addClass('hover');
+					var next = e.keyCode == 40 ? 0 : length-1;
+
+					for(var i = 0; i < length; i++){
+						if(items[i].classList.contains('hover')){
+							items[i].classList.remove('hover');
+							current = i; break;
+						}
 					}
-				}else{
-					ac.addClass('visible');
-
-					var next = current.closest('.autocomplete-item').next().children('.autocomplete-link');
-					var prev = current.closest('.autocomplete-item').prev().children('.autocomplete-link');
-
-					current.removeClass('hover');
 
 					if(e.keyCode == 40){
-						if(!next.length){
-							ac.find('.autocomplete-item:first-child > .autocomplete-link').addClass('hover');
-						}else{
-							next.addClass('hover');
-						}
+						next = current == length-1 ? 0 : current + 1;
 					}else{
-						if(!prev.length){
-							ac.find('.autocomplete-item:last-child > .autocomplete-link').addClass('hover');
-						}else{
-							prev.addClass('hover');
-						}
+						next = current == 0 ? length-1 : current - 1;
+					}
+
+					items[next].classList.add('hover');
+				}else{
+					var hovered = document.querySelector('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link.hover');
+
+					if(hovered){
+						self.clickEvent(hovered);
 					}
 				}
-			}else if(e.keyCode == 13){
-				e.preventDefault();
-
-				var trigger = that.closest('.autocomplete-trigger');
-
-				id = trigger.attr('data-ac-id');
-
-				ac = $('.autocomplete[data-ac-id="'+id+'"]');
-
-				current = ac.find('.autocomplete-item > .autocomplete-link.hover');
-
-				if(current.length){
-					trigger.val(current.text());
-					ac.removeClass('visible');
-				}
-
 			}
-		});
+		}, false);
 
-		$(window).on('resize scroll', function(){
-			var ac = $('.autocomplete.visible');
-
-			if(ac.length){
-				var trigger = $('.autocomplete-trigger[data-ac-id="'+ac.attr('data-ac-id')+'"]');
-
-				var pos = trigger.offset();
-
-				ac.css({'top': (pos.top+trigger.outerHeight())+'px', 'left': pos.left});
+		_input.onblur = function(e){
+			//e.relatedTarget
+			if(!e.relatedTarget || !e.relatedTarget.classList.contains('autocomplete-link')){
+				self.hide();
 			}
-		});
-	});
-}(jQuery));
+		};
+
+		_input.setAttribute('data-ac-id', _id);
+	};
+
+	if(typeof _input == 'object' && _input){
+		var input_length = _input.length;
+
+		if(typeof input_length == 'number'){
+			if(input_length > 0){
+				_input = _input[0];
+				initEvents();
+			}
+		}else{
+			initEvents();
+		}
+	}
+
+	return this;
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	var elements = this.querySelectorAll('[data-ac]');
+
+	for(var i = 0; i < elements.length; i++){
+		(function(e){
+			new p.autocomplete(elements[e]);
+		})(i);
+	}
+
+	window.onresize = function(){
+		var element = document.querySelector('.autocomplete.visible');
+
+		if(element){
+			var id = element.getAttribute('data-ac-id');
+
+			var input = document.querySelector('input[data-ac-id="'+id+'"]');
+
+			var pos = input.getBoundingClientRect();
+			element.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
+			element.style.left = (pos.left+window.pageXOffset)+'px';
+		}
+	};
+});
 
 
 
@@ -2912,4 +3131,282 @@ $(function(){
 
 		pipui.alertblock.hide($(this).closest('.alertblock'));
 	});
+});
+
+
+
+
+/***** tagselector.js *****/
+pipui.tagselector = function(e){
+	var _input = undefined;
+
+	var _id = Math.random().toString();
+
+	var _block;
+
+	var _min = 1;
+
+	var _maxTags = 0;
+
+	var _debug = true;
+
+	var self = this;
+
+	var _position = 'append';
+
+	var _disableEvents = false;
+
+	var _templateBlock = '<div class="tagselector" data-ts-id="{ID}"><ul class="tagselector-list"></ul></div>';
+
+	var _templateSelector = '<li class="tagselector-item"><a href="#" title="Удалить" class="tagselector-link" data-value="{VALUE}" rel="nofollow">{NAME}</a><input type="hidden" name="tags[{NAME}]" value="{VALUE}" class="tagselector-value"></li>';
+
+	this.setTemplateBlock = function(html){
+		_templateBlock = html;
+
+		return self;
+	};
+
+	this.setDisableEvents = function(value){
+
+		_disableEvents = value;
+
+		return self;
+	};
+
+	this.setTemplateSelector = function(html){
+
+		_templateSelector = html;
+
+		return self;
+	};
+
+	this.getResult = function(){
+		return _input ? _input.value : '';
+	};
+
+	this.getInput = function(){
+		return _input;
+	};
+
+	this.setMin = function(min){
+		_min = typeof min != 'number' || min < 1 ? 1 : parseInt(min);
+
+		return self;
+	};
+
+	this.setName = function(name){
+
+		var inputs = self.getBlock().querySelectorAll('.tagselector-value');
+
+		for(var i = 0; i < inputs.length; i++){
+			var item = inputs[i];
+
+			var subname = item.getAttribute('name');
+
+			item.setAttribute('name', name+item.substring(subname.indexOf('[')));
+		}
+
+		return self;
+	};
+
+	this.setPosition = function(position){
+		_position = typeof position != 'string' ? 'append' : position;
+
+		return self;
+	};
+
+	this.setMaxTags = function(value){
+		_maxTags = typeof value != 'number' || value < 0 ? 0 : parseInt(value);
+
+		return self;
+	};
+
+	this.setInput = function(input){
+		if(typeof input == 'object'){
+			_input = input;
+		}else if(typeof input == 'string'){
+			_input = document.querySelector(input);
+		}else{
+			if(_debug){ console.warn('[PipUI] Tag selector: invalid input object'); }
+
+			return self;
+		}
+
+		var position = input.getAttribute('data-ts-position');
+		if(position){ self.setPosition(position); }
+
+		var name = input.getAttribute('data-ts-name');
+		if(name){ self.setName(name); }
+
+		var min = input.getAttribute('data-ts-min');
+		if(min){
+			min = parseInt(min);
+
+			if(!isNaN(min) && min > 0){
+				self.setMin(min);
+			}
+		}
+
+		var max_tags = input.getAttribute('data-ts-max-tags');
+		if(max_tags){
+			max_tags = parseInt(max_tags);
+
+			if(!isNaN(max_tags)){
+				self.setMaxTags(max_tags);
+			}
+		}
+
+		return self;
+	};
+
+	this.setInput(e);
+
+	this.getBlock = function(){
+		_block = typeof _block != 'undefined' ? _block : document.body.querySelector('.tagselector[data-ts-id="'+_id+'"]');
+
+		if(!_block){
+			p.after(_input, p.replaceAll(_templateBlock, '{ID}', _id));
+
+			_block = document.body.querySelector('.tagselector[data-ts-id="'+_id+'"]');
+		}
+
+		return _block;
+	};
+
+	this.pend = function(position, value, name){
+		var block = self.getBlock();
+
+		var html = p.replaceAll(_templateSelector, '{VALUE}', value);
+
+		if(typeof name == 'undefined'){
+			name = value;
+		}
+
+		html = p.replaceAll(html, '{NAME}', name);
+
+		var list = block.querySelector('.tagselector-list');
+
+		if(typeof position == 'undefined' || position == 'append'){
+			p.append(list, html)
+		}else{
+			p.prepend(list, html);
+		}
+
+		self.updateClickEvents();
+
+		return self;
+	};
+
+	this.prepend = function(value, name){
+		return self.pend('prepend', value, name);
+	};
+
+	this.append = function(value, name){
+		return self.pend('append', value, name);
+	};
+
+	this.error = function(e, xhr){
+		if(_debug){ console.warn('[PipUI] Tag selector: [CODE: '+xhr.status+'] - '+e); }
+
+		return self;
+	};
+
+	this.clickEvent = function(link){
+
+		var li = link.closest('.tagselector-item');
+
+		if(li){ li.remove(); }
+
+		return self;
+	};
+
+	this.updateClickEvents = function(){
+		var items = document.querySelectorAll('.tagselector[data-ts-id="'+_id+'"] .tagselector-link');
+
+		if(!items || !items.length){
+			return self;
+		}
+
+		for(var i = 0; i < items.length; i++){
+			if(typeof items[i].onclick != 'function'){
+				(function(e){
+					e.onclick = function(f){
+						f.preventDefault();
+
+						self.clickEvent(f.target);
+					}
+				})(items[i]);
+			}
+		}
+
+		return self;
+	};
+
+	var initEvents = function(){
+
+		_input.addEventListener('keydown', function(e){
+
+			if(!_disableEvents){
+				var value = _input.value.trim();
+
+				if(value.length >= _min && (e.keyCode == 188 || e.keyCode == 13)){
+
+					if(_debug){ console.warn('[PipUI] Tag selector: press key '+e.keyCode); }
+
+					var values = self.getBlock().querySelectorAll('.tagselector-value');
+
+					var index = self.getBlock().querySelectorAll('.tagselector-value[value="'+value+'"]').length;
+
+					if((_maxTags <= 0 || values.length < _maxTags) && !index){
+						self.pend(_position, value);
+
+						_input.value = '';
+					}
+
+				}
+			}
+		}, false);
+
+		var value = _input.value;
+
+		if(value.length){
+			var items = value.split(',');
+
+			for(var i = 0; i < items.length; i++){
+				self.pend(undefined, items[i]);
+			}
+
+			_input.value = '';
+		}
+
+		self.updateClickEvents();
+
+		_input.setAttribute('data-ts-id', _id);
+	};
+
+	if(typeof _input == 'object' && _input){
+		var input_length = _input.length;
+
+		if(typeof input_length == 'number'){
+			if(input_length > 0){
+				_input = _input[0];
+				initEvents();
+			}
+		}else{
+			initEvents();
+		}
+	}
+
+	return this;
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	var elements = this.querySelectorAll('[data-ts]');
+
+	for(var i = 0; i < elements.length; i++){
+		(function(e){
+			new p.tagselector(elements[e]);
+		})(i);
+	}
 });
