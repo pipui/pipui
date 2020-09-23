@@ -237,14 +237,30 @@ pipui.autocomplete = function(e){
 	this.request = function(){
 		_xhr = new XMLHttpRequest();
 
-		_xhr.open(_method, _url, true);
+		var params;
 
-		var params = typeof _params == 'object' ? _params : new FormData();
+		if(typeof _params == 'object' && _params.toString() != '[object FormData]'){
+			params = new FormData();
 
-		if(!params.has('value')){
-			params.append('value', _value);
+			for(var prop in _params){
+				if(!_params.hasOwnProperty(prop)){ continue; }
+
+				params.append(prop, _params[prop]);
+			}
+		}else if(typeof _params == 'function'){
+			params = _params();
+		}else{
+			params = new FormData();
 		}
 
+		if(params.has('value')){
+			params.delete('value');
+		}
+
+		params.append('value', _value);
+
+		_xhr.open(_method, _url, true);
+		_xhr.setRequestHeader('Cache-Control', 'no-cache');
 		_xhr.send(params);
 
 		_xhr.onload = function(){

@@ -61,7 +61,7 @@
 
 			var options = slider_options[id];
 
-			if(options.locked){ return slider; }
+			if(typeof options == 'undefined' || slider.find('.slider-wrapper > .slider-slide').length == 1 || options.locked){ return slider; }
 
 			slider.trigger('slider.change');
 
@@ -308,7 +308,7 @@
 
 			var index = that.closest('.slider-control').find('.slider-control-label').index(that);
 
-			slider_methods.setSlide(index, slider, slider_options[id]);
+			slider_methods.setSlide(index, slider);
 		}).on('mouseenter', '.slider', function(){
 
 			var that = $(this);
