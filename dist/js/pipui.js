@@ -1,9 +1,10 @@
-/* PipUI v1.3.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.0 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/
 var pipui = {
-	a: 10,
+	v: '1.4.0',
+	enable_compatible: true,
 
 	array_unique: function(array){
 		var result = [];
@@ -51,46 +52,177 @@ var pipui = {
 		return window.innerWidth - e.offset().left - e.outerWidth() + window.pageXOffset;
 	},
 
-	append: function(e, content){
-		if(typeof content == 'object'){
-			e.append(content);
-		}else{
-			e.insertAdjacentHTML('beforeend', content);
+	dependencies: {},
+
+	required: function(component, needle, version, operator){
+		if(typeof operator == 'undefined'){
+			operator = '=';
 		}
+
+		this.dependencies[component].push({
+			'name': needle,
+			'version': version,
+			'operator': operator
+		});
 	},
 
-	prepend: function(e, content){
-		if(typeof content == 'object'){
-			e.prepend(content);
-		}else{
-			e.insertAdjacentHTML('afterbegin', content);
-		}
+	addModule: function(name, version){
+		this.modules[name] = version;
+		this.dependencies[name] = [];
 	},
 
-	after: function(e, content){
-		if(typeof content == 'object'){
-			e.parentNode.insertBefore(content, e.nextSibling);
-		}else{
-			e.insertAdjacentHTML('afterend', content);
-		}
+	modules: {},
+
+	moduleExists: function(name){
+		return typeof this.modules[name] != 'undefined';
 	},
 
-	before: function(e, content){
-		if(typeof content == 'object'){
-			e.parentNode.insertBefore(content, e);
-		}else{
-			e.insertAdjacentHTML('beforebegin', content);
-		}
+	moduleVersion: function(name){
+		if(!this.moduleExists(name)){ return null; }
+
+		return this.modules[name];
 	},
 
-	replaceAll: function(str, match, replacement){
-		return str.split(match).join(replacement);
-	}
+	// <, >, <=, >=, =, !=, <>
+	version_compare: function(v1, v2, operator){
+
+		if(typeof operator == 'undefined'){
+			operator = '=';
+		}
+
+		if(operator == '=' || operator == '==' || operator == '==='){
+			return v1 === v2;
+		}
+
+		if(operator == '!=' || operator == '<>' || operator == '!=='){
+			return v1 !== v2;
+		}
+
+		var i, x;
+		var compare = 0;
+
+		var vm = {
+			'dev': -6,
+			'alpha': -5,
+			'a': -5,
+			'beta': -4,
+			'b': -4,
+			'RC': -3,
+			'rc': -3,
+			'#': -2,
+			'p': 1,
+			'pl': 1
+		};
+
+		var _prepVersion = function(v){
+			v = ('' + v).replace(/[_\-+]/g, '.');
+			v = v.replace(/([^.\d]+)/g, '.$1.').replace(/\.{2,}/g, '.');
+			return (!v.length ? [-8] : v.split('.'))
+		};
+
+		var _numVersion = function(v){
+			return !v ? 0 : (isNaN(v) ? vm[v] || -7 : parseInt(v, 10))
+		};
+
+		v1 = _prepVersion(v1);
+		v2 = _prepVersion(v2);
+		x = Math.max(v1.length, v2.length);
+
+		for(i = 0; i < x; i++){
+			if(v1[i] === v2[i]){ continue }
+
+			v1[i] = _numVersion(v1[i]);
+			v2[i] = _numVersion(v2[i]);
+
+			if(v1[i] < v2[i]){
+				compare = -1;
+				break
+			}else if(v1[i] > v2[i]){
+				compare = 1;
+				break
+			}
+		}
+
+		if(!operator){ return compare; }
+
+		switch(operator){
+			case '>':
+			case 'gt': return (compare > 0);
+			case '>=':
+			case 'ge': return (compare >= 0);
+			case '<=':
+			case 'le': return (compare <= 0);
+			case '<':
+			case 'lt': return (compare < 0);
+		}
+
+		return null;
+	},
+
+	compatible: function(){
+		$.each(pipui.dependencies, function(k, v){
+			if(!v.length){ return; }
+
+			for(var i = 0; i < v.length; i++){
+				if(typeof v[i] == 'undefined'){ continue; }
+
+				if(!pipui.moduleExists(v[i].name)){
+					console.warn('[PipUI] '+pipui.l(pipui.i18n.base.requires, [k, v[i].name]));
+
+					return;
+				}
+
+				if(!pipui.version_compare(pipui.moduleVersion(v[i].name), v[i].version, v[i].operator)){
+					console.warn('[PipUI] '+pipui.l(pipui.i18n.base.requires_version, [k, v[i].name, v[i].operator], v[i].version));
+				}
+			}
+
+		});
+	},
+
+	l: function(str, data, symbol){
+		if(typeof symbol == 'undefined'){ symbol = '%'; }
+
+		if(typeof data == 'string'){ return str.replaceAll(symbol, data); }
+
+		var symbol_len = symbol.length;
+
+		var n = 0;
+
+		while(true){
+			var search = str.indexOf(symbol);
+
+			if(search === -1 || typeof data[n] == 'undefined'){ break; }
+
+			var replace1 = str.substr(0, search);
+			var replace2 = str.substr(search+symbol_len);
+
+			str = replace1+data[n]+replace2;
+
+			n++;
+		}
+
+		return str;
+	},
+
+	i18n: {
+		"base": {
+			"requires": 'Component "%" requires component %',
+			"requires_version": 'Component % requires component % version % %',
+		},
+	},
 };
 
 var p = pipui;
 
+pipui.addModule('base', pipui.v);
+
 $(function(){
+
+	if(p.enable_compatible){
+		p.compatible();
+	}
+
 	$('body').on('click', '.preventDefault', function(e){
 		e.preventDefault();
 	});
@@ -100,6 +232,8 @@ $(function(){
 
 
 /***** navbar.js *****/
+pipui.addModule('navbar', '1.0.0');
+
 $(function(){
 	$('html').on('click', 'body', function(e){
 
@@ -159,6 +293,8 @@ $(function(){
 
 
 /***** modal.js *****/
+pipui.addModule('modal', '1.0.0');
+
 pipui.modal = {
 	open: function(e){
 		if(e==''){ return false; }
@@ -231,6 +367,12 @@ $(function(){
 
 
 /***** alert.js *****/
+pipui.addModule('alert', '1.0.0');
+pipui.required('alert', 'base', '1.4.0', '>=');
+pipui.i18n.alert = {
+	"close": 'ЗАКРЫТЬ',
+};
+
 pipui.alert = {
 	openTimeout: 3000,
 
@@ -269,16 +411,16 @@ pipui.alert = {
 		var id = Math.random();
 
 		var e = $('<div class="alert-id" style="display: none;" data-id="'+id+'">' +
-						'<div class="alert-content">'+text+'</div>' +
+					'<div class="alert-content">'+text+'</div>' +
 
-						'<div class="alert-footer">' +
-							'<div class="block-left"><div class="title">'+title+'</div></div>' +
+					'<div class="alert-footer">' +
+						'<div class="block-left"><div class="title">'+title+'</div></div>' +
 
-							'<div class="block-right">' +
-								'<button class="btn btn-transparent close-trigger">ЗАКРЫТЬ</button>' +
-							'</div>' +
+						'<div class="block-right">' +
+							'<button class="btn btn-transparent close-trigger">'+p.i18n.alert.close+'</button>' +
 						'</div>' +
-					'</div>');
+					'</div>' +
+				'</div>');
 
 		block.append(e);
 
@@ -390,6 +532,14 @@ $(function(){
 
 
 /***** confirm.js *****/
+pipui.addModule('confirm', '1.0.0');
+p.required('confirm', 'base', '1.4.0', '>=');
+p.i18n.confirm = {
+	"confirm": 'Подтвердите действие на странице',
+	"success": 'OK',
+	"cancel": 'Отмена'
+};
+
 pipui.confirm = {
 	openTimeout: 3000,
 
@@ -434,11 +584,11 @@ pipui.confirm = {
 		}
 
 		if(typeof yes == 'undefined'){
-			yes = 'ОК';
+			yes = p.i18n.confirm.success;
 		}
 
 		if(typeof no == 'undefined'){
-			no = 'Отмена';
+			no = p.i18n.confirm.cancel;
 		}
 
 		var block = $('.confirm');
@@ -450,7 +600,7 @@ pipui.confirm = {
 		}
 
 		if(typeof title == 'undefined'){
-			title = 'Подтвердите действие на странице';
+			title = p.i18n.confirm.confirm;
 		}
 
 		var id = Math.random().toString();
@@ -591,6 +741,8 @@ $(function(){
 
 
 /***** tabs.js *****/
+pipui.addModule('tabs', '1.0.0');
+
 pipui.tabs = {
 	active: function(id){
 		if(typeof id != 'string'){
@@ -630,6 +782,8 @@ $(function(){
 
 
 /***** spoiler.js *****/
+pipui.addModule('spoiler', '1.0.0');
+
 pipui.spoiler = {
 	show: function(e){
 
@@ -761,6 +915,8 @@ $(function(){
 
 
 /***** textarea.js *****/
+pipui.addModule('textarea', '1.0.0');
+
 pipui.textarea = {
 	element: '.textarea',
 
@@ -938,27 +1094,49 @@ $(function(){
 
 
 /***** bbpanel.js *****/
+pipui.addModule('bbpanel', '1.0.0');
+p.required('bbpanel', 'base', '1.4.0', '>=');
+p.i18n.bbpanel = {
+	"b": 'Жирный',
+	"i": 'Курсив',
+	"u": 'Подчеркнутый',
+	"s": 'Зачеркнутый',
+	"left": 'Выравнивание по левому краю',
+	"center": 'Выравнивание по центру',
+	"right": 'Выравнивание по правому краю',
+	"spoiler": 'Скрытый текст',
+	"color": 'Цвет текста',
+	"size": 'Размер текста',
+	"img": 'Изображени',
+	"quote": 'Цитата',
+	"urlAlt": 'Ссылка',
+	"code": 'Код',
+	"line": 'Горизонтальная линия',
+	"youtube": 'Ссылка на YouTube видео',
+	"hide": 'Скрыть панель'
+};
+
 pipui.bbpanel = {
 	element: '.bbpanel',
 	targetClass: 'bbpanel-target',
 	codes: {
-		'b': {'title': 'Жирный', 'text': '<i class="fa fa-bold"></i>', 'left': '[b]', 'right': '[/b]'},
-		'i': {'title': 'Курсив', 'text': '<i class="fa fa-italic"></i>', 'left': '[i]', 'right': '[/i]'},
-		'u': {'title': 'Подчеркнутый', 'text': '<i class="fa fa-underline"></i>', 'left': '[u]', 'right': '[/u]'},
-		's': {'title': 'Зачеркнутый', 'text': '<i class="fa fa-strikethrough"></i>', 'left': '[s]', 'right': '[/s]'},
-		'left': {'title': 'Выравнивание по левому краю', 'text': '<i class="fa fa-align-left"></i>', 'left': '[left]', 'right': '[/left]'},
-		'center': {'title': 'Выравнивание по центру', 'text': '<i class="fa fa-align-center"></i>', 'left': '[center]', 'right': '[/center]'},
-		'right': {'title': 'Выравнивание по правому краю', 'text': '<i class="fa fa-align-right"></i>', 'left': '[right]', 'right': '[/right]'},
-		'spoiler': {'title': 'Скрытый текст', 'text': '<i class="fa fa-eye-slash"></i>', 'left': '[spoiler=""]', 'right': '[/spoiler]'},
-		'color': {'title': 'Цвет текста', 'text': '<i class="fa fa-paint-brush"></i>', 'left': '[color="#"]', 'right': '[/color]'},
-		'size': {'title': 'Размер текста', 'text': '<i class="fa fa-text-height"></i>', 'left': '[size="1"]', 'right': '[/size]'},
-		'img': {'title': 'Изображени', 'text': '<i class="fa fa-picture-o"></i>', 'left': '[img]', 'right': '[/img]'},
-		'quote': {'title': 'Цитата', 'text': '<i class="fa fa-quote-right"></i>', 'left': '[quote]', 'right': '[/quote]'},
-		'urlAlt': {'title': 'Ссылка', 'text': '<i class="fa fa-link"></i>', 'left': '[url=""]', 'right': '[/url]'},
-		'code': {'title': 'Код', 'text': '<i class="fa fa-code"></i>', 'left': '[code]', 'right': '[/code]'},
-		'line': {'title': 'Горизонтальная линия', 'text': '<i class="fa fa-minus"></i>', 'left': '', 'right': '[line]'},
-		'youtube': {'title': 'Ссылка на YouTube видео', 'text': '<i class="fa fa-youtube-play"></i>', 'left': '[youtube]', 'right': '[/youtube]'},
-		'hide': {'title': 'Скрыть панель', 'text': '<i class="fa fa-angle-up"></i>', 'method': function(e){
+		'b': {'title': p.i18n.bbpanel.b, 'text': '<i class="fa fa-bold"></i>', 'left': '[b]', 'right': '[/b]'},
+		'i': {'title': p.i18n.bbpanel.i, 'text': '<i class="fa fa-italic"></i>', 'left': '[i]', 'right': '[/i]'},
+		'u': {'title': p.i18n.bbpanel.u, 'text': '<i class="fa fa-underline"></i>', 'left': '[u]', 'right': '[/u]'},
+		's': {'title': p.i18n.bbpanel.s, 'text': '<i class="fa fa-strikethrough"></i>', 'left': '[s]', 'right': '[/s]'},
+		'left': {'title': p.i18n.bbpanel.left, 'text': '<i class="fa fa-align-left"></i>', 'left': '[left]', 'right': '[/left]'},
+		'center': {'title': p.i18n.bbpanel.center, 'text': '<i class="fa fa-align-center"></i>', 'left': '[center]', 'right': '[/center]'},
+		'right': {'title': p.i18n.bbpanel.right, 'text': '<i class="fa fa-align-right"></i>', 'left': '[right]', 'right': '[/right]'},
+		'spoiler': {'title': p.i18n.bbpanel.spoiler, 'text': '<i class="fa fa-eye-slash"></i>', 'left': '[spoiler=""]', 'right': '[/spoiler]'},
+		'color': {'title': p.i18n.bbpanel.color, 'text': '<i class="fa fa-paint-brush"></i>', 'left': '[color="#"]', 'right': '[/color]'},
+		'size': {'title': p.i18n.bbpanel.size, 'text': '<i class="fa fa-text-height"></i>', 'left': '[size="1"]', 'right': '[/size]'},
+		'img': {'title': p.i18n.bbpanel.img, 'text': '<i class="fa fa-picture-o"></i>', 'left': '[img]', 'right': '[/img]'},
+		'quote': {'title': p.i18n.bbpanel.quote, 'text': '<i class="fa fa-quote-right"></i>', 'left': '[quote]', 'right': '[/quote]'},
+		'urlAlt': {'title': p.i18n.bbpanel.urlAlt, 'text': '<i class="fa fa-link"></i>', 'left': '[url=""]', 'right': '[/url]'},
+		'code': {'title': p.i18n.bbpanel.code, 'text': '<i class="fa fa-code"></i>', 'left': '[code]', 'right': '[/code]'},
+		'line': {'title': p.i18n.bbpanel.line, 'text': '<i class="fa fa-minus"></i>', 'left': '', 'right': '[line]'},
+		'youtube': {'title': p.i18n.bbpanel.youtube, 'text': '<i class="fa fa-youtube-play"></i>', 'left': '[youtube]', 'right': '[/youtube]'},
+		'hide': {'title': p.i18n.bbpanel.hide, 'text': '<i class="fa fa-angle-up"></i>', 'method': function(e){
 				e.closest('.bbpanel-target').slideUp('fast');
 			}}
 	},
@@ -1065,6 +1243,8 @@ $(function(){
 
 
 /***** bbcodes.js *****/
+pipui.addModule('bbcodes', '1.0.0');
+
 $(function(){
 	$('body').on('click', '.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger', function(e){
 		e.preventDefault();
@@ -1088,7 +1268,14 @@ $(function(){
 
 
 
+
 /***** formvalidator.js *****/
+pipui.addModule('formvalidator', '1.0.0');
+p.required('formvalidator', 'base', '1.4.0', '>=');
+p.i18n.formvalidator = {
+	"incorrect": 'Поле заполнено неверно'
+};
+
 pipui.formvalidator = {
 	form: '[data-formvalidator]',
 
@@ -1135,7 +1322,7 @@ $(function(){
 			var text = el.attr('data-formvalidator-text');
 
 			if(typeof text == 'undefined'){
-				text = 'Поле заполнено неверно';
+				text = p.i18n.formvalidator.incorrect;
 			}
 
 			var alert = $('.formvalidator-alert[data-formvalidator-id="'+id+'"]');
@@ -1201,6 +1388,9 @@ $(function(){
 
 
 /***** dropdown.js *****/
+pipui.addModule('dropdown', '1.0.0');
+p.required('dropdown', 'base', '1.4.0', '>=');
+
 pipui.dropdown = {
 	toggle: function(e){
 		if(!e.length){ return false; }
@@ -1276,6 +1466,8 @@ $(function(){
 
 
 /***** toggle.js *****/
+pipui.addModule('toggle', '1.0.0');
+
 $(function(){
 	$('body').on('click', '[data-toggle]', function(e){
 
@@ -1315,6 +1507,8 @@ $(function(){
 
 
 /***** tabindex.js *****/
+pipui.addModule('tabindex', '1.0.0');
+
 pipui.tabindex = {
 	search_next: function(current, block){
 		var indexes = block.find('[tabindex]');
@@ -1381,6 +1575,8 @@ $(function(){
 
 
 /***** pagination.js *****/
+pipui.addModule('pagination', '1.0.0');
+
 pipui.pagination = {
 	get_data: function(e){
 		var type = parseInt(e.attr('data-pagination'));
@@ -1651,6 +1847,8 @@ $(function(){
 
 
 /***** navmenu.js *****/
+pipui.addModule('navmenu', '1.0.0');
+
 pipui.navmenu = {
 	toggle: function(that){
 
@@ -1690,16 +1888,50 @@ $(function(){
 
 
 /***** autocomplete.js *****/
-pipui.autocomplete = function(e){
-	var _input = undefined;
+pipui.addModule('autocomplete', '1.0.0');
+p.required('autocomplete', 'base', '1.4.0', '>=');
+p.i18n.autocomplete = {
+	"completed": 'Autocomplete: Search completed',
+	"found": 'Autocomplete: Results found',
+	"notfound": 'Autocomplete: Results not found',
+	"installed": 'Autocomplete: installed',
+	"typing": 'Autocomplete: Typing... % | Delay: %',
+	"error": 'Autocomplete: Error "%"'
+};
 
-	var _type = 'plain';
+pipui.autocomplete_helper = {
+	defaultSelector: "[data-ac]",
 
-	var _data = [];
+	is_init: function(input){
+		var id = input.attr('data-ac-id');
 
-	var _id = Math.random();
+		return typeof id == 'string' && id.length;
+	},
 
-	var _url, _key, _timeout_typing, _block, _xhr, _params;
+	position: function(block, target){
+		var offset = target.offset();
+
+		var height = target.outerHeight();
+
+		block.css({
+			'top': (offset.top + height)+'px',
+			'left': offset.left+'px'
+		});
+	}
+};
+
+pipui.autocomplete = function(input){
+	var _input = input;
+
+	var _type = 'text';
+
+	var _data = '';
+
+	var _id = Math.random().toString();
+
+	var _url, _key, _timeout_typing, _block, _xhr;
+
+	var _params = {};
 
 	var _method = 'GET';
 
@@ -1717,11 +1949,156 @@ pipui.autocomplete = function(e){
 
 	var _result = [];
 
-	var _templateBlock = '<div class="autocomplete" data-ac-id="{ID}"><ul class="autocomplete-list">{ITEMS}</ul></div>';
+	var _templateBlock = '<div class="autocomplete" data-ac-id="{ID}"><ul class="autocomplete-list"></ul></div>';
 
-	var _templateSelector = '<li class="autocomplete-item"><a href="#" class="autocomplete-link" data-index="{KEY}" rel="nofollow">{VALUE}</a></li>';
+	var _templateSelector = '<li class="autocomplete-item"><a href="#" class="autocomplete-link" data-key="{KEY}" data-index="{INDEX}" rel="nofollow">{VALUE}</a></li>';
 
-	var _rendered = '';
+	var draw = function(results){
+		if(!results || !results.length){ _block.removeClass('visible'); return; }
+
+		var list = _block.find('.autocomplete-list');
+
+		list.empty();
+
+		var item;
+
+		$.each(results, function(key, obj){
+			item = _templateSelector.replace(/\{KEY\}/g, obj.key);
+			item = item.replace(/\{INDEX\}/g, obj.index);
+			list.append(item.replace(/\{VALUE\}/g, obj.value));
+		});
+
+		_block.addClass('visible');
+
+		_block.find('.autocomplete-link').on('click', function(e){
+			e.preventDefault();
+
+			var that = $(this);
+
+			if(_block.hasClass('visible')){
+				var id = that.attr('data-index');
+
+				_input.val(results[id].value);
+
+				_block.removeClass('visible');
+
+				if(typeof choice == 'function'){
+					choice(results[id], that);
+				}
+			}
+		});
+	};
+
+	var search = function(list, str){
+		_result = [];
+
+		if(str.length < _min){
+			return _result;
+		}
+
+		var founded = 0;
+
+		if(_type == 'text'){
+			list = list.split(',');
+		}
+
+		$.each(list, function(key, value){
+
+			if(typeof _key == 'string'){
+				value = value[_key];
+			}
+
+			if(typeof value == 'undefined'){
+				return;
+			}
+
+			if(value.toLowerCase().indexOf(str.toLowerCase()) !== -1){
+				_result.push({"value": value, "key": key, "index": founded});
+				founded++;
+
+				if(founded >= _results){
+					return false;
+				}
+			}
+		});
+
+		if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.completed); }
+
+		if(founded){
+			if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.found); }
+
+			if(typeof found == 'function'){
+				found(_result);
+			}
+
+			pipui.autocomplete_helper.position(_block, _input);
+		}else{
+			if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.notfound); }
+
+			if(typeof notfound == 'function'){
+				notfound();
+			}
+		}
+
+		return _result;
+	};
+
+	var initInput = function(trigger){
+		trigger.attr('data-ac-id', _id);
+
+		var data = trigger.attr('data-ac-data');
+		var type = trigger.attr('data-ac-type');
+		var key = trigger.attr('data-ac-key');
+		var min = trigger.attr('data-ac-min');
+		var url = trigger.attr('data-ac-url');
+		var method = trigger.attr('data-ac-method');
+		var timer = trigger.attr('data-ac-timer');
+		var results = trigger.attr('data-ac-results');
+
+		if(typeof type == 'string' && ['text', 'object', 'array', 'json'].indexOf(type.toLowerCase()) !== -1){
+			self.setType(type.toLowerCase());
+		}
+
+		if(typeof data == 'string' && data.length){
+			if(typeof type == 'undefined'){
+				self.setType('text');
+			}
+
+			self.setData(data);
+		}
+
+		if(typeof key == 'string' && key.length){
+			self.setKey(key);
+		}
+
+		if(typeof min == 'string' && min.length){
+			self.setMin(parseInt(min));
+		}
+
+		if(typeof url == 'string' && url.length){
+			self.setURL(url);
+		}
+
+		if(typeof method == 'string' && method.length){
+			self.setMethod(method);
+		}
+
+		if(typeof timer == 'string' && timer.length){
+			self.setTimer(parseInt(timer));
+		}
+
+		if(typeof results == 'string' && results.length){
+			self.setResults(parseInt(results));
+		}
+
+		_block = $(_templateBlock.replace(/\{ID\}/g, _id));
+
+		$('body').append(_block);
+
+		if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.installed); }
+
+		return self;
+	};
 
 	this.setParams = function(formdata){
 		_params = formdata;
@@ -1746,8 +2123,12 @@ pipui.autocomplete = function(e){
 		return _result;
 	};
 
+	this.getInput = function(){
+		return _input;
+	};
+
 	this.setType = function(type){
-		_type = typeof type != 'string' ? 'plain' : type;
+		_type = typeof type != 'string' ? 'text' : type;
 
 		return self;
 	};
@@ -1758,8 +2139,8 @@ pipui.autocomplete = function(e){
 		return self;
 	};
 
-	this.setData = function(object){
-		_data = typeof object != 'object' ? [] : object;
+	this.setData = function(data){
+		_data = data;
 
 		return self;
 	};
@@ -1794,446 +2175,211 @@ pipui.autocomplete = function(e){
 		return self;
 	};
 
-	this.setInput = function(input){
-		if(typeof input == 'object'){
-			_input = input;
-		}else if(typeof input == 'string'){
-			_input = document.querySelector(input);
+	var typing, found, notfound, error, choice, success;
+
+	this.typing = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		typing = f;
+
+		return self;
+	};
+
+	this.choice = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		choice = f;
+
+		return self;
+	};
+
+	this.found = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		found = f;
+
+		return self;
+	};
+
+	this.notfound = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		notfound = f;
+
+		return self;
+	};
+
+	this.error = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		error = f;
+
+		return self;
+	};
+
+	this.success = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		success = f;
+
+		return self;
+	};
+
+	initInput(input);
+
+	_input.on('input', function(){
+		var that = $(this);
+
+		_value = that.val();
+
+		if(_debug){ console.info('[PipUI] '+p.l(p.i18n.autocomplete.typing, [_value, _timer])); }
+
+		if(typeof typing == 'function'){
+			typing(_value);
+		}
+
+		var s = {};
+
+		if(!_url){
+			if(typeof _timeout_typing != 'undefined'){ clearTimeout(_timeout_typing); }
+
+			_timeout_typing = setTimeout(function(){
+				s = search(_data, _value);
+
+				draw(s);
+
+				if(typeof success == 'function'){
+					success(s, '');
+				}
+			}, _timer);
 		}else{
-			if(_debug){ console.warn('[PipUI] Autocomplete: invalid input object'); }
+			var formData = (_params.toString() === '[object FormData]') ? _params : new FormData();
 
-			return self;
-		}
+			formData.append('value', _value);
 
-		var url = input.getAttribute('data-ac-url');
-		if(url){ self.setURL(url); }
-
-		var method = input.getAttribute('data-ac-method');
-		if(method){ self.setMethod(method); }
-
-		var type = input.getAttribute('data-ac-type');
-		if(type){ self.setType(type); }
-
-		var key = input.getAttribute('data-ac-key');
-		if(key){ self.setKey(key); }
-
-		var data = input.getAttribute('data-ac-data');
-		if(data){ self.setData(data.split(',')).setType('array'); }
-
-		var min = input.getAttribute('data-ac-min');
-		if(min){
-			min = parseInt(min);
-
-			if(!isNaN(min) && min > 0){
-				self.setMin(min);
-			}
-		}
-
-		var timer = input.getAttribute('data-ac-timer');
-		if(timer){
-			timer = parseInt(timer);
-
-			if(!isNaN(timer)){
-				self.setTimer(timer);
-			}
-		}
-
-		var results = input.getAttribute('data-ac-results');
-		if(results){
-			results = parseInt(results);
-
-			if(!isNaN(results) && results > 0){
-				self.setResults(results);
-			}
-		}
-
-		return self;
-	};
-
-	this.setInput(e);
-
-	this.getBlock = function(){
-		_block = typeof _block != 'undefined' ? _block : document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
-
-		if(!_block){
-			p.append(document.body, _rendered);
-
-			_block = document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
-		}
-
-		return _block;
-	};
-
-	this.hide = function(){
-		var e = self.getBlock();
-
-		if(e){
-			e.classList.remove('visible');
-		}
-
-		return self;
-	};
-
-	this.show = function(){
-		var e = self.getBlock();
-
-		if(e){
-			e.classList.add('visible');
-		}
-
-		return self;
-	};
-
-	this.prepend = function(e){
-		_result.unshift(e);
-
-		return self;
-	};
-
-	this.append = function(e){
-		_result.push(e);
-
-		return self;
-	};
-
-	this.choice = undefined;
-
-	this.complete = function(e, xhr){
-		if(xhr.status == 200){
-			if(_type == 'json' || _type == 'array'){
-				self.setData(JSON.parse(e));
-			}else{
-				self.setData(e.split(','));
-			}
-		}else{
-			self.setData([]);
-		}
-
-		self.search(_value, _data);
-
-		if(self.getResult().length){
-			self.updateDOM().updatePosition().show();
-		}else{
-			self.hide();
-		}
-
-		return self;
-	};
-
-	this.error = function(e, xhr){
-		if(_debug){ console.warn('[PipUI] Autocomplete: [CODE: '+xhr.status+'] - '+e); }
-
-		return self;
-	};
-
-	this.request = function(){
-		_xhr = new XMLHttpRequest();
-
-		_xhr.open(_method, _url, true);
-
-		var params = typeof _params == 'object' ? _params : new FormData();
-
-		if(!params.has('value')){
-			params.append('value', _value);
-		}
-
-		_xhr.send(params);
-
-		_xhr.onload = function(){
-			if(_xhr.status != 200){
-				if(typeof self.error == 'function'){
-					self.error(_xhr.responseText, _xhr);
-				}else{
-					if(_debug){ console.warn('[PipUI] Autocomplete: '+_xhr.responseText); }
+			if(_params.toString() !== '[object FormData]'){
+				if(typeof _params != 'undefined'){
+					$.each(_params, function(key, value){
+						formData.append(key.toString(), value.toString());
+					});
 				}
 			}
 
-			self.complete(_xhr.response, _xhr);
-		};
+			if(typeof _timeout_typing != 'undefined'){ clearTimeout(_timeout_typing); }
 
-		_xhr.onerror = function(){
-			if(typeof self.error == 'function'){
-				self.error('error', _xhr);
-			}else{
-				if(_debug){ console.warn('[PipUI] Autocomplete: request error '); }
-			}
-		};
+			_timeout_typing = setTimeout(function(){
+				var ajax = {
+					url: _url,
+					type: _method,
+					async: true,
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: formData,
 
-		return self;
-	};
+					error: function(data, textStatus, xhr){
+						_xhr = xhr;
 
-	this.updatePosition = function(){
-		var e = self.getBlock();
+						if(_debug){ console.info('[PipUI] '+p.l(p.i18n.autocomplete.error, [textStatus])); console.error(data); }
 
-		if(e && _input){
-			var pos = _input.getBoundingClientRect();
-			e.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
-			e.style.left = (pos.left+window.pageXOffset)+'px';
-		}
+						if(typeof error == 'function'){
+							error(data);
+						}
+					},
 
-		return self;
-	};
+					success: function(data, textStatus, xhr){
+						_xhr = xhr;
 
-	this.clickEvent = function(target){
+						_data = data;
 
-		var value = target.getAttribute('data-value');
+						s = search(_data, _value);
 
-		_input.value = value ? value : target.innerHTML;
+						draw(s);
 
-		self.hide();
-
-		target.classList.remove('hover');
-
-		if(typeof self.choice == 'function'){
-			self.choice(target);
-		}
-
-		return self;
-	};
-
-	this.updateClickEvents = function(){
-		var links = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
-
-		if(!links || !links.length){
-			return self;
-		}
-
-		for(var i = 0; i < links.length; i++){
-			if(typeof links[i].onclick != 'function'){
-				(function(e){
-					e.onclick = function(f){
-						f.preventDefault();
-
-						self.clickEvent(f.target);
-					}
-				})(links[i]);
-			}
-		}
-
-		return self;
-	};
-
-	this.updateDOM = function(){
-		var results = self.getResult();
-
-		var length = results.length;
-
-		if(!length){ self.hide(); return self; }
-
-		var list = '';
-
-		for(var i = 0; i < length; i++){
-
-			var item = undefined;
-
-			if(_type == 'plain' || _type == 'array'){
-				item = p.replaceAll(_templateSelector, '{VALUE}', results[i]);
-				item = p.replaceAll(item, '{KEY}', i.toString());
-			}else{
-				for(var key in results[i]){
-					if(!results[i].hasOwnProperty(key)){ continue; }
-
-					if(typeof item == 'undefined'){
-						item = p.replaceAll(_templateSelector, '{'+key+'}', results[i][key]);
-					}else{
-						item = p.replaceAll(item, '{'+key+'}', results[i][key]);
-					}
-				}
-			}
-
-			list += item;
-		}
-
-		var block = self.getBlock();
-
-		if(block){
-			block.remove();
-		}
-
-		_block = undefined;
-
-		_rendered = p.replaceAll(_templateBlock, '{ID}', _id);
-		_rendered = p.replaceAll(_rendered, '{ITEMS}', list);
-
-		self.getBlock();
-		self.updateClickEvents();
-
-		return self;
-	};
-
-	this.search = function(str, data){
-
-		_result = [];
-
-		if(_type == 'plain' && data.length){
-			data = data.split(',');
-		}
-
-		var keys = data;
-
-		if(!Array.isArray(data)){ keys = Object.keys(data); }
-
-		if(!keys.length){ return _result; }
-
-		var value;
-
-		var num = 0;
-
-		for(var key in data){
-			if(!data.hasOwnProperty(key)){ continue; }
-
-			value = typeof _key != 'undefined' ? data[key][_key] : data[key];
-
-			if(p.indexOfCase(value, str) === -1){ continue; }
-
-			num++;
-
-			self.append(data[key]);
-
-			if(num >= _results){ break; }
-		}
-
-		return _result;
-	};
-
-	this.typing = function(value){
-		if(_debug){ console.info('[PipUI] Autocomplete: Typing... '+value+' | Delay: '+_timer); }
-
-		_value = value;
-
-		if(_value.length < _min){
-			_result = [];
-
-			self.hide();
-
-			return self;
-		}
-
-		if(typeof _timeout_typing != 'undefined'){
-			clearTimeout(_timeout_typing);
-		}
-
-		_timeout_typing = setTimeout(function(){
-			if(_debug){ console.info('[PipUI] Autocomplete: Typing complete'); }
-
-			if(typeof _url != 'undefined'){
-				self.request();
-			}else{
-				self.search(value, _data);
-				if(self.getResult().length){
-					self.updateDOM().updatePosition().show();
-				}else{
-					self.hide();
-				}
-			}
-		}, _timer);
-
-		return self;
-	};
-
-	var initEvents = function(){
-		_input.oninput = function(){
-			self.typing(this.value);
-		};
-
-		_input.onfocus = function(){
-			if(this.value.length >= _min){
-				self.typing(this.value);
-			}
-		};
-
-		_input.addEventListener('keydown', function(e){
-			if(_value.length >= _min && e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
-				e.preventDefault();
-
-				if(e.keyCode == 40 || e.keyCode == 38){
-					var items = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
-
-					var length = items ? items.length : 0;
-
-					var current = -1;
-
-					var next = e.keyCode == 40 ? 0 : length-1;
-
-					for(var i = 0; i < length; i++){
-						if(items[i].classList.contains('hover')){
-							items[i].classList.remove('hover');
-							current = i; break;
+						if(typeof success == 'function'){
+							success(data, textStatus, xhr);
 						}
 					}
+				};
 
-					if(e.keyCode == 40){
-						next = current == length-1 ? 0 : current + 1;
-					}else{
-						next = current == 0 ? length-1 : current - 1;
+				if(_type == 'json' || typeof _type == 'undefined'){
+					ajax.dataType = 'json';
+				}else if(_type == 'text'){
+					ajax.dataType = 'text';
+				}
+
+				return $.ajax(ajax);
+			}, _timer);
+		}
+	}).on('keydown', function(e){
+		if(e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
+			e.preventDefault();
+
+			if(e.keyCode == 40 || e.keyCode == 38){
+
+				var items = _block.find('.autocomplete-link');
+
+				var length = items.length;
+
+				var current = -1;
+
+				var next = e.keyCode == 40 ? 0 : length-1;
+
+				items.each(function(i){
+					var that = $(this);
+
+					if(that.hasClass('hover')){
+						that.removeClass('hover');
+						current = i;
 					}
+				});
 
-					items[next].classList.add('hover');
+				if(e.keyCode == 40){
+					next = current == length-1 ? 0 : current + 1;
 				}else{
-					var hovered = document.querySelector('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link.hover');
+					next = current == 0 ? length-1 : current - 1;
+				}
 
-					if(hovered){
-						self.clickEvent(hovered);
-					}
+				$(items[next]).addClass('hover');
+			}else{
+				var hovered = _block.find('.autocomplete-link.hover');
+
+				if(hovered.length){
+					hovered.trigger('click');
 				}
 			}
-		}, false);
-
-		_input.onblur = function(e){
-			//e.relatedTarget
-			if(!e.relatedTarget || !e.relatedTarget.classList.contains('autocomplete-link')){
-				self.hide();
-			}
-		};
-
-		_input.setAttribute('data-ac-id', _id);
-	};
-
-	if(typeof _input == 'object' && _input){
-		var input_length = _input.length;
-
-		if(typeof input_length == 'number'){
-			if(input_length > 0){
-				_input = _input[0];
-				initEvents();
-			}
-		}else{
-			initEvents();
 		}
-	}
-
-	return this;
+	});
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-
-	var elements = this.querySelectorAll('[data-ac]');
-
-	for(var i = 0; i < elements.length; i++){
-		(function(e){
-			new p.autocomplete(elements[e]);
-		})(i);
-	}
-
+$(function(){
 	window.onresize = function(){
-		var element = document.querySelector('.autocomplete.visible');
+		var element = $('.autocomplete.visible');
 
-		if(element){
-			var id = element.getAttribute('data-ac-id');
+		if(element.length){
+			var input = $('input[data-ac-id="'+element.attr('data-ac-id')+'"]');
 
-			var input = document.querySelector('input[data-ac-id="'+id+'"]');
-
-			var pos = input.getBoundingClientRect();
-			element.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
-			element.style.left = (pos.left+window.pageXOffset)+'px';
+			if(input.length){
+				pipui.autocomplete_helper.position(element, input);
+			}
 		}
 	};
+
+	$('body').on('focus', pipui.autocomplete_helper.defaultSelector, function(){
+		var that = $(this);
+
+		if(!pipui.autocomplete_helper.is_init(that)){
+			new pipui.autocomplete(that);
+		}
+	});
 });
 
 
 
 
 /***** poplight.js *****/
+pipui.addModule('poplight', '1.0.0');
+
 pipui.poplight = {
 	'overlay_close': true,
 
@@ -2398,6 +2544,8 @@ $(function(){
 
 
 /***** popup.js *****/
+pipui.addModule('popup', '1.0.0');
+
 pipui.popup = {
 	'showSpeed': 'fast',
 	'hideSpeed': 'fast',
@@ -2663,6 +2811,8 @@ $(function(){
 
 
 /***** slider.js *****/
+pipui.addModule('slider', '1.0.0');
+
 (function($){
 
 	var slider_methods = {
@@ -2726,7 +2876,7 @@ $(function(){
 
 			var options = slider_options[id];
 
-			if(options.locked){ return slider; }
+			if(typeof options == 'undefined' || slider.find('.slider-wrapper > .slider-slide').length == 1 || options.locked){ return slider; }
 
 			slider.trigger('slider.change');
 
@@ -2973,7 +3123,7 @@ $(function(){
 
 			var index = that.closest('.slider-control').find('.slider-control-label').index(that);
 
-			slider_methods.setSlide(index, slider, slider_options[id]);
+			slider_methods.setSlide(index, slider);
 		}).on('mouseenter', '.slider', function(){
 
 			var that = $(this);
@@ -3008,6 +3158,8 @@ $(function(){
 
 
 /***** tooltip.js *****/
+pipui.addModule('tooltip', '1.0.0');
+
 pipui.tooltip = {
 	'margin': 2,
 
@@ -3082,21 +3234,23 @@ $(function(){
 
 		var text = that.attr(trigger);
 
-		if(typeof id == 'undefined'){
-			id = Math.random();
-			that.attr('data-tooltip-id', id);
-			var append = $('<div class="tooltip" data-tooltip-id="'+id+'">'+text+'</div>');
+		if($.trim(text) != ''){
+			if(typeof id == 'undefined'){
+				id = Math.random();
+				that.attr('data-tooltip-id', id);
+				var append = $('<div class="tooltip" data-tooltip-id="'+id+'">'+text+'</div>');
 
-			$('body').append(append);
+				$('body').append(append);
+			}
+
+			var tooltip = $('.tooltip[data-tooltip-id="'+id+'"]');
+
+			tooltip.removeClass('tooltip-pos tooltip-pos-left tooltip-pos-right tooltip-pos-bottom tooltip-pos-top').addClass('tooltip-pos'+position);
+
+			pipui.tooltip.setPosition(that, tooltip, position);
+
+			tooltip.addClass('show');
 		}
-
-		var tooltip = $('.tooltip[data-tooltip-id="'+id+'"]');
-
-		tooltip.removeClass('tooltip-pos tooltip-pos-left tooltip-pos-right tooltip-pos-bottom tooltip-pos-top').addClass('tooltip-pos'+position);
-
-		pipui.tooltip.setPosition(that, tooltip, position);
-
-		tooltip.addClass('show');
 	}).on('mouseleave', '['+pipui.tooltip.trigger+'], ['+pipui.tooltip.trigger+'-left], ['+pipui.tooltip.trigger+'-right],['+pipui.tooltip.trigger+'-top], ['+pipui.tooltip.trigger+'-bottom]', function(){
 		var tooltip = $('.tooltip.show');
 
@@ -3111,6 +3265,8 @@ $(function(){
 
 
 /***** alertblock.js *****/
+pipui.addModule('alertblock', '1.0.0');
+
 pipui.alertblock = {
 	show: function(element){
 		if(typeof element == 'string'){ element = $(element); }
@@ -3137,38 +3293,59 @@ $(function(){
 
 
 /***** tagselector.js *****/
-pipui.tagselector = function(e){
-	var _input = undefined;
+pipui.addModule('tagselector', '1.0.0');
+p.required('tagselector', 'base', '1.4.0', '>=');
+p.i18n.tagselector = {
+	"pushed": 'Tagselector: tag "%" by key "%" has been pushed',
+	"installed": 'Tagselector: installed'
+};
+
+pipui.tagselector_helper = {
+	defaultSelector: "[data-ts]",
+
+	is_init: function(input){
+		var id = input.attr('data-ts-id');
+
+		return typeof id == 'string' && id.length;
+	}
+};
+
+pipui.tagselector = function(input){
+
+	var _input = input;
 
 	var _id = Math.random().toString();
 
-	var _block;
+	var _keys = [',', 'Enter'];
 
-	var _min = 1;
+	var _min_length = 1;
 
-	var _maxTags = 0;
+	var _max_length = 32;
 
-	var _debug = true;
+	var _min_tags = 0;
+
+	var _max_tags = 0;
+
+	var _name = 'tags';
+
+	var _position = 'end';
+
+	var _debug = false;
 
 	var self = this;
 
-	var _position = 'append';
-
 	var _disableEvents = false;
+
+	var _block, onpush, onclear;
+
+	var _separator = ',';
 
 	var _templateBlock = '<div class="tagselector" data-ts-id="{ID}"><ul class="tagselector-list"></ul></div>';
 
-	var _templateSelector = '<li class="tagselector-item"><a href="#" title="Удалить" class="tagselector-link" data-value="{VALUE}" rel="nofollow">{NAME}</a><input type="hidden" name="tags[{NAME}]" value="{VALUE}" class="tagselector-value"></li>';
+	var _templateSelector = '<li class="tagselector-item"><a href="#" title="Удалить" class="tagselector-link" data-title="{TITLE}" data-key="{KEY}" rel="nofollow">{TITLE}</a><input type="hidden" name="{NAME}[{KEY}]" value="{TITLE}" class="tagselector-value"></li>';
 
 	this.setTemplateBlock = function(html){
 		_templateBlock = html;
-
-		return self;
-	};
-
-	this.setDisableEvents = function(value){
-
-		_disableEvents = value;
 
 		return self;
 	};
@@ -3180,233 +3357,909 @@ pipui.tagselector = function(e){
 		return self;
 	};
 
-	this.getResult = function(){
-		return _input ? _input.value : '';
+	this.setDisableEvents = function(value){
+
+		_disableEvents = value;
+
+		return self;
+	};
+
+	this.setMin = function(length){
+		_min_length = typeof length != 'number' || length < 1 ? 1 : parseInt(length);
+
+		return self;
+	};
+
+	this.setMax = function(length){
+		_max_length = typeof length != 'number' || length < 1 ? 1 : parseInt(length);
+
+		return self;
+	};
+
+	this.setName = function(name){
+		_name = name;
+
+		return self;
+	};
+
+	this.setKeys = function(keys){
+		_keys = keys;
+
+		return self;
+	};
+
+	this.setSeparator = function(separator){
+		_separator = separator;
+
+		return self;
+	};
+
+	this.setPosition = function(pos){
+		_position = pos;
+
+		return self;
+	};
+
+	this.setMinTags = function(length){
+		_min_tags = typeof length != 'number' || length < 1 ? 1 : parseInt(length);
+
+		return self;
+	};
+
+	this.setMaxTags = function(length){
+		_max_tags = typeof length != 'number' || length < 1 ? 1 : parseInt(length);
+
+		return self;
+	};
+
+	this.push = function(position, title, key){
+
+		if(typeof key == 'undefined'){
+			key = title;
+		}
+
+		if(self.exists(key)){ return self; }
+
+		var html = _templateSelector.replace(/\{TITLE\}/g, title);
+
+		html = html.replace(/\{NAME\}/g, _name);
+		html = html.replace(/\{KEY\}/g, key);
+
+		var list = _block.find('.tagselector-list');
+
+		if(typeof position == 'undefined' || position == 'end'){
+			list.append(html);
+		}else{
+			list.prepend(html);
+		}
+
+		if(_debug){ console.info('[PipUI] '+p.l(p.i18n.tagselector.pushed, [title, key])); }
+
+		list.find('.tagselector-link').on('click', function(e){
+			e.preventDefault();
+
+			var tags = self.length();
+
+			if(_min_tags <= 0 || tags > _min_tags){
+				$(this).fadeOut('fast', function(){
+					self.remove($(this).attr('data-key'));
+				});
+			}
+
+		});
+
+		if(typeof onpush == 'function'){
+			onpush(title, key, position);
+		}
+
+		return self;
+	};
+
+	this.exists = function(key){
+
+		if(typeof key == 'undefined' || !key.toString().length){ return false; }
+
+		return _block.find('.tagselector-link[data-key="'+key+'"]').length > 0;
+	};
+
+	this.remove = function(key){
+
+		if(typeof key == 'undefined' || !key.length){ return self; }
+
+		var tags = self.length();
+
+		if(_min_tags > 0 && tags <= _min_tags){
+			return self;
+		}
+
+		var item = _block.find('.tagselector-link[data-key="'+key+'"]');
+
+		if(item.length){
+			item.closest('.tagselector-item').remove();
+		}
+
+		return self;
 	};
 
 	this.getInput = function(){
 		return _input;
 	};
 
-	this.setMin = function(min){
-		_min = typeof min != 'number' || min < 1 ? 1 : parseInt(min);
-
-		return self;
-	};
-
-	this.setName = function(name){
-
-		var inputs = self.getBlock().querySelectorAll('.tagselector-value');
-
-		for(var i = 0; i < inputs.length; i++){
-			var item = inputs[i];
-
-			var subname = item.getAttribute('name');
-
-			item.setAttribute('name', name+item.substring(subname.indexOf('[')));
-		}
-
-		return self;
-	};
-
-	this.setPosition = function(position){
-		_position = typeof position != 'string' ? 'append' : position;
-
-		return self;
-	};
-
-	this.setMaxTags = function(value){
-		_maxTags = typeof value != 'number' || value < 0 ? 0 : parseInt(value);
-
-		return self;
-	};
-
-	this.setInput = function(input){
-		if(typeof input == 'object'){
-			_input = input;
-		}else if(typeof input == 'string'){
-			_input = document.querySelector(input);
-		}else{
-			if(_debug){ console.warn('[PipUI] Tag selector: invalid input object'); }
-
-			return self;
-		}
-
-		var position = input.getAttribute('data-ts-position');
-		if(position){ self.setPosition(position); }
-
-		var name = input.getAttribute('data-ts-name');
-		if(name){ self.setName(name); }
-
-		var min = input.getAttribute('data-ts-min');
-		if(min){
-			min = parseInt(min);
-
-			if(!isNaN(min) && min > 0){
-				self.setMin(min);
-			}
-		}
-
-		var max_tags = input.getAttribute('data-ts-max-tags');
-		if(max_tags){
-			max_tags = parseInt(max_tags);
-
-			if(!isNaN(max_tags)){
-				self.setMaxTags(max_tags);
-			}
-		}
-
-		return self;
-	};
-
-	this.setInput(e);
-
-	this.getBlock = function(){
-		_block = typeof _block != 'undefined' ? _block : document.body.querySelector('.tagselector[data-ts-id="'+_id+'"]');
-
-		if(!_block){
-			p.after(_input, p.replaceAll(_templateBlock, '{ID}', _id));
-
-			_block = document.body.querySelector('.tagselector[data-ts-id="'+_id+'"]');
-		}
-
-		return _block;
-	};
-
-	this.pend = function(position, value, name){
-		var block = self.getBlock();
-
-		var html = p.replaceAll(_templateSelector, '{VALUE}', value);
-
-		if(typeof name == 'undefined'){
-			name = value;
-		}
-
-		html = p.replaceAll(html, '{NAME}', name);
-
-		var list = block.querySelector('.tagselector-list');
-
-		if(typeof position == 'undefined' || position == 'append'){
-			p.append(list, html)
-		}else{
-			p.prepend(list, html);
-		}
-
-		self.updateClickEvents();
-
-		return self;
-	};
-
 	this.prepend = function(value, name){
-		return self.pend('prepend', value, name);
+		return self.push('start', value, name);
 	};
 
 	this.append = function(value, name){
-		return self.pend('append', value, name);
+		return self.push('end', value, name);
 	};
 
-	this.error = function(e, xhr){
-		if(_debug){ console.warn('[PipUI] Tag selector: [CODE: '+xhr.status+'] - '+e); }
+	this.clear = function(){
+		_block.find('.tagselector-list').empty();
 
 		return self;
 	};
 
-	this.clickEvent = function(link){
+	this.onclear = function(f){
+		if(typeof f != 'function'){ return self; }
 
-		var li = link.closest('.tagselector-item');
-
-		if(li){ li.remove(); }
+		onclear = f;
 
 		return self;
 	};
 
-	this.updateClickEvents = function(){
-		var items = document.querySelectorAll('.tagselector[data-ts-id="'+_id+'"] .tagselector-link');
+	this.onpush = function(f){
+		if(typeof f != 'function'){ return self; }
 
-		if(!items || !items.length){
-			return self;
+		onpush = f;
+
+		return self;
+	};
+
+	this.length = function(){
+		return _block.find('.tagselector-link').length;
+	};
+
+	var initInput = function(trigger){
+		trigger.attr('data-ts-id', _id);
+
+		var value = trigger.val();
+
+		var separator = trigger.attr('data-ts-separator');
+		var min = trigger.attr('data-ts-min');
+		var max = trigger.attr('data-ts-max');
+		var name = trigger.attr('data-ts-name');
+		var position = trigger.attr('data-ts-position');
+		var mintags = trigger.attr('data-ts-mintags');
+		var maxtags = trigger.attr('data-ts-maxtags');
+
+		if(typeof min == 'string' && min.length){
+			self.setMin(parseInt(min));
 		}
 
-		for(var i = 0; i < items.length; i++){
-			if(typeof items[i].onclick != 'function'){
-				(function(e){
-					e.onclick = function(f){
-						f.preventDefault();
-
-						self.clickEvent(f.target);
-					}
-				})(items[i]);
-			}
+		if(typeof max == 'string' && max.length){
+			self.setMax(parseInt(max));
 		}
 
-		return self;
-	};
+		if(typeof name == 'string' && name.length){
+			self.setName(name);
+		}
 
-	var initEvents = function(){
+		if(typeof separator == 'string' && separator.length){
+			self.setSeparator(separator);
+		}
 
-		_input.addEventListener('keydown', function(e){
+		if(typeof position == 'string' && position.length){
+			self.setPosition(position == 'end' ? position : 'start');
+		}
 
-			if(!_disableEvents){
-				var value = _input.value.trim();
+		if(typeof mintags == 'string' && mintags.length){
+			self.setMinTags(parseInt(mintags));
+		}
 
-				if(value.length >= _min && (e.keyCode == 188 || e.keyCode == 13)){
+		if(typeof maxtags == 'string' && maxtags.length){
+			self.setMaxTags(parseInt(maxtags));
+		}
 
-					if(_debug){ console.warn('[PipUI] Tag selector: press key '+e.keyCode); }
+		_block = $(_templateBlock.replace(/\{ID\}/g, _id));
 
-					var values = self.getBlock().querySelectorAll('.tagselector-value');
+		if(_max_length > 0){
+			trigger.attr('maxlength', _max_length);
+		}
 
-					var index = self.getBlock().querySelectorAll('.tagselector-value[value="'+value+'"]').length;
-
-					if((_maxTags <= 0 || values.length < _maxTags) && !index){
-						self.pend(_position, value);
-
-						_input.value = '';
-					}
-
-				}
-			}
-		}, false);
-
-		var value = _input.value;
+		trigger.after(_block);
 
 		if(value.length){
-			var items = value.split(',');
+			value = p.array_unique(value.split(_separator));
 
-			for(var i = 0; i < items.length; i++){
-				self.pend(undefined, items[i]);
+			for(var i = 0; i < value.length; i++){
+				if(typeof value[i] == 'undefined'){ continue; }
+
+				self.push(_position, value[i]);
 			}
 
-			_input.value = '';
+			trigger.val('');
 		}
 
-		self.updateClickEvents();
+		trigger.on('keydown', function(e){
 
-		_input.setAttribute('data-ts-id', _id);
+			if(!_disableEvents && _keys.indexOf(e.key) !== -1){
+				e.preventDefault();
+
+				var val = trigger.val();
+
+				if(!self.exists(val)){
+					var len = val.length;
+
+					if(_min_length > 0 && len < _min_length){
+						return;
+					}
+
+					if(_max_length > 0 && len > _max_length){
+						return;
+					}
+
+					var tags = self.length();
+
+					if(_max_tags > 0 && tags >= _max_tags){
+						return;
+					}
+
+					self.push(_position, val);
+
+					trigger.val('');
+				}
+			}
+		});
+
+		if(_debug){ console.info('[PipUI] '+p.i18n.tagselector.installed); }
+
+		return self;
 	};
 
-	if(typeof _input == 'object' && _input){
-		var input_length = _input.length;
-
-		if(typeof input_length == 'number'){
-			if(input_length > 0){
-				_input = _input[0];
-				initEvents();
-			}
-		}else{
-			initEvents();
-		}
-	}
-
-	return this;
+	initInput(_input);
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+$(function(){
 
-	var elements = this.querySelectorAll('[data-ts]');
+	var list = $(pipui.tagselector_helper.defaultSelector);
 
-	for(var i = 0; i < elements.length; i++){
-		(function(e){
-			new p.tagselector(elements[e]);
-		})(i);
+	if(list.length){
+		list.each(function(){
+			var that = $(this);
+
+			if(!pipui.tagselector_helper.is_init(that)){
+				new pipui.tagselector(that);
+			}
+		});
 	}
+});
+
+
+
+
+/***** anchor.js *****/
+pipui.addModule('anchor', '1.0.0');
+
+pipui.anchor = {
+	defaultDuration: 400,
+	defaultEasing: '',
+
+	goto: function(selector, duration, easing, complete){
+		var to = $(selector);
+
+		if(!to.length){ return false; }
+
+		var offset = to.offset();
+
+		if(!offset){ return false; }
+
+		duration = typeof duration == 'undefined' ? pipui.anchor.defaultDuration : parseInt(duration);
+
+		easing = typeof easing == 'undefined' ? pipui.anchor.defaultEasing : easing;
+
+		if(isNaN(duration)){
+			duration = pipui.anchor.defaultDuration;
+		}
+
+		var scroll = offset.top;
+
+		if(typeof complete != 'function'){
+			complete = function(){};
+		}
+
+		$('html').animate({
+			scrollTop: scroll
+		}, duration, easing, complete);
+	}
+};
+
+$(function(){
+	$('body').on('click', '[data-anchor]', function(e){
+
+		var that = $(this);
+
+		var selector = that.attr('data-anchor');
+
+		var hash = that.attr('data-anchor-hash');
+
+		e.preventDefault();
+
+		pipui.anchor.goto(selector, that.attr('data-anchor-duration'), that.attr('data-anchor-easing'), function(){
+			if(hash == 'true'){
+				location.hash = selector;
+			}
+		});
+	});
+});
+
+
+
+
+/***** datepicker.js *****/
+pipui.addModule('datepicker', '1.0.0');
+p.required('datepicker', 'base', '1.4.0', '>=');
+p.i18n.datepicker = {
+	"jan": 'Января',
+	"feb": 'Февраля',
+	"mar": 'Марта',
+	"apr": 'Апреля',
+	"may": 'Мая',
+	"jun": 'Июня',
+	"jul": 'Июля',
+	"aug": 'Августа',
+	"sep": 'Сентября',
+	"oct": 'Октября',
+	"nov": 'Ноября',
+	"dec": 'Декабря',
+	"year": 'Год'
+};
+
+pipui.datepicker = {
+	months: [
+		p.i18n.datepicker.jan, p.i18n.datepicker.feb, p.i18n.datepicker.mar,
+		p.i18n.datepicker.apr, p.i18n.datepicker.may, p.i18n.datepicker.jun,
+		p.i18n.datepicker.jul, p.i18n.datepicker.aug, p.i18n.datepicker.sep,
+		p.i18n.datepicker.oct, p.i18n.datepicker.nov, p.i18n.datepicker.dec
+	],
+
+	template_month: '<option class="month-id" value="{MONTH_NUM}" {MONTH_SELECTED} data-value="{MONTH_NUM}">{MONTH_NAME}</option>',
+
+	template_hour: '<option class="hour-id" value="{HOUR_NUM}" {HOUR_SELECTED} data-value="{HOUR_NUM}">{HOUR_NUM}</option>',
+
+	template_minute: '<option class="minute-id" value="{MINUTE_NUM}" {MINUTE_SELECTED} data-value="{MINUTE_NUM}">{MINUTE_NUM}</option>',
+
+	template_second: '<option class="second-id" value="{SECOND_NUM}" {SECOND_SELECTED} data-value="{SECOND_NUM}">{SECOND_NUM}</option>',
+
+	template_day: '<div class="day-id {DAY_SELECTED}" data-value="{DAY_NUM}">{DAY_NUM}</div>',
+
+	template_date: '<div class="datepicker" style="display:none;" data-datepicker-id="{ID}">' +
+						'<div class="datepicker-wrapper">' +
+							'<div class="datepicker-block window" data-datepicker-type="date">' +
+								'<div class="block-date">' +
+									'<div class="top">' +
+										'<div class="block-left"><input type="number" class="datepicker-year" placeholder="'+p.i18n.datepicker.year+'" value="{CURRENT_YEAR}"></div>' +
+										'<div class="block-right"><select class="datepicker-month">{MONTHLIST}</select></div>' +
+									'</div>' +
+
+									'<div class="middle">' +
+										'<div class="daylist">{DAYLIST}</div>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>' +
+					'</div>',
+
+	template_datetime: '<div class="datepicker" style="display:none;" data-datepicker-id="{ID}">' +
+							'<div class="datepicker-wrapper">' +
+								'<div class="datepicker-block window" data-datepicker-type="datetime">' +
+									'<div class="block-date">' +
+										'<div class="top">' +
+											'<div class="block-left"><input type="number" class="datepicker-year" placeholder="'+p.i18n.datepicker.year+'" value="{CURRENT_YEAR}"></div>' +
+											'<div class="block-right"><select class="datepicker-month">{MONTHLIST}</select></div>' +
+										'</div>' +
+
+										'<div class="middle">' +
+											'<div class="daylist">{DAYLIST}</div>' +
+										'</div>' +
+
+										'<div class="footer">' +
+											'<select class="datepicker-hour">{HOURLIST}</select>' +
+											'<select class="datepicker-minute">{MINUTELIST}</select>' +
+											'<select class="datepicker-second">{SECONDLIST}</select>' +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>',
+
+	monthlist: function(selected){
+		var tpl = "";
+
+		var monthlist = "";
+
+		for(var m = 1; m <= 12; m++){
+			var monthname = pipui.datepicker.months[m-1];
+
+			tpl = pipui.datepicker.template_month.replace(/\{MONTH_NAME\}/ig, monthname);
+
+			tpl = tpl.replace(/\{MONTH_NUM\}/ig, m.toString());
+
+			tpl = tpl.replace(/\{MONTH_SELECTED\}/ig, selected == m ? 'selected' : '');
+
+			monthlist += tpl;
+		}
+
+		return monthlist;
+	},
+
+	daylist: function(days, selected){
+		var tpl = "";
+
+		var daylist = "";
+
+		for(var d = 1; d <= days; d++){
+			tpl = pipui.datepicker.template_day.replace(/\{DAY_NUM\}/ig, d);
+
+			tpl = tpl.replace(/\{DAY_SELECTED\}/ig, selected == d ? 'selected' : '');
+
+			daylist += tpl;
+		}
+
+		return daylist;
+	},
+
+	hourlist: function(selected){
+		var tpl = "";
+
+		var hourlist = "";
+
+		for(var h = 0; h <= 23; h++){
+			h = h < 10 ? '0'+h : h;
+			tpl = pipui.datepicker.template_hour.replace(/\{HOUR_NUM\}/ig, h);
+
+			tpl = tpl.replace(/\{HOUR_SELECTED\}/ig, selected == h ? 'selected' : '');
+
+			hourlist += tpl;
+		}
+
+		return hourlist;
+	},
+
+	minutelist: function(selected){
+		var tpl = "";
+
+		var minutelist = "";
+
+		for(var m = 0; m <= 59; m++){
+			m = m < 10 ? '0'+m : m;
+			tpl = pipui.datepicker.template_minute.replace(/\{MINUTE_NUM\}/ig, m);
+
+			tpl = tpl.replace(/\{MINUTE_SELECTED\}/ig, selected == m ? 'selected' : '');
+
+			minutelist += tpl;
+		}
+
+		return minutelist;
+	},
+
+	secondlist: function(selected){
+		var tpl = "";
+
+		var secondlist = "";
+
+		for(var s = 0; s <= 59; s++){
+			s = s < 10 ? '0'+s : s;
+			tpl = pipui.datepicker.template_second.replace(/\{SECOND_NUM\}/ig, s);
+
+			tpl = tpl.replace(/\{SECOND_SELECTED\}/ig, selected == s ? 'selected' : '');
+
+			secondlist += tpl;
+		}
+
+		return secondlist;
+	},
+
+	daysInMonth: function(month, year){
+		return new Date(year, month, 0).getDate();
+	},
+
+	drawdays: function(picker, days, selected){
+		var daylist = picker.find('.daylist');
+
+		daylist.html(pipui.datepicker.daylist(days, selected));
+	},
+
+	update: function(picker, m, y){
+		var id = picker.attr('data-datepicker-id');
+
+		var trigger = $('[data-datepicker-trigger="'+id+'"]');
+
+		var date = new Date();
+
+		var year = parseInt(picker.find('.datepicker-year').val());
+
+		var month = parseInt(picker.find('.datepicker-month').val());
+
+		var day = parseInt(picker.find('.day-id.selected').attr('data-value'));
+
+		if(isNaN(year) || year < 0){
+			year = date.getFullYear();
+		}
+
+		if(isNaN(month) || month < 0 || month > 12){
+			month = date.getMonth()+1;
+		}
+
+		if(isNaN(day) || day < 1 || day > 31){
+			day = date.getDate();
+		}
+
+		var days = pipui.datepicker.daysInMonth(month, year);
+
+		if(day > days){ day = days; }
+
+		var type = typeof trigger.attr('data-datepicker') != 'undefined' ? 'datepicker' : 'datetimepicker';
+
+		var str = (day<10?'0'+day:day)+'.'+(month<10?'0'+month:month)+'.'+year;
+
+		if(type == 'datetimepicker'){
+			var hour = parseInt(picker.find('.datepicker-hour').val());
+
+			var minute = parseInt(picker.find('.datepicker-minute').val());
+
+			var second = parseInt(picker.find('.datepicker-second').val());
+
+			if(isNaN(hour) || hour < 0 || hour > 23){
+				hour = date.getHours();
+			}
+
+			if(isNaN(minute) || minute < 0 || minute > 59){
+				minute = date.getMinutes();
+			}
+
+			if(isNaN(second) || second < 1 || second > 59){
+				second = date.getSeconds();
+			}
+
+			str += ' '+(hour<10?'0'+hour:hour)+':'+(minute<10?'0'+minute:minute)+':'+(second<10?'0'+second:second);
+		}
+
+		if(trigger[0].tagName == 'INPUT' || trigger[0].tagName == 'TEXTAREA'){
+			trigger.val(str);
+			trigger.attr('data-'+type, str);
+		}
+
+		if(m || y){
+			pipui.datepicker.drawdays(picker, days, day);
+		}
+	},
+
+	drawdate: function(trigger, id){
+		if(typeof id == 'undefined'){
+			id = trigger.attr('data-datepicker-trigger');
+		}
+
+		var current = trigger.attr('data-datepicker');
+
+		var date = new Date();
+
+		var value = trigger.val();
+
+		var year = date.getFullYear();
+		var month = date.getMonth()+1;
+		var day = date.getDate();
+
+		var ms = date.getTime();
+
+		if(current != '' || value != ''){
+			var splitter = current != '' ? current : value;
+
+			var split_cur = splitter.split('.');
+
+			var p_year_cur = parseInt(split_cur[2]);
+			var p_month_cur = parseInt(split_cur[1]);
+			var p_day_cur = parseInt(split_cur[0]);
+
+			if(isNaN(p_day_cur) || p_day_cur < 1 || p_day_cur > 31){ p_day_cur = day; }
+
+			if(isNaN(p_month_cur) || p_month_cur < 1 || p_month_cur > 12){ p_month_cur = month; }
+
+			if(isNaN(p_year_cur)){ p_year_cur = year; }
+
+			ms = Date.parse(p_year_cur+'-'+p_month_cur+'-'+p_day_cur);
+
+			date = new Date(ms);
+
+			year = date.getFullYear();
+			month = date.getMonth()+1;
+			day = date.getDate();
+		}
+
+		var template = pipui.datepicker.template_date.replace(/\{ID\}/ig, id);
+
+		template = template.replace(/\{CURRENT_YEAR\}/ig, year);
+
+		template = template.replace(/\{MONTHLIST\}/ig, pipui.datepicker.monthlist(month));
+
+		template = template.replace(/\{DAYLIST\}/ig, pipui.datepicker.daylist(pipui.datepicker.daysInMonth(month, year), day));
+
+		template = $(template);
+
+		return template;
+	},
+
+	drawdatetime: function(trigger, id){
+		if(typeof id == 'undefined'){
+			id = trigger.attr('data-datepicker-trigger');
+		}
+
+		var current = trigger.attr('data-datetimepicker');
+
+		var date = new Date();
+
+		var value = trigger.val();
+
+		var year = date.getFullYear();
+		var month = date.getMonth()+1;
+		var day = date.getDate();
+
+		var hour = date.getHours();
+		var minute = date.getMinutes();
+		var second = date.getSeconds();
+
+		var ms = date.getTime();
+
+		if(current != '' || value != ''){
+			var splitter = current != '' ? current : value;
+
+			splitter = splitter.split(' ');
+
+			if(typeof splitter[1] == 'undefined'){
+				splitter[1] = '00:00:00';
+			}
+
+			var split_date_cur = splitter[0].split('.');
+			var split_time_cur = splitter[1].split(':');
+
+			var p_year_cur = parseInt(split_date_cur[2]);
+			var p_month_cur = parseInt(split_date_cur[1]);
+			var p_day_cur = parseInt(split_date_cur[0]);
+
+			var p_second_cur = parseInt(split_time_cur[2]);
+			var p_minute_cur = parseInt(split_time_cur[1]);
+			var p_hour_cur = parseInt(split_time_cur[0]);
+
+			if(isNaN(p_day_cur) || p_day_cur < 1 || p_day_cur > 31){ p_day_cur = day; }
+
+			if(isNaN(p_month_cur) || p_month_cur < 1 || p_month_cur > 12){ p_month_cur = month; }
+
+			if(isNaN(p_year_cur)){ p_year_cur = year; }
+
+			if(isNaN(p_second_cur) || p_second_cur < 0 || p_second_cur > 59){ p_second_cur = second; }
+
+			if(isNaN(p_minute_cur) || p_minute_cur < 0 || p_minute_cur > 59){ p_minute_cur = minute; }
+
+			if(isNaN(p_hour_cur) || p_hour_cur < 0 || p_hour_cur > 23){ p_hour_cur = hour; }
+
+			ms = Date.parse(p_year_cur+'-'+p_month_cur+'-'+p_day_cur+' '+p_hour_cur+':'+p_minute_cur+':'+p_second_cur);
+
+			date = new Date(ms);
+
+			year = date.getFullYear();
+			month = date.getMonth()+1;
+			day = date.getDate();
+
+			hour = date.getHours();
+			minute = date.getMinutes();
+			second = date.getSeconds();
+		}
+
+		var template = pipui.datepicker.template_datetime.replace(/\{ID\}/ig, id);
+
+		template = template.replace(/\{CURRENT_YEAR\}/ig, year);
+
+		template = template.replace(/\{MONTHLIST\}/ig, pipui.datepicker.monthlist(month));
+
+		template = template.replace(/\{DAYLIST\}/ig, pipui.datepicker.daylist(pipui.datepicker.daysInMonth(month, year), day));
+
+		template = template.replace(/\{HOURLIST\}/ig, pipui.datepicker.hourlist(hour));
+
+		template = template.replace(/\{MINUTELIST\}/ig, pipui.datepicker.minutelist(minute));
+
+		template = template.replace(/\{SECONDLIST\}/ig, pipui.datepicker.secondlist(second));
+
+		template = $(template);
+
+		return template;
+	},
+
+	init_date: function(input){
+		var id = input.attr('data-datepicker-trigger');
+
+		if(typeof id == 'undefined'){
+			id = Math.random().toString();
+
+			input.attr('data-datepicker-trigger', id);
+		}
+
+		var picker = $('.datepicker[data-datepicker-id="'+id+'"]');
+
+		if(picker.length){
+			return picker;
+		}
+
+		var draw = pipui.datepicker.drawdate(input, id);
+
+		$('body').append(draw);
+
+		return draw;
+	},
+
+	init_datetime: function(input){
+		var id = input.attr('data-datepicker-trigger');
+
+		if(typeof id == 'undefined'){
+			id = Math.random().toString();
+
+			input.attr('data-datepicker-trigger', id);
+		}
+
+		var picker = $('.datepicker[data-datepicker-id="'+id+'"]');
+
+		if(picker.length){
+			return picker;
+		}
+
+		var draw = pipui.datepicker.drawdatetime(input, id);
+
+		$('body').append(draw);
+
+		return draw;
+	}
+};
+
+$(function(){
+	$('body').on('mousedown', '[data-datepicker]', function(e){
+		e.preventDefault();
+
+		var that = $(this);
+
+		setTimeout(function(){ that.trigger('blur'); }, 10);
+
+		var picker = pipui.datepicker.init_date(that);
+
+		picker.replaceWith(picker);
+
+		picker.fadeIn('fast');
+	}).on('click', '[data-datetimepicker]', function(e){
+		e.preventDefault();
+
+		var that = $(this);
+
+		setTimeout(function(){ that.trigger('blur'); }, 10);
+
+		var picker = pipui.datepicker.init_datetime(that);
+
+		picker.replaceWith(picker);
+
+		picker.fadeIn('fast');
+	}).on('input', '.datepicker input', function(){
+		var picker = $(this).closest('.datepicker');
+
+		pipui.datepicker.update(picker);
+	}).on('change', '.datepicker select', function(){
+		var picker = $(this).closest('.datepicker');
+
+		pipui.datepicker.update(picker, undefined, true);
+	}).on('click', '.datepicker .day-id', function(){
+		var that = $(this);
+
+		var picker = that.closest('.datepicker');
+
+		var id = picker.attr('data-datepicker-id');
+
+		var trigger = $('[data-datepicker-trigger="'+id+'"]');
+
+		picker.find('.day-id.selected').removeClass('selected');
+
+		that.addClass('selected');
+
+		pipui.datepicker.update(picker, true);
+
+		if(trigger.attr('data-datepicker-autoclose') == 'true'){
+			picker.fadeOut('fast');
+		}
+	});
+
+	$('html').on('click', 'body', function(e){
+
+		var target = $(e.target);
+
+		if(!target.closest('.datepicker-block').length){
+			target.closest('.datepicker').fadeOut('fast');
+		}
+	});
+});
+
+
+
+
+/***** progress.js *****/
+pipui.addModule('progress', '1.0.0');
+
+pipui.progress = {
+	defaultBorderSize: 12,
+	defaultBorderPadding: 3,
+	defaultBackgroundColor: '#000',
+	defaultBorderColor: '#fff',
+
+	init: function(selector){
+		var elements = document.querySelectorAll(selector);
+
+		if(!elements){ return false; }
+
+		var length = elements.length;
+
+		for(let i = 0; i < length; i++){
+			if(typeof elements[i] == 'undefined'){ continue; }
+			pipui.progress.draw(elements[i]);
+		}
+
+		return true;
+	},
+
+	draw: function(e){
+		var context = e.getContext('2d');
+
+		context.clearRect(0, 0, e.width, e.height);
+
+		var borderSize = parseInt(e.getAttribute('data-border-size'));
+		var borderColor = e.getAttribute('data-border-color');
+		var borderPadding = parseInt(e.getAttribute('data-border-padding'));
+		var backgroundColor = e.getAttribute('data-background-color');
+		var radius = parseFloat(e.getAttribute('data-radius'));
+
+		if(isNaN(borderSize)){ borderSize = pipui.progress.defaultBorderSize; }
+		if(isNaN(borderPadding)){ borderPadding = pipui.progress.defaultBorderPadding; }
+		if(isNaN(radius)){ radius = 0; }
+
+		borderPadding *= 2;
+
+		var half = (e.width - borderSize) / 2;
+
+		var margin = half + (borderSize / 2);
+
+		var start = Math.PI * 1.5;
+
+		backgroundColor = typeof backgroundColor != 'string' ? pipui.progress.defaultBackgroundColor : backgroundColor;
+		borderColor = typeof borderColor != 'string' ? pipui.progress.defaultBorderColor : borderColor;
+
+		context.beginPath();
+		context.strokeStyle = backgroundColor;
+		context.lineWidth = borderSize;
+		context.arc(margin, margin, half, 0, Math.PI * 2, false);
+		context.stroke();
+
+		var end = start + (3.6 * radius * (Math.PI / 180));
+
+		context.beginPath();
+		context.shadowColor = borderColor;
+		context.shadowBlur = borderPadding/2 - 1;
+		context.strokeStyle = borderColor;
+		context.lineWidth = borderSize - borderPadding;
+		context.arc(margin, margin, half, start, end, false);
+		context.stroke();
+
+		var timer = parseInt(e.getAttribute('data-timer'));
+
+		if(!isNaN(timer)){
+			setTimeout(function(){ pipui.progress.draw(e); }, timer);
+		}
+
+		return context;
+	}
+};
+
+$(function(){
+	pipui.progress.init('.progress-radial > .bar');
 });

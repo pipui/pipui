@@ -1,3 +1,6 @@
+pipui.addModule('dropdown', '1.0.0');
+p.required('dropdown', 'base', '1.4.0', '>=');
+
 pipui.dropdown = {
 	toggle: function(e){
 		if(!e.length){ return false; }

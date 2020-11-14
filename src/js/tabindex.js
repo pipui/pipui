@@ -1,3 +1,5 @@
+pipui.addModule('tabindex', '1.0.0');
+
 pipui.tabindex = {
 	search_next: function(current, block){
 		var indexes = block.find('[tabindex]');

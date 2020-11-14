@@ -1,3 +1,5 @@
+pipui.addModule('popup', '1.0.0');
+
 pipui.popup = {
 	'showSpeed': 'fast',
 	'hideSpeed': 'fast',

@@ -1,3 +1,5 @@
+pipui.addModule('slider', '1.0.0');
+
 (function($){
 
 	var slider_methods = {

@@ -1,3 +1,5 @@
+pipui.addModule('toggle', '1.0.0');
+
 $(function(){
 	$('body').on('click', '[data-toggle]', function(e){
 

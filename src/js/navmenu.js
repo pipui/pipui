@@ -1,3 +1,5 @@
+pipui.addModule('navmenu', '1.0.0');
+
 pipui.navmenu = {
 	toggle: function(that){
 

@@ -1,3 +1,5 @@
+pipui.addModule('poplight', '1.0.0');
+
 pipui.poplight = {
 	'overlay_close': true,
 

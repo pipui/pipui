@@ -1,3 +1,5 @@
+pipui.addModule('tabs', '1.0.0');
+
 pipui.tabs = {
 	active: function(id){
 		if(typeof id != 'string'){

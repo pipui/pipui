@@ -1,3 +1,5 @@
+pipui.addModule('pagination', '1.0.0');
+
 pipui.pagination = {
 	get_data: function(e){
 		var type = parseInt(e.attr('data-pagination'));

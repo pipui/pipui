@@ -1,3 +1,5 @@
+pipui.addModule('textarea', '1.0.0');
+
 pipui.textarea = {
 	element: '.textarea',
 

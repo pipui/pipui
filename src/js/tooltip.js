@@ -1,3 +1,5 @@
+pipui.addModule('tooltip', '1.0.0');
+
 pipui.tooltip = {
 	'margin': 2,
 
@@ -72,21 +74,23 @@ $(function(){
 
 		var text = that.attr(trigger);
 
-		if(typeof id == 'undefined'){
-			id = Math.random();
-			that.attr('data-tooltip-id', id);
-			var append = $('<div class="tooltip" data-tooltip-id="'+id+'">'+text+'</div>');
+		if($.trim(text) != ''){
+			if(typeof id == 'undefined'){
+				id = Math.random();
+				that.attr('data-tooltip-id', id);
+				var append = $('<div class="tooltip" data-tooltip-id="'+id+'">'+text+'</div>');
 
-			$('body').append(append);
+				$('body').append(append);
+			}
+
+			var tooltip = $('.tooltip[data-tooltip-id="'+id+'"]');
+
+			tooltip.removeClass('tooltip-pos tooltip-pos-left tooltip-pos-right tooltip-pos-bottom tooltip-pos-top').addClass('tooltip-pos'+position);
+
+			pipui.tooltip.setPosition(that, tooltip, position);
+
+			tooltip.addClass('show');
 		}
-
-		var tooltip = $('.tooltip[data-tooltip-id="'+id+'"]');
-
-		tooltip.removeClass('tooltip-pos tooltip-pos-left tooltip-pos-right tooltip-pos-bottom tooltip-pos-top').addClass('tooltip-pos'+position);
-
-		pipui.tooltip.setPosition(that, tooltip, position);
-
-		tooltip.addClass('show');
 	}).on('mouseleave', '['+pipui.tooltip.trigger+'], ['+pipui.tooltip.trigger+'-left], ['+pipui.tooltip.trigger+'-right],['+pipui.tooltip.trigger+'-top], ['+pipui.tooltip.trigger+'-bottom]', function(){
 		var tooltip = $('.tooltip.show');
 

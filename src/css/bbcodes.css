@@ -1,5 +1,5 @@
 .bb-bold {
-	font-weight: bold;
+	font-weight: 500;
 }
 
 .bb-italic {
@@ -162,7 +162,7 @@
 	border-radius: 2px;
 	color: #E57373;
 	line-height: 20px;
-	word-break: break-all;
+	word-break: break-word;
 }
 
 .bb-code > .bb-code-language {
@@ -180,7 +180,7 @@
 	max-width: calc(100% - 16px);
 	text-align: center;
 	text-transform: uppercase;
-	font-weight: bold;
+	font-weight: 500;
 }
 
 .bb-youtube {

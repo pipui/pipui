@@ -1,3 +1,9 @@
+pipui.addModule('alert', '1.0.0');
+pipui.required('alert', 'base', '1.4.0', '>=');
+pipui.i18n.alert = {
+	"close": 'ЗАКРЫТЬ',
+};
+
 pipui.alert = {
 	openTimeout: 3000,
 
@@ -36,16 +42,16 @@ pipui.alert = {
 		var id = Math.random();
 
 		var e = $('<div class="alert-id" style="display: none;" data-id="'+id+'">' +
-						'<div class="alert-content">'+text+'</div>' +
+					'<div class="alert-content">'+text+'</div>' +
 
-						'<div class="alert-footer">' +
-							'<div class="block-left"><div class="title">'+title+'</div></div>' +
+					'<div class="alert-footer">' +
+						'<div class="block-left"><div class="title">'+title+'</div></div>' +
 
-							'<div class="block-right">' +
-								'<button class="btn btn-transparent close-trigger">ЗАКРЫТЬ</button>' +
-							'</div>' +
+						'<div class="block-right">' +
+							'<button class="btn btn-transparent close-trigger">'+p.i18n.alert.close+'</button>' +
 						'</div>' +
-					'</div>');
+					'</div>' +
+				'</div>');
 
 		block.append(e);
 

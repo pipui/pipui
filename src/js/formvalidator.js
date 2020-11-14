@@ -1,3 +1,9 @@
+pipui.addModule('formvalidator', '1.0.0');
+p.required('formvalidator', 'base', '1.4.0', '>=');
+p.i18n.formvalidator = {
+	"incorrect": 'Поле заполнено неверно'
+};
+
 pipui.formvalidator = {
 	form: '[data-formvalidator]',
 
@@ -44,7 +50,7 @@ $(function(){
 			var text = el.attr('data-formvalidator-text');
 
 			if(typeof text == 'undefined'){
-				text = 'Поле заполнено неверно';
+				text = p.i18n.formvalidator.incorrect;
 			}
 
 			var alert = $('.formvalidator-alert[data-formvalidator-id="'+id+'"]');

@@ -1,3 +1,5 @@
+pipui.addModule('bbcodes', '1.0.0');
+
 $(function(){
 	$('body').on('click', '.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger', function(e){
 		e.preventDefault();

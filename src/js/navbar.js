@@ -1,3 +1,5 @@
+pipui.addModule('navbar', '1.0.0');
+
 $(function(){
 	$('html').on('click', 'body', function(e){
 

@@ -56,7 +56,7 @@
 .table .table-cell-resp {
 	display: none;
 	box-sizing: border-box;
-	font-weight: bold;
+	font-weight: 500;
 	color: #616161;
 	font-size: 12px;
 	text-transform: uppercase;
@@ -74,7 +74,7 @@
 .table .table-header > .table-row > .table-cell {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
-	font-weight: bold;
+	font-weight: 500;
 	color: #616161;
 	font-size: 12px;
 	text-transform: uppercase;

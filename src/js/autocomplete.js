@@ -1,13 +1,47 @@
-pipui.autocomplete = function(e){
-	var _input = undefined;
+pipui.addModule('autocomplete', '1.0.0');
+p.required('autocomplete', 'base', '1.4.0', '>=');
+p.i18n.autocomplete = {
+	"completed": 'Autocomplete: Search completed',
+	"found": 'Autocomplete: Results found',
+	"notfound": 'Autocomplete: Results not found',
+	"installed": 'Autocomplete: installed',
+	"typing": 'Autocomplete: Typing... % | Delay: %',
+	"error": 'Autocomplete: Error "%"'
+};
 
-	var _type = 'plain';
+pipui.autocomplete_helper = {
+	defaultSelector: "[data-ac]",
 
-	var _data = [];
+	is_init: function(input){
+		var id = input.attr('data-ac-id');
 
-	var _id = Math.random();
+		return typeof id == 'string' && id.length;
+	},
 
-	var _url, _key, _timeout_typing, _block, _xhr, _params;
+	position: function(block, target){
+		var offset = target.offset();
+
+		var height = target.outerHeight();
+
+		block.css({
+			'top': (offset.top + height)+'px',
+			'left': offset.left+'px'
+		});
+	}
+};
+
+pipui.autocomplete = function(input){
+	var _input = input;
+
+	var _type = 'text';
+
+	var _data = '';
+
+	var _id = Math.random().toString();
+
+	var _url, _key, _timeout_typing, _block, _xhr;
+
+	var _params = {};
 
 	var _method = 'GET';
 
@@ -25,11 +59,156 @@ pipui.autocomplete = function(e){
 
 	var _result = [];
 
-	var _templateBlock = '<div class="autocomplete" data-ac-id="{ID}"><ul class="autocomplete-list">{ITEMS}</ul></div>';
+	var _templateBlock = '<div class="autocomplete" data-ac-id="{ID}"><ul class="autocomplete-list"></ul></div>';
 
-	var _templateSelector = '<li class="autocomplete-item"><a href="#" class="autocomplete-link" data-index="{KEY}" rel="nofollow">{VALUE}</a></li>';
+	var _templateSelector = '<li class="autocomplete-item"><a href="#" class="autocomplete-link" data-key="{KEY}" data-index="{INDEX}" rel="nofollow">{VALUE}</a></li>';
 
-	var _rendered = '';
+	var draw = function(results){
+		if(!results || !results.length){ _block.removeClass('visible'); return; }
+
+		var list = _block.find('.autocomplete-list');
+
+		list.empty();
+
+		var item;
+
+		$.each(results, function(key, obj){
+			item = _templateSelector.replace(/\{KEY\}/g, obj.key);
+			item = item.replace(/\{INDEX\}/g, obj.index);
+			list.append(item.replace(/\{VALUE\}/g, obj.value));
+		});
+
+		_block.addClass('visible');
+
+		_block.find('.autocomplete-link').on('click', function(e){
+			e.preventDefault();
+
+			var that = $(this);
+
+			if(_block.hasClass('visible')){
+				var id = that.attr('data-index');
+
+				_input.val(results[id].value);
+
+				_block.removeClass('visible');
+
+				if(typeof choice == 'function'){
+					choice(results[id], that);
+				}
+			}
+		});
+	};
+
+	var search = function(list, str){
+		_result = [];
+
+		if(str.length < _min){
+			return _result;
+		}
+
+		var founded = 0;
+
+		if(_type == 'text'){
+			list = list.split(',');
+		}
+
+		$.each(list, function(key, value){
+
+			if(typeof _key == 'string'){
+				value = value[_key];
+			}
+
+			if(typeof value == 'undefined'){
+				return;
+			}
+
+			if(value.toLowerCase().indexOf(str.toLowerCase()) !== -1){
+				_result.push({"value": value, "key": key, "index": founded});
+				founded++;
+
+				if(founded >= _results){
+					return false;
+				}
+			}
+		});
+
+		if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.completed); }
+
+		if(founded){
+			if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.found); }
+
+			if(typeof found == 'function'){
+				found(_result);
+			}
+
+			pipui.autocomplete_helper.position(_block, _input);
+		}else{
+			if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.notfound); }
+
+			if(typeof notfound == 'function'){
+				notfound();
+			}
+		}
+
+		return _result;
+	};
+
+	var initInput = function(trigger){
+		trigger.attr('data-ac-id', _id);
+
+		var data = trigger.attr('data-ac-data');
+		var type = trigger.attr('data-ac-type');
+		var key = trigger.attr('data-ac-key');
+		var min = trigger.attr('data-ac-min');
+		var url = trigger.attr('data-ac-url');
+		var method = trigger.attr('data-ac-method');
+		var timer = trigger.attr('data-ac-timer');
+		var results = trigger.attr('data-ac-results');
+
+		if(typeof type == 'string' && ['text', 'object', 'array', 'json'].indexOf(type.toLowerCase()) !== -1){
+			self.setType(type.toLowerCase());
+		}
+
+		if(typeof data == 'string' && data.length){
+			if(typeof type == 'undefined'){
+				self.setType('text');
+			}
+
+			self.setData(data);
+		}
+
+		if(typeof key == 'string' && key.length){
+			self.setKey(key);
+		}
+
+		if(typeof min == 'string' && min.length){
+			self.setMin(parseInt(min));
+		}
+
+		if(typeof url == 'string' && url.length){
+			self.setURL(url);
+		}
+
+		if(typeof method == 'string' && method.length){
+			self.setMethod(method);
+		}
+
+		if(typeof timer == 'string' && timer.length){
+			self.setTimer(parseInt(timer));
+		}
+
+		if(typeof results == 'string' && results.length){
+			self.setResults(parseInt(results));
+		}
+
+		_block = $(_templateBlock.replace(/\{ID\}/g, _id));
+
+		$('body').append(_block);
+
+		if(_debug){ console.info('[PipUI] '+p.i18n.autocomplete.installed); }
+
+		return self;
+	};
 
 	this.setParams = function(formdata){
 		_params = formdata;
@@ -54,8 +233,12 @@ pipui.autocomplete = function(e){
 		return _result;
 	};
 
+	this.getInput = function(){
+		return _input;
+	};
+
 	this.setType = function(type){
-		_type = typeof type != 'string' ? 'plain' : type;
+		_type = typeof type != 'string' ? 'text' : type;
 
 		return self;
 	};
@@ -66,8 +249,8 @@ pipui.autocomplete = function(e){
 		return self;
 	};
 
-	this.setData = function(object){
-		_data = typeof object != 'object' ? [] : object;
+	this.setData = function(data){
+		_data = data;
 
 		return self;
 	};
@@ -102,454 +285,201 @@ pipui.autocomplete = function(e){
 		return self;
 	};
 
-	this.setInput = function(input){
-		if(typeof input == 'object'){
-			_input = input;
-		}else if(typeof input == 'string'){
-			_input = document.querySelector(input);
+	var typing, found, notfound, error, choice, success;
+
+	this.typing = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		typing = f;
+
+		return self;
+	};
+
+	this.choice = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		choice = f;
+
+		return self;
+	};
+
+	this.found = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		found = f;
+
+		return self;
+	};
+
+	this.notfound = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		notfound = f;
+
+		return self;
+	};
+
+	this.error = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		error = f;
+
+		return self;
+	};
+
+	this.success = function(f){
+		if(typeof f != 'function'){ return self; }
+
+		success = f;
+
+		return self;
+	};
+
+	initInput(input);
+
+	_input.on('input', function(){
+		var that = $(this);
+
+		_value = that.val();
+
+		if(_debug){ console.info('[PipUI] '+p.l(p.i18n.autocomplete.typing, [_value, _timer])); }
+
+		if(typeof typing == 'function'){
+			typing(_value);
+		}
+
+		var s = {};
+
+		if(!_url){
+			if(typeof _timeout_typing != 'undefined'){ clearTimeout(_timeout_typing); }
+
+			_timeout_typing = setTimeout(function(){
+				s = search(_data, _value);
+
+				draw(s);
+
+				if(typeof success == 'function'){
+					success(s, '');
+				}
+			}, _timer);
 		}else{
-			if(_debug){ console.warn('[PipUI] Autocomplete: invalid input object'); }
+			var formData = (_params.toString() === '[object FormData]') ? _params : new FormData();
 
-			return self;
-		}
+			formData.append('value', _value);
 
-		var url = input.getAttribute('data-ac-url');
-		if(url){ self.setURL(url); }
-
-		var method = input.getAttribute('data-ac-method');
-		if(method){ self.setMethod(method); }
-
-		var type = input.getAttribute('data-ac-type');
-		if(type){ self.setType(type); }
-
-		var key = input.getAttribute('data-ac-key');
-		if(key){ self.setKey(key); }
-
-		var data = input.getAttribute('data-ac-data');
-		if(data){ self.setData(data.split(',')).setType('array'); }
-
-		var min = input.getAttribute('data-ac-min');
-		if(min){
-			min = parseInt(min);
-
-			if(!isNaN(min) && min > 0){
-				self.setMin(min);
-			}
-		}
-
-		var timer = input.getAttribute('data-ac-timer');
-		if(timer){
-			timer = parseInt(timer);
-
-			if(!isNaN(timer)){
-				self.setTimer(timer);
-			}
-		}
-
-		var results = input.getAttribute('data-ac-results');
-		if(results){
-			results = parseInt(results);
-
-			if(!isNaN(results) && results > 0){
-				self.setResults(results);
-			}
-		}
-
-		return self;
-	};
-
-	this.setInput(e);
-
-	this.getBlock = function(){
-		_block = typeof _block != 'undefined' ? _block : document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
-
-		if(!_block){
-			p.append(document.body, _rendered);
-
-			_block = document.querySelector('.autocomplete[data-ac-id="'+_id+'"]');
-		}
-
-		return _block;
-	};
-
-	this.hide = function(){
-		var e = self.getBlock();
-
-		if(e){
-			e.classList.remove('visible');
-		}
-
-		return self;
-	};
-
-	this.show = function(){
-		var e = self.getBlock();
-
-		if(e){
-			e.classList.add('visible');
-		}
-
-		return self;
-	};
-
-	this.prepend = function(e){
-		_result.unshift(e);
-
-		return self;
-	};
-
-	this.append = function(e){
-		_result.push(e);
-
-		return self;
-	};
-
-	this.choice = undefined;
-
-	this.complete = function(e, xhr){
-		if(xhr.status == 200){
-			if(_type == 'json' || _type == 'array'){
-				self.setData(JSON.parse(e));
-			}else{
-				self.setData(e.split(','));
-			}
-		}else{
-			self.setData([]);
-		}
-
-		self.search(_value, _data);
-
-		if(self.getResult().length){
-			self.updateDOM().updatePosition().show();
-		}else{
-			self.hide();
-		}
-
-		return self;
-	};
-
-	this.error = function(e, xhr){
-		if(_debug){ console.warn('[PipUI] Autocomplete: [CODE: '+xhr.status+'] - '+e); }
-
-		return self;
-	};
-
-	this.request = function(){
-		_xhr = new XMLHttpRequest();
-
-		var params;
-
-		if(typeof _params == 'object' && _params.toString() != '[object FormData]'){
-			params = new FormData();
-
-			for(var prop in _params){
-				if(!_params.hasOwnProperty(prop)){ continue; }
-
-				params.append(prop, _params[prop]);
-			}
-		}else if(typeof _params == 'function'){
-			params = _params();
-		}else{
-			params = new FormData();
-		}
-
-		if(params.has('value')){
-			params.delete('value');
-		}
-
-		params.append('value', _value);
-
-		_xhr.open(_method, _url, true);
-		_xhr.setRequestHeader('Cache-Control', 'no-cache');
-		_xhr.send(params);
-
-		_xhr.onload = function(){
-			if(_xhr.status != 200){
-				if(typeof self.error == 'function'){
-					self.error(_xhr.responseText, _xhr);
-				}else{
-					if(_debug){ console.warn('[PipUI] Autocomplete: '+_xhr.responseText); }
+			if(_params.toString() !== '[object FormData]'){
+				if(typeof _params != 'undefined'){
+					$.each(_params, function(key, value){
+						formData.append(key.toString(), value.toString());
+					});
 				}
 			}
 
-			self.complete(_xhr.response, _xhr);
-		};
+			if(typeof _timeout_typing != 'undefined'){ clearTimeout(_timeout_typing); }
 
-		_xhr.onerror = function(){
-			if(typeof self.error == 'function'){
-				self.error('error', _xhr);
-			}else{
-				if(_debug){ console.warn('[PipUI] Autocomplete: request error '); }
-			}
-		};
+			_timeout_typing = setTimeout(function(){
+				var ajax = {
+					url: _url,
+					type: _method,
+					async: true,
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: formData,
 
-		return self;
-	};
+					error: function(data, textStatus, xhr){
+						_xhr = xhr;
 
-	this.updatePosition = function(){
-		var e = self.getBlock();
+						if(_debug){ console.info('[PipUI] '+p.l(p.i18n.autocomplete.error, [textStatus])); console.error(data); }
 
-		if(e && _input){
-			var pos = _input.getBoundingClientRect();
-			e.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
-			e.style.left = (pos.left+window.pageXOffset)+'px';
-		}
+						if(typeof error == 'function'){
+							error(data);
+						}
+					},
 
-		return self;
-	};
+					success: function(data, textStatus, xhr){
+						_xhr = xhr;
 
-	this.clickEvent = function(target){
+						_data = data;
 
-		var value = target.getAttribute('data-value');
+						s = search(_data, _value);
 
-		_input.value = value ? value : target.innerHTML;
+						draw(s);
 
-		self.hide();
-
-		target.classList.remove('hover');
-
-		if(typeof self.choice == 'function'){
-			self.choice(target);
-		}
-
-		return self;
-	};
-
-	this.updateClickEvents = function(){
-		var links = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
-
-		if(!links || !links.length){
-			return self;
-		}
-
-		for(var i = 0; i < links.length; i++){
-			if(typeof links[i].onclick != 'function'){
-				(function(e){
-					e.onclick = function(f){
-						f.preventDefault();
-
-						self.clickEvent(f.target);
-					}
-				})(links[i]);
-			}
-		}
-
-		return self;
-	};
-
-	this.updateDOM = function(){
-		var results = self.getResult();
-
-		var length = results.length;
-
-		if(!length){ self.hide(); return self; }
-
-		var list = '';
-
-		for(var i = 0; i < length; i++){
-
-			var item = undefined;
-
-			if(_type == 'plain' || _type == 'array'){
-				item = p.replaceAll(_templateSelector, '{VALUE}', results[i]);
-				item = p.replaceAll(item, '{KEY}', i.toString());
-			}else{
-				for(var key in results[i]){
-					if(!results[i].hasOwnProperty(key)){ continue; }
-
-					if(typeof item == 'undefined'){
-						item = p.replaceAll(_templateSelector, '{'+key+'}', results[i][key]);
-					}else{
-						item = p.replaceAll(item, '{'+key+'}', results[i][key]);
-					}
-				}
-			}
-
-			list += item;
-		}
-
-		var block = self.getBlock();
-
-		if(block){
-			block.remove();
-		}
-
-		_block = undefined;
-
-		_rendered = p.replaceAll(_templateBlock, '{ID}', _id);
-		_rendered = p.replaceAll(_rendered, '{ITEMS}', list);
-
-		self.getBlock();
-		self.updateClickEvents();
-
-		return self;
-	};
-
-	this.search = function(str, data){
-
-		_result = [];
-
-		if(_type == 'plain' && data.length){
-			data = data.split(',');
-		}
-
-		var keys = data;
-
-		if(!Array.isArray(data)){ keys = Object.keys(data); }
-
-		if(!keys.length){ return _result; }
-
-		var value;
-
-		var num = 0;
-
-		for(var key in data){
-			if(!data.hasOwnProperty(key)){ continue; }
-
-			value = typeof _key != 'undefined' ? data[key][_key] : data[key];
-
-			if(p.indexOfCase(value, str) === -1){ continue; }
-
-			num++;
-
-			self.append(data[key]);
-
-			if(num >= _results){ break; }
-		}
-
-		return _result;
-	};
-
-	this.typing = function(value){
-		if(_debug){ console.info('[PipUI] Autocomplete: Typing... '+value+' | Delay: '+_timer); }
-
-		_value = value;
-
-		if(_value.length < _min){
-			_result = [];
-
-			self.hide();
-
-			return self;
-		}
-
-		if(typeof _timeout_typing != 'undefined'){
-			clearTimeout(_timeout_typing);
-		}
-
-		_timeout_typing = setTimeout(function(){
-			if(_debug){ console.info('[PipUI] Autocomplete: Typing complete'); }
-
-			if(typeof _url != 'undefined'){
-				self.request();
-			}else{
-				self.search(value, _data);
-				if(self.getResult().length){
-					self.updateDOM().updatePosition().show();
-				}else{
-					self.hide();
-				}
-			}
-		}, _timer);
-
-		return self;
-	};
-
-	var initEvents = function(){
-		_input.oninput = function(){
-			self.typing(this.value);
-		};
-
-		_input.onfocus = function(){
-			if(this.value.length >= _min){
-				self.typing(this.value);
-			}
-		};
-
-		_input.addEventListener('keydown', function(e){
-			if(_value.length >= _min && e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
-				e.preventDefault();
-
-				if(e.keyCode == 40 || e.keyCode == 38){
-					var items = document.querySelectorAll('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link');
-
-					var length = items ? items.length : 0;
-
-					var current = -1;
-
-					var next = e.keyCode == 40 ? 0 : length-1;
-
-					for(var i = 0; i < length; i++){
-						if(items[i].classList.contains('hover')){
-							items[i].classList.remove('hover');
-							current = i; break;
+						if(typeof success == 'function'){
+							success(data, textStatus, xhr);
 						}
 					}
+				};
 
-					if(e.keyCode == 40){
-						next = current == length-1 ? 0 : current + 1;
-					}else{
-						next = current == 0 ? length-1 : current - 1;
+				if(_type == 'json' || typeof _type == 'undefined'){
+					ajax.dataType = 'json';
+				}else if(_type == 'text'){
+					ajax.dataType = 'text';
+				}
+
+				return $.ajax(ajax);
+			}, _timer);
+		}
+	}).on('keydown', function(e){
+		if(e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
+			e.preventDefault();
+
+			if(e.keyCode == 40 || e.keyCode == 38){
+
+				var items = _block.find('.autocomplete-link');
+
+				var length = items.length;
+
+				var current = -1;
+
+				var next = e.keyCode == 40 ? 0 : length-1;
+
+				items.each(function(i){
+					var that = $(this);
+
+					if(that.hasClass('hover')){
+						that.removeClass('hover');
+						current = i;
 					}
+				});
 
-					items[next].classList.add('hover');
+				if(e.keyCode == 40){
+					next = current == length-1 ? 0 : current + 1;
 				}else{
-					var hovered = document.querySelector('.autocomplete[data-ac-id="'+_id+'"] .autocomplete-link.hover');
+					next = current == 0 ? length-1 : current - 1;
+				}
 
-					if(hovered){
-						self.clickEvent(hovered);
-					}
+				$(items[next]).addClass('hover');
+			}else{
+				var hovered = _block.find('.autocomplete-link.hover');
+
+				if(hovered.length){
+					hovered.trigger('click');
 				}
 			}
-		}, false);
-
-		_input.onblur = function(e){
-			//e.relatedTarget
-			if(!e.relatedTarget || !e.relatedTarget.classList.contains('autocomplete-link')){
-				self.hide();
-			}
-		};
-
-		_input.setAttribute('data-ac-id', _id);
-	};
-
-	if(typeof _input == 'object' && _input){
-		var input_length = _input.length;
-
-		if(typeof input_length == 'number'){
-			if(input_length > 0){
-				_input = _input[0];
-				initEvents();
-			}
-		}else{
-			initEvents();
 		}
-	}
-
-	return this;
+	});
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-
-	var elements = this.querySelectorAll('[data-ac]');
-
-	for(var i = 0; i < elements.length; i++){
-		(function(e){
-			new p.autocomplete(elements[e]);
-		})(i);
-	}
-
+$(function(){
 	window.onresize = function(){
-		var element = document.querySelector('.autocomplete.visible');
+		var element = $('.autocomplete.visible');
 
-		if(element){
-			var id = element.getAttribute('data-ac-id');
+		if(element.length){
+			var input = $('input[data-ac-id="'+element.attr('data-ac-id')+'"]');
 
-			var input = document.querySelector('input[data-ac-id="'+id+'"]');
-
-			var pos = input.getBoundingClientRect();
-			element.style.top = (pos.top+pos.height+window.pageYOffset)+'px';
-			element.style.left = (pos.left+window.pageXOffset)+'px';
+			if(input.length){
+				pipui.autocomplete_helper.position(element, input);
+			}
 		}
 	};
+
+	$('body').on('focus', pipui.autocomplete_helper.defaultSelector, function(){
+		var that = $(this);
+
+		if(!pipui.autocomplete_helper.is_init(that)){
+			new pipui.autocomplete(that);
+		}
+	});
 });

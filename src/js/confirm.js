@@ -1,3 +1,11 @@
+pipui.addModule('confirm', '1.0.0');
+p.required('confirm', 'base', '1.4.0', '>=');
+p.i18n.confirm = {
+	"confirm": 'Подтвердите действие на странице',
+	"success": 'OK',
+	"cancel": 'Отмена'
+};
+
 pipui.confirm = {
 	openTimeout: 3000,
 
@@ -42,11 +50,11 @@ pipui.confirm = {
 		}
 
 		if(typeof yes == 'undefined'){
-			yes = 'ОК';
+			yes = p.i18n.confirm.success;
 		}
 
 		if(typeof no == 'undefined'){
-			no = 'Отмена';
+			no = p.i18n.confirm.cancel;
 		}
 
 		var block = $('.confirm');
@@ -58,7 +66,7 @@ pipui.confirm = {
 		}
 
 		if(typeof title == 'undefined'){
-			title = 'Подтвердите действие на странице';
+			title = p.i18n.confirm.confirm;
 		}
 
 		var id = Math.random().toString();

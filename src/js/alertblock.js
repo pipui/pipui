@@ -1,3 +1,5 @@
+pipui.addModule('alertblock', '1.0.0');
+
 pipui.alertblock = {
 	show: function(element){
 		if(typeof element == 'string'){ element = $(element); }

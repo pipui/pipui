@@ -1,4 +1,4 @@
-/* PipUI v1.3.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.0 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base-responsive.css *****/
@@ -200,6 +200,28 @@
 
 	.confirm > .confirm-id > .confirm-footer > .btn {
 		margin-left: 0;
+	}
+}
+
+
+
+
+/***** datepicker-responsive.css *****/
+@media (max-width: 479px) {
+	.datepicker > .datepicker-wrapper > .datepicker-block {
+		width: 100%;
+	}
+
+	.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .middle > .daylist {
+		grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+	}
+}
+
+@media (max-width: 319px) {
+	.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .top,
+	.datepicker > .datepicker-wrapper > .datepicker-block[data-datepicker-type="datetime"] > .block-date > .footer {
+		grid-gap: 8px;
+		grid-template-columns: 100%;
 	}
 }
 

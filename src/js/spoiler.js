@@ -1,3 +1,5 @@
+pipui.addModule('spoiler', '1.0.0');
+
 pipui.spoiler = {
 	show: function(e){
 

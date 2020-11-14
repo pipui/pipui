@@ -14,6 +14,7 @@ select {
 	border: 0;
 	outline: none;
 	display: block;
+	font-size: 14px;
 	width: 100%;
 	border-radius: 2px;
 	margin-bottom: 20px;
@@ -274,7 +275,7 @@ input[type="radio"] {
 	height: 100%;
 	text-align: center;
 	line-height: 14px;
-	font-weight: bold;
+	font-weight: 500;
 	border-radius: inherit;
 	transition: all 350ms cubic-bezier(.23,1,.32,1) 0s;
 }
