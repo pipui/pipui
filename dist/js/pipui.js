@@ -3917,7 +3917,7 @@ pipui.datepicker = {
 				minute = date.getMinutes();
 			}
 
-			if(isNaN(second) || second < 1 || second > 59){
+			if(isNaN(second) || second < 0 || second > 59){
 				second = date.getSeconds();
 			}
 
