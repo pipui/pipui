@@ -1,4 +1,4 @@
-/* PipUI v1.4.0 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.1 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.js *****/

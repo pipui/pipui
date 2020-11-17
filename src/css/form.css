@@ -75,8 +75,7 @@ textarea {
 }
 
 input[type="file"] {
-	line-height: normal;
-	padding: 8px;
+
 }
 
 input[type="file"].styled {

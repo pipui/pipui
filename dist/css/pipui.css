@@ -1,4 +1,4 @@
-/* PipUI v1.4.0 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.1 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.css *****/
@@ -21,6 +21,11 @@ div, form, footer, header, a, ul, ol, li, header, input, button, textarea, label
 a {
 	text-decoration: none;
 	color: #03A9F4;
+}
+
+h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
+	word-wrap: break-word;
+	word-break: break-word;
 }
 
 h1,.h1 {
@@ -3283,8 +3288,7 @@ textarea {
 }
 
 input[type="file"] {
-	line-height: normal;
-	padding: 8px;
+
 }
 
 input[type="file"].styled {
@@ -5009,6 +5013,8 @@ ul.pagination > li.selected > a {
 	color: #fafafa;
 	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 	position: relative;
+	background: none;
+	border: 0;
 }
 
 .tabs.tabs-horizontal > .tab-links > li .tab-link {
@@ -5034,7 +5040,7 @@ ul.pagination > li.selected > a {
 
 .tabs > .tab-list > .tab-id {
 	display: none;
-	padding: 20px;
+	padding: 20px 0;
 	border-radius: 0 0 2px 2px;
 }
 

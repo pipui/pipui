@@ -19,6 +19,11 @@ a {
 	color: #03A9F4;
 }
 
+h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
+	word-wrap: break-word;
+	word-break: break-word;
+}
+
 h1,.h1 {
 	font-size: 56px;
 	line-height: 56px;
