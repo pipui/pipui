@@ -1,4 +1,4 @@
-/* PipUI v1.4.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.2 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base-responsive.css *****/
@@ -631,15 +631,17 @@
 		display: block;
 	}
 
-	.tabs > .tab-links > li > a {
+	.tabs > .tab-links > li > .tab-link {
 		line-height: 40px;
 		height: 40px;
 		min-width: 40px;
 		padding: 0 12px;
+		width: 100%;
+		display: block;
 	}
 
-	.tabs > .tab-links > li > a:hover,
-	.tabs > .tab-links > li > a.active {
+	.tabs > .tab-links > li > .tab-link:hover,
+	.tabs > .tab-links > li > .tab-link.active {
 		border: 0;
 		background-color: rgba(0,0,0,0.1);
 	}

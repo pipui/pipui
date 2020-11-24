@@ -1,4 +1,4 @@
-/* PipUI v1.4.1 © Qexy | Site: https://pipui.ru | License: MIT */
+/* PipUI v1.4.2 © Qexy | Site: https://pipui.ru | License: MIT */
 
 
 /***** base.css *****/
@@ -5015,6 +5015,8 @@ ul.pagination > li.selected > a {
 	position: relative;
 	background: none;
 	border: 0;
+	text-align: left;
+	width: 100%;
 }
 
 .tabs.tabs-horizontal > .tab-links > li .tab-link {
@@ -5046,6 +5048,7 @@ ul.pagination > li.selected > a {
 
 .tabs.tabs-horizontal > .tab-list > .tab-id {
 	border-radius: 0 2px 2px 0;
+	padding: 8px 20px;
 	height: 100%;
 }
 

@@ -47,6 +47,8 @@
 	position: relative;
 	background: none;
 	border: 0;
+	text-align: left;
+	width: 100%;
 }
 
 .tabs.tabs-horizontal > .tab-links > li .tab-link {
@@ -78,6 +80,7 @@
 
 .tabs.tabs-horizontal > .tab-list > .tab-id {
 	border-radius: 0 2px 2px 0;
+	padding: 8px 20px;
 	height: 100%;
 }
 
