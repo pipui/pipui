@@ -1,0 +1,43 @@
+@import "../globals";
+@import "../mixins";
+
+
+@include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
+  .alert {
+    width: 100%;
+    padding: $RESPONSIVE_PADDING_WIDTH;
+  }
+
+  .alert[data-placement$="-center"] {
+    right: auto;
+    left: 0;
+    margin-left: 0;
+  }
+
+  .alert > .alert-id {
+    max-width: 100%;
+    width: 100%;
+    min-width: 100%;
+    padding: $RESPONSIVE_PADDING_WIDTH;
+    margin: auto auto $RESPONSIVE_PADDING_WIDTH auto;
+  }
+
+  .alert > .alert-id > .alert-footer {
+    padding-top: $RESPONSIVE_PADDING_WIDTH;
+    grid-template-columns: calc(100% - 100px - #{$RESPONSIVE_PADDING_WIDTH}) 100px;
+    grid-gap: $RESPONSIVE_PADDING_WIDTH;
+  }
+}
+
+@include BREAKPOINT($BP_SMARTPHONE) {
+  .alert > .alert-id > .alert-footer {
+    grid-template-columns: auto auto;
+  }
+}
+
+@include BREAKPOINT($BP_PHONE) {
+  .alert > .alert-id > .alert-footer {
+    grid-template-columns: 100%;
+    text-align: center;
+  }
+}

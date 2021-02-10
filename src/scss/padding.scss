@@ -1,0 +1,137 @@
+@import "globals";
+
+$padding-loop: 0;
+$padding-loop-max: 25;
+
+@while $padding-loop <= ($padding-loop-max * $DEFAULT_DIVIDER) {
+  .p-#{$padding-loop} {
+    padding: $padding-loop + 0px;
+  }
+
+  .p-#{$padding-loop}-i {
+    padding: ($padding-loop + 0px) !important;
+  }
+
+  .pl-#{$padding-loop} {
+    padding-left: $padding-loop + 0px;
+  }
+
+  .pl-#{$padding-loop}-i {
+    padding-left: ($padding-loop + 0px) !important;
+  }
+
+  .pr-#{$padding-loop} {
+    padding-right: $padding-loop + 0px;
+  }
+
+  .pr-#{$padding-loop}-i {
+    padding-right: ($padding-loop + 0px) !important;
+  }
+
+  .pt-#{$padding-loop} {
+    padding-top: $padding-loop + 0px;
+  }
+
+  .pt-#{$padding-loop}-i {
+    padding-top: ($padding-loop + 0px) !important;
+  }
+
+  .pb-#{$padding-loop} {
+    padding-bottom: $padding-loop + 0px;
+  }
+
+  .pb-#{$padding-loop}-i {
+    padding-bottom: ($padding-loop + 0px) !important;
+  }
+
+  .px-#{$padding-loop} {
+    padding-left: $padding-loop + 0px;
+    padding-right: $padding-loop + 0px;
+  }
+
+  .px-#{$padding-loop}-i {
+    padding-left: ($padding-loop + 0px) !important;
+    padding-right: ($padding-loop + 0px) !important;
+  }
+
+  .py-#{$padding-loop} {
+    padding-top: $padding-loop + 0px;
+    padding-bottom: $padding-loop + 0px;
+  }
+
+  .py-#{$padding-loop}-i {
+    padding-top: ($padding-loop + 0px) !important;
+    padding-bottom: ($padding-loop + 0px) !important;
+  }
+
+
+  .m-#{$padding-loop} {
+    margin: $padding-loop + 0px;
+  }
+
+  .m-#{$padding-loop}-i {
+    margin: ($padding-loop + 0px) !important;
+  }
+
+  .ml-#{$padding-loop} {
+    margin-left: $padding-loop + 0px;
+  }
+
+  .ml-#{$padding-loop}-i {
+    margin-left: ($padding-loop + 0px) !important;
+  }
+
+  .mr-#{$padding-loop} {
+    margin-right: $padding-loop + 0px;
+  }
+
+  .mr-#{$padding-loop}-i {
+    margin-right: ($padding-loop + 0px) !important;
+  }
+
+  .mt-#{$padding-loop} {
+    margin-top: $padding-loop + 0px;
+  }
+
+  .mt-#{$padding-loop}-i {
+    margin-top: ($padding-loop + 0px) !important;
+  }
+
+  .mb-#{$padding-loop} {
+    margin-bottom: $padding-loop + 0px;
+  }
+
+  .mb-#{$padding-loop}-i {
+    margin-bottom: ($padding-loop + 0px) !important;
+  }
+
+  .mx-#{$padding-loop} {
+    margin-left: $padding-loop + 0px;
+    margin-right: $padding-loop + 0px;
+  }
+
+  .mx-#{$padding-loop}-i {
+    margin-left: ($padding-loop + 0px) !important;
+    margin-right: ($padding-loop + 0px) !important;
+  }
+
+  .my-#{$padding-loop} {
+    margin-top: $padding-loop + 0px;
+    margin-bottom: $padding-loop + 0px;
+  }
+
+  .my-#{$padding-loop}-i {
+    margin-top: ($padding-loop + 0px) !important;
+    margin-bottom: ($padding-loop + 0px) !important;
+  }
+
+  $padding-loop: $padding-loop + $DEFAULT_DIVIDER;
+}
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-auto { margin-top: auto; margin-bottom: auto; }
+.m-auto { margin: auto; }
+
+.mx-auto-i { margin-left: auto !important; margin-right: auto !important; }
+.my-auto-i { margin-top: auto !important; margin-bottom: auto !important; }
+.m-auto-i { margin: auto !important; }
