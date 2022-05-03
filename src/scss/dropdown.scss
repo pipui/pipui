@@ -1,0 +1,119 @@
+@import "palette";
+@import "globals";
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown > .dropdown-trigger {
+}
+
+.dropdown > .dropdown-target {
+  position: absolute;
+  display: none;
+  top: calc(100% + #{$DEFAULT_DIVIDER}px);
+  left: 0;
+  width: $DEFAULT_DIVIDER * 50px;
+  background-color: map_get($PALETTE, 'white');
+  color: map_get($PALETTE, 'gray-900');
+  box-sizing: border-box;
+  box-shadow: $DEFAULT_BOX_SHADOW_ACTIVE;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  z-index: 2;
+  padding: ($DEFAULT_DIVIDER * 2px) 0;
+}
+
+.dropdown[data-dropdown-x="left"] > .dropdown-target {
+  left: auto;
+  right: 0;
+}
+
+.dropdown[data-dropdown-x="right"] > .dropdown-target {
+  left: 0;
+  right: auto;
+}
+
+.dropdown[data-dropdown-y="top"] > .dropdown-target {
+  top: auto;
+  bottom: calc(100% + #{$DEFAULT_DIVIDER}px);
+}
+
+.dropdown[data-dropdown-y="bottom"] > .dropdown-target {
+  top: calc(100% + #{$DEFAULT_DIVIDER}px);
+  bottom: auto;
+}
+
+.dropdown > .dropdown-target .dropdown > .dropdown-target {
+  top: -8px;
+  left: calc(100% + #{$DEFAULT_DIVIDER}px);
+}
+
+.dropdown[data-dropdown-x="left"] > .dropdown-target .dropdown > .dropdown-target {
+  left: auto;
+  right: calc(100% + #{$DEFAULT_DIVIDER * 2}px);
+}
+
+.dropdown[data-dropdown-x="right"] > .dropdown-target .dropdown > .dropdown-target {
+  right: auto;
+  left: calc(100% + #{$DEFAULT_DIVIDER}px);
+}
+
+.dropdown[data-dropdown-y="top"] > .dropdown-target .dropdown > .dropdown-target {
+  top: auto;
+  bottom: $DEFAULT_DIVIDER * -2px;
+}
+
+.dropdown[data-dropdown-y="bottom"] > .dropdown-target .dropdown > .dropdown-target {
+  bottom: auto;
+  top: $DEFAULT_DIVIDER * -2px;
+}
+
+.dropdown[data-dropdown-x="left"] > .dropdown-target .dropdown[data-dropdown-x="right"] > .dropdown-target {
+  right: auto;
+  left: calc(100% + #{$DEFAULT_DIVIDER}px);
+}
+
+.dropdown[data-dropdown-x="right"] > .dropdown-target .dropdown[data-dropdown-x="left"] > .dropdown-target {
+  left: auto;
+  right: calc(100% + #{$DEFAULT_DIVIDER * 2}px);
+}
+
+.dropdown[data-dropdown-y="top"] > .dropdown-target .dropdown[data-dropdown-y="bottom"] > .dropdown-target {
+  bottom: auto;
+  top: -8px;
+}
+
+.dropdown[data-dropdown-y="bottom"] > .dropdown-target .dropdown[data-dropdown-y="top"] > .dropdown-target {
+  top: auto;
+  bottom: $DEFAULT_DIVIDER * -2px;
+}
+
+.dropdown.active > .dropdown-target {
+  display: block;
+}
+
+.dropdown > .dropdown-target > .dropdown-item {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  list-style: none;
+  border-left: ($DEFAULT_DIVIDER + 0px) solid transparent;
+  transition: $DEFAULT_TRANSITION;
+}
+
+.dropdown > .dropdown-target .dropdown-item.active,
+.dropdown > .dropdown-target .dropdown-item:active,
+.dropdown > .dropdown-target .dropdown-item:hover {
+  border-left: ($DEFAULT_DIVIDER + 0px) solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.05);
+}
+
+.dropdown > .dropdown-target .dropdown-item .dropdown-link {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: ($DEFAULT_DIVIDER * 2px) ($DEFAULT_DIVIDER * 3px);
+  text-align: left;
+  color: map_get($PALETTE, 'gray-800');
+}

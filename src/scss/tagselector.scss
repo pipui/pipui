@@ -1,0 +1,44 @@
+@import "palette";
+@import "globals";
+
+$TAGSELECTOR_MAX_HEIGHT: $DEFAULT_DIVIDER * 70px;
+$TAGSELECTOR_LINK_HEIGHT: $DEFAULT_DIVIDER * 8px;
+
+.tagselector {
+  display: block;
+}
+
+.tagselector .tagselector-list {
+  font-size: $DEFAULT_FONT_SIZE;
+}
+
+.tagselector .tagselector-list .tagselector-item {
+  list-style: none;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  max-width: $TAGSELECTOR_MAX_HEIGHT;
+  padding: 0 ($DEFAULT_DIVIDER * 1px) ($DEFAULT_DIVIDER * 1px) 0;
+}
+
+.tagselector .tagselector-list .tagselector-item .tagselector-link {
+  height: $TAGSELECTOR_LINK_HEIGHT;
+  line-height: $TAGSELECTOR_LINK_HEIGHT;
+  padding: 0 ($TAGSELECTOR_LINK_HEIGHT / $DEFAULT_DIVIDER * 3);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  background-color: map_get($PALETTE, 'gray-200');
+  color: map_get($PALETTE, 'gray-800');
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: $DEFAULT_TRANSITION;
+}
+
+.tagselector .tagselector-list .tagselector-item .tagselector-link:hover {
+  text-decoration: line-through;
+  color: map_get($PALETTE, 'white');
+  background-color: map_get($PALETTE, 'gray-600');
+}
