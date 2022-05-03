@@ -1,0 +1,121 @@
+.poplight-overlay {
+	background-color: rgba(0,0,0,0.8);
+	position: fixed;
+	z-index: 8000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.poplight-overlay.active {
+	visibility: visible;
+	opacity: 1;
+}
+
+.poplight-box {
+	z-index: 8001;
+	background-color: #fff;
+	box-shadow: rgba(255, 255, 255, 0.12) 0 1px 6px, rgba(255, 255, 255, 0.12) 0 1px 4px;
+}
+
+.poplight-overlay.active.canclose {
+	cursor: pointer;
+}
+
+.poplight-message {
+	display: block;
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	z-index: 8002;
+	transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+	background-color: #fff;
+	box-shadow: rgba(255, 255, 255, 0.12) 0 1px 6px, rgba(255, 255, 255, 0.12) 0 1px 4px;
+	border-radius: 20px;
+	padding: 16px;
+	max-width: 320px;
+}
+
+.poplight-message.active {
+	visibility: visible;
+	opacity: 0.7;
+}
+
+.poplight-message.active:hover {
+	opacity: 1;
+}
+
+.poplight-message:after {
+	display: block;
+	content: "";
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.poplight-message:hover:after {
+	opacity: 1;
+}
+
+.poplight-message.poplight-top.poplight-left {
+	border-radius: 20px 20px 0 20px;
+}
+
+.poplight-message.poplight-top.poplight-left:after {
+	border-top: 8px solid #fff;
+	border-left: 20px solid transparent;
+	top: 100%;
+	right: 0;
+}
+
+.poplight-message.poplight-top.poplight-right {
+	border-radius: 20px 20px 20px 0;
+}
+
+.poplight-message.poplight-top.poplight-right:after {
+	border-top: 8px solid #fff;
+	border-right: 20px solid transparent;
+	top: 100%;
+	left: 0;
+}
+
+.poplight-message.poplight-bottom.poplight-left {
+	border-radius: 20px 0 20px 20px;
+}
+
+.poplight-message.poplight-bottom.poplight-left:after {
+	border-bottom: 8px solid #fff;
+	border-left: 20px solid transparent;
+	bottom: 100%;
+	right: 0;
+}
+
+.poplight-message.poplight-bottom.poplight-right {
+	border-radius: 0 20px 20px 20px;
+}
+
+.poplight-message.poplight-bottom.poplight-right:after {
+	border-bottom: 8px solid #fff;
+	border-right: 20px solid transparent;
+	bottom: 100%;
+	left: 0;
+}
+
+.poplight-message .poplight-message-close {
+	position: absolute;
+	top: -20px;
+	right: -20px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	color: rgba(255,255,255,0.8);
+	text-align: center;
+	font-weight: 500;
+	font-size: 20px;
+	display: block;
+}

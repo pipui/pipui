@@ -1,0 +1,88 @@
+.formvalidator-alert {
+	padding: 8px;
+	background-color: #fff;
+	box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+	color: #424242;
+	margin-top: 8px;
+	position: relative;
+	border-radius: 2px;
+}
+
+.formvalidator-alert:before {
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-bottom: 4px solid #fff;
+	position: absolute;
+	top: -4px;
+	left: 4px;
+}
+
+.formvalidator-alert.warning {
+	background-color: #FFC107;
+	color: #fff;
+}
+
+.formvalidator-alert.warning:before {
+	border-bottom: 4px solid #FFC107;
+}
+
+.formvalidator-alert.danger {
+	background-color: #F44336;
+	color: #fff;
+}
+
+.formvalidator-alert.danger:before {
+	border-bottom: 4px solid #F44336;
+}
+
+.formvalidator-alert.info {
+	background-color: #3F51B5;
+	color: #fff;
+}
+
+.formvalidator-alert.info:before {
+	border-bottom: 4px solid #3F51B5;
+}
+
+.formvalidator-alert.success {
+	background-color: #4CAF50;
+	color: #fff;
+}
+
+.formvalidator-alert.success:before {
+	border-bottom: 4px solid #4CAF50;
+}
+
+.formvalidator-alert > .wrapper {
+	display: grid;
+	grid-template-columns: 36px calc(100% - 88px) 36px;
+	grid-gap: 8px;
+	align-items: center;
+}
+
+.formvalidator-alert > .wrapper > .icon-block {
+	line-height: 37px;
+	height: 36px;
+	text-align: center;
+	font-size: 16px;
+}
+
+.formvalidator-alert > .wrapper > .close-block > .close {
+	color: #fff;
+	line-height: 35px;
+	height: 36px;
+	text-align: center;
+	display: block;
+	width: 100%;
+	border-radius: 50%;
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+	font-size: 25px;
+}
+
+.formvalidator-alert > .wrapper > .close-block > .close:hover {
+	background-color: rgba(0,0,0,0.1);
+}

@@ -1,0 +1,7 @@
+@media (max-width: 767px) {
+	.btn {
+		display: block;
+		width: 100%;
+		margin-top: 20px;
+	}
+}

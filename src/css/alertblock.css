@@ -1,0 +1,45 @@
+.alertblock {
+	background-color: #EDE7F6;
+	color: rgba(0,0,0,0.6);
+	padding: 20px;
+	position: relative;
+	line-height: 20px;
+	border-radius: 2px;
+}
+
+.alertblock.alertblock-before {
+	padding-left: 60px;
+}
+
+.alertblock.alertblock-after {
+	padding-right: 60px;
+}
+
+.alertblock.alertblock-before > .before,
+.alertblock.alertblock-after > .after {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	width: 40px;
+	font-size: 20px;
+	color: rgba(0,0,0,0.4);
+}
+
+.alertblock.alertblock-after > .after {
+	left: auto;
+	right: 20px;
+	text-align: right;
+}
+
+.alertblock .alertblock-close {
+	color: inherit;
+	box-sizing: border-box;
+	width: 20px;
+	display: inline-block;
+	text-align: center;
+	transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.alertblock .alertblock-close:hover {
+	color: rgba(0,0,0,0.8);
+}

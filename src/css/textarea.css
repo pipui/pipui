@@ -1,0 +1,59 @@
+.textarea {
+	position: relative;
+	box-sizing: border-box;
+	background-color: #fff;
+}
+
+.textarea > textarea {
+	line-height: 20px;
+	padding-left: 48px;
+	z-index: 1;
+	background-color: transparent;
+}
+
+.textarea > .textarea-numbers {
+	display: block;
+	position: absolute;
+	max-height: 100%;
+	overflow: hidden;
+	z-index: 2;
+	left: 0;
+	top: 0;
+	width: 40px;
+	border-radius: 2px 0 0 2px;
+	background-color: #757575;
+	height: 100%;
+}
+
+.textarea > .textarea-numbers > ul {
+	padding: 4px 0;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.textarea > .textarea-numbers > ul > li {
+	display: block;
+	width: 100%;
+	list-style: none;
+	text-align: center;
+	font-size: 10px;
+	position: relative;
+}
+
+.textarea > .textarea-numbers > ul > li > a {
+	color: #fff;
+	box-sizing: border-box;
+	padding: 0 4px;
+	height: 20px;
+	line-height: 20px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.textarea > .textarea-numbers > ul > li:last-child > a {
+	border: 0;
+}
