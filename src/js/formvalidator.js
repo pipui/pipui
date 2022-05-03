@@ -1,4 +1,4 @@
-pipui.addModule('formvalidator', '1.0.0');
+pipui.addModule('formvalidator', '1.0.1');
 p.required('formvalidator', 'base', '1.4.0', '>=');
 p.i18n.formvalidator = {
 	"incorrect": 'Поле заполнено неверно'

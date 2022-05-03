@@ -11,7 +11,7 @@ const srcScssPath = './src/scss/';
 const srcJsPath = './src/js/';
 const mapPath = './';
 
-const v = '1.5.0';
+const v = '1.5.1';
 
 let scssList = [
     'base.scss', 'alert.scss', 'alertblock.scss',
