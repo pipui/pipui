@@ -1,0 +1,50 @@
+@import "palette";
+@import "globals";
+
+$CONFIRM_MIN_WIDTH: 300px;
+
+.confirm {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  padding: $DEFAULT_PADDING_WIDTH;
+  text-align: center;
+  visibility: visible;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.confirm:empty {
+  display: none;
+}
+
+.confirm > .confirm-id {
+  text-align: left;
+  display: block;
+  vertical-align: top;
+  width: max-content;
+  min-width: $CONFIRM_MIN_WIDTH;
+  max-width: 100%;
+  visibility: visible;
+  color: #fff;
+  background-color: map_get($PALETTE, 'gray-900');
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  padding: $DEFAULT_PADDING_WIDTH;
+  margin: auto auto ($DEFAULT_DIVIDER * 3px) auto;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.confirm > .confirm-id > .confirm-text {
+  padding-top: $DEFAULT_DIVIDER * 2px;
+}
+
+.confirm > .confirm-id > .confirm-footer {
+  padding-top: $DEFAULT_PADDING_WIDTH;
+  text-align: right;
+}
+
+.confirm > .confirm-id > .confirm-footer > .btn {
+  margin-left: $DEFAULT_DIVIDER * 2px;
+}

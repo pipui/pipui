@@ -1,4 +1,4 @@
-pipui.addModule('formvalidator', '1.0.0');
+pipui.addModule('formvalidator', '1.0.1');
 p.required('formvalidator', 'base', '1.4.0', '>=');
 p.i18n.formvalidator = {
 	"incorrect": 'Поле заполнено неверно'
@@ -15,7 +15,7 @@ pipui.formvalidator = {
 };
 
 $(function(){
-	$('body').on('click', pipui.formvalidator.form+' [type="submit"]', function(e){
+	$('body').on('click', pipui.formvalidator.form, function(e){
 		var that = $(this);
 
 		var form = that.closest('form');

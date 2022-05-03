@@ -1,0 +1,58 @@
+@import "../mixins";
+
+$GRID_MAX_FIELDS: 12;
+
+@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
+
+  .row {
+    display: block;
+    width: 100%;
+  }
+
+  $grid-cols-loop: 1;
+
+  @while $grid-cols-loop <= $GRID_MAX_FIELDS {
+    .row > .col-#{$grid-cols-loop} {
+      display: block;
+      width: 100%;
+    }
+
+    $grid-cols-loop: $grid-cols-loop + 1;
+  }
+}
+
+@include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
+
+  $grid-cols-loop: 1;
+
+  @while $grid-cols-loop <= $GRID_MAX_FIELDS {
+    .columns-#{$grid-cols-loop} {
+      grid-template-columns: 100%;
+    }
+
+    $grid-cols-loop: $grid-cols-loop + 1;
+  }
+
+  $grid-col-loop: 1;
+  $grid-col-sub: 1;
+
+  @while $grid-col-loop <= $GRID_MAX_FIELDS {
+
+    @while $grid-col-sub <= $GRID_MAX_FIELDS {
+
+      @if($grid-col-loop == $grid-col-sub){
+        .column-#{$grid-col-loop} {
+          grid-column: unset;
+        }
+      }@else if($grid-col-loop < $grid-col-sub){
+        .column-#{$grid-col-loop}-#{$grid-col-sub} {
+          grid-column: unset;
+        }
+      }
+
+      $grid-col-sub: $grid-col-sub + 1;
+    }
+
+    $grid-col-loop: $grid-col-loop + 1;
+  }
+}

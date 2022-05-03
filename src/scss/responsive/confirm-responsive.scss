@@ -1,0 +1,21 @@
+@import "../mixins";
+
+@include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
+  .confirm {
+    padding: $RESPONSIVE_PADDING_WIDTH;
+  }
+
+  .confirm > .confirm-id {
+    width: 100%;
+    min-width: 100%;
+    padding: $RESPONSIVE_PADDING_WIDTH;
+  }
+
+  .confirm > .confirm-id > .confirm-footer {
+    padding: 0;
+  }
+
+  .confirm > .confirm-id > .confirm-footer > .btn {
+    margin-left: 0;
+  }
+}

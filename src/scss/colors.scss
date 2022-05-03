@@ -1,0 +1,35 @@
+@import "palette";
+
+@each $color-name-loop, $color-val-loop in $PALETTE {
+  .text-#{$color-name-loop} {
+    color: $color-val-loop;
+  }
+
+  .text-#{$color-name-loop}-i {
+    color: $color-val-loop !important;
+  }
+
+  .text-#{$color-name-loop}-h:hover {
+    color: $color-val-loop;
+  }
+
+  .text-#{$color-name-loop}-h-i:hover {
+    color: $color-val-loop !important;
+  }
+
+  .bg-#{$color-name-loop} {
+    background-color: $color-val-loop;
+  }
+
+  .bg-#{$color-name-loop}-i {
+    background-color: $color-val-loop !important;
+  }
+
+  .bg-#{$color-name-loop}-h:hover {
+    background-color: $color-val-loop !important;
+  }
+
+  .bg-#{$color-name-loop}-h-i:hover {
+    background-color: $color-val-loop !important;
+  }
+}

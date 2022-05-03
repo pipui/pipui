@@ -1,0 +1,54 @@
+@import "palette";
+@import "globals";
+
+ul.pagination {
+  display: inline-block;
+  vertical-align: middle;
+  margin: auto;
+  font-size: 0;
+}
+
+ul.pagination > li {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: $DEFAULT_FONT_SIZE + 4;
+  box-sizing: border-box;
+  padding: #{$DEFAULT_DIVIDER / 2}px;
+  position: relative;
+}
+
+ul.pagination > li > a {
+  color: map_get($PALETTE, 'gray-700');
+  text-align: center;
+  border: 0;
+  padding: 0 ($DEFAULT_DIVIDER * 2px);
+  line-height: $DEFAULT_DIVIDER * 7px - 1;
+  height: $DEFAULT_DIVIDER * 7px;
+  min-width: $DEFAULT_DIVIDER * 7px;
+  display: block;
+  width: 100%;
+  font-size: $DEFAULT_FONT_SIZE;
+  border-radius: $DEFAULT_DIVIDER * 7px / 2;
+  transition: $DEFAULT_TRANSITION;
+  position: relative;
+  font-weight: 500;
+}
+
+ul.pagination > li > a:hover {
+  background-color: rgba(0,0,0,0.08);
+}
+
+ul.pagination > li.active > a,
+ul.pagination > li > a:active {
+  background-color: rgba(0,0,0,0.16);
+}
+
+ul.pagination > li.selected > a {
+  color: rgba(0,0,0,0.5);
+}
+
+.pagination-block {
+  padding: $DEFAULT_PADDING_WIDTH 0;
+  position: relative;
+  min-height: $DEFAULT_DIVIDER * 10px;
+}

@@ -422,41 +422,40 @@ pipui.autocomplete = function(input){
 			}, _timer);
 		}
 	}).on('keydown', function(e){
-		if(e.keyCode == 40 || e.keyCode == 38 || e.keyCode == 13){
+		if(e.keyCode == 40 || e.keyCode == 38){
 			e.preventDefault();
 
-			if(e.keyCode == 40 || e.keyCode == 38){
+			var items = _block.find('.autocomplete-link');
 
-				var items = _block.find('.autocomplete-link');
+			var length = items.length;
 
-				var length = items.length;
+			var current = -1;
 
-				var current = -1;
+			var next = e.keyCode == 40 ? 0 : length-1;
 
-				var next = e.keyCode == 40 ? 0 : length-1;
+			items.each(function(i){
+				var that = $(this);
 
-				items.each(function(i){
-					var that = $(this);
-
-					if(that.hasClass('hover')){
-						that.removeClass('hover');
-						current = i;
-					}
-				});
-
-				if(e.keyCode == 40){
-					next = current == length-1 ? 0 : current + 1;
-				}else{
-					next = current == 0 ? length-1 : current - 1;
+				if(that.hasClass('hover')){
+					that.removeClass('hover');
+					current = i;
 				}
+			});
 
-				$(items[next]).addClass('hover');
+			if(e.keyCode == 40){
+				next = current == length-1 ? 0 : current + 1;
 			}else{
-				var hovered = _block.find('.autocomplete-link.hover');
+				next = current == 0 ? length-1 : current - 1;
+			}
 
-				if(hovered.length){
-					hovered.trigger('click');
-				}
+			$(items[next]).addClass('hover');
+		}else if(e.keyCode == 13){
+			var hovered = _block.find('.autocomplete-link.hover');
+
+			if(_block.hasClass('visible') && hovered.length){
+				e.preventDefault();
+
+				hovered.trigger('click');
 			}
 		}
 	});
