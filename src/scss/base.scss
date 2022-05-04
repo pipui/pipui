@@ -55,6 +55,7 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
   box-sizing: border-box;
   box-shadow: $DEFAULT_BOX_SHADOW;
   border-radius: $DEFAULT_BORDER_RADIUS;
+  padding: $DEFAULT_PADDING_WIDTH;
 }
 
 // display & important settings
