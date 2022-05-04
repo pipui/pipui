@@ -15,7 +15,7 @@ pipui.formvalidator = {
 };
 
 $(function(){
-	$('body').on('click', pipui.formvalidator.form, function(e){
+	$('body').on('submit', pipui.formvalidator.form, function(e){
 		var that = $(this);
 
 		var form = that.closest('form');
