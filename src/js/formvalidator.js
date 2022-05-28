@@ -1,5 +1,5 @@
-pipui.addModule('formvalidator', '1.0.1');
-p.required('formvalidator', 'base', '1.4.0', '>=');
+pipui.addModule('formvalidator', '1.1.0');
+p.required('formvalidator', 'base', '1.6.0', '>=');
 p.i18n.formvalidator = {
 	"incorrect": 'Поле заполнено неверно'
 };
@@ -76,13 +76,13 @@ $(function(){
 			var icon = '';
 
 			if(type == 'warning'){
-				icon = '<i class="fa fa-exclamation-triangle"></i>';
+				icon = '<i class="fa-solid fa-triangle-exclamation"></i>';
 			}else if (type == 'danger'){
-				icon = '<i class="fa fa-exclamation-circle"></i>'
+				icon = '<i class="fa-solid fa-circle-exclamation"></i>'
 			}else if (type == 'info'){
-				icon = '<i class="fa fa-info-circle"></i>'
+				icon = '<i class="fa-solid fa-circle-info"></i>'
 			}else if (type == 'success'){
-				icon = '<i class="fa fa-check-circle"></i>'
+				icon = '<i class="fa-solid fa-circle-check"></i>'
 			}
 
 			alert.html('<div class="wrapper"><div class="icon-block">'+icon+'</div><div class="text-block">'+text+'</div><div class="close-block"><a href="#" class="close">&times;</a></div></div>').fadeIn('fast');
