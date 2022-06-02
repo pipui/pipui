@@ -1,5 +1,5 @@
 var pipui = {
-	v: '1.5.1',
+	v: '1.6.0',
 	enable_compatible: true,
 
 	array_unique: function(array){

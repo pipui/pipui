@@ -11,7 +11,7 @@ const srcScssPath = './src/scss/';
 const srcJsPath = './src/js/';
 const mapPath = './';
 
-const v = '1.5.1';
+const v = '1.6.0';
 
 let scssList = [
     'base.scss', 'alert.scss', 'alertblock.scss',
@@ -124,8 +124,8 @@ gulp.task('dist:css', gulp.series('build:css', function(){
     return gulp.src('./build/'+v+'/css/bundles/pipui.css')
         .pipe(gulpSourcemaps.init())
         .pipe(gulpCleanCSS())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/css/bundles/'));
 }));
 
@@ -135,8 +135,8 @@ gulp.task('dist:css:files', gulp.series('build:css:files', function(){
     return gulp.src(['./build/'+v+'/css/*.css', '!./build/'+v+'/css/*-responsive.css'])
         .pipe(gulpSourcemaps.init())
         .pipe(gulpCleanCSS())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/css/'));
 }));
 
@@ -146,8 +146,8 @@ gulp.task('dist:responsive', gulp.series('build:responsive', function(){
     return gulp.src('./build/'+v+'/css/bundles/pipui-responsive.css')
         .pipe(gulpSourcemaps.init())
         .pipe(gulpCleanCSS())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/css/bundles/'));
 }));
 
@@ -157,8 +157,8 @@ gulp.task('dist:responsive:files', gulp.series('build:responsive:files', functio
     return gulp.src('./build/'+v+'/css/*-responsive.css')
         .pipe(gulpSourcemaps.init())
         .pipe(gulpCleanCSS())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/css/'));
 }));
 
@@ -168,8 +168,8 @@ gulp.task('dist:js', gulp.series('build:js', function(){
     return gulp.src('./build/'+v+'/js/bundles/pipui.js')
         .pipe(gulpSourcemaps.init())
         .pipe(gulpUglify())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/js/bundles/'));
 }));
 
@@ -179,8 +179,8 @@ gulp.task('dist:js:files', function(){
     return gulp.src(jsList)
         .pipe(gulpSourcemaps.init())
         .pipe(gulpUglify())
-        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulpRename({suffix: '.min'}))
+        .pipe(gulpSourcemaps.write(mapPath))
         .pipe(gulp.dest('./dist/'+v+'/js/'));
 });
 
