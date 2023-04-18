@@ -44,4 +44,4 @@ npm run dist
 <script src="https://cdn.pipui.ru/latest/dist/js/bundles/pipui.min.js"></script>
 ```
 
-Полную документацию можно найти на странице https://pipui.ru/docs/
+Полную документацию можно найти на странице https://v2-0-0.pipui.ru/
