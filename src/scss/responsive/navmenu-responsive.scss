@@ -1,54 +1,16 @@
-@import "../globals";
-@import "../palette";
-@import "../mixins";
+@import "../Globals";
+@import "../Mixins";
 
 @include BREAKPOINT($BP_TABLET_FULLSCREEN) {
-  .nav-menu.nav-menu-responsive {
-    width: $DEFAULT_DIVIDER * 16px;
-  }
-
-  .nav-menu.nav-menu-responsive .nav-menu-item.active {
-    background-color: rgba(0,0,0,0.08);
-  }
-
-  .nav-menu.nav-menu-responsive .nav-menu-link .link-text {
-    position: absolute;
-    left: 100%;
-    top: 0;
-    z-index: 1;
-    max-width: calc(100vw - #{$DEFAULT_DIVIDER * 21px});
-    padding: $DEFAULT_PADDING_WIDTH;
-    visibility: hidden;
-    white-space: nowrap;
-    display: block;
-    opacity: 0;
-    background-color: map_get($PALETTE, 'gray-200');
-    transition: $DEFAULT_TRANSITION;
-  }
-
-  .nav-menu.nav-menu-responsive .nav-menu-link:hover .link-text {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .nav-menu.nav-menu-responsive .nav-menu-link .link-icon {
-    font-size: $DEFAULT_FONT_SIZE + 2;
-  }
-}
-
-@include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
-  .nav-menu.nav-menu-responsive .nav-menu-link .link-text {
-    padding: $RESPONSIVE_PADDING_WIDTH;
+  .nav-menu .nav-menu-link,
+  .nav-menu .nav-menu-link .link-icon {
+    padding: $DEFAULT_DIVIDER * 4px;
   }
 }
 
 @include BREAKPOINT($BP_PHONE) {
-  .nav-menu.nav-menu-responsive .nav-menu-link .link-text {
-    width: calc(100vw - #{$DEFAULT_DIVIDER * 21px});
-  }
-
-  .nav-menu.nav-menu-responsive .nav-menu-link .link-text {
-    word-break: normal;
-    white-space: normal;
+  .nav-menu .nav-menu-link,
+  .nav-menu .nav-menu-link .link-icon {
+    padding: $DEFAULT_DIVIDER * 3px;
   }
 }

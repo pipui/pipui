@@ -1,5 +1,5 @@
-@import "../globals";
-@import "../mixins";
+@import "../Globals";
+@import "../Mixins";
 
 @include BREAKPOINT($BP_TABLET, 'from') {
 
@@ -33,22 +33,6 @@
       left: $RESPONSIVE_PADDING_WIDTH;
       right: $RESPONSIVE_PADDING_WIDTH;
     }
-  }
-
-  .absolute.absolute-static {
-    position: static;
-  }
-
-  .fixed.fixed-static {
-    position: static;
-  }
-
-  .absolute-i.absolute-static {
-    position: static !important;
-  }
-
-  .fixed-i.fixed-static {
-    position: static !important;
   }
 
   @for $i from 1 through 6 {

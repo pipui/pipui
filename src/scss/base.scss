@@ -1,20 +1,20 @@
-@import "palette";
-@import "globals";
-@import "mixins";
+@import "Palette";
+@import "Globals";
+@import "Mixins";
 
 @include IMPORT_DEFAULT_FONT;
 
 * { margin: 0; padding: 0; font-family: $DEFAULT_FONT_FAMILY; }
 
 body {
-  @include DEFAULT_FONT;
+  font-size: $DEFAULT_FONT_SIZE;
   color: $DEFAULT_COLOR;
   min-height: 100vh;
   word-break: break-word;
   word-wrap: break-word;
 }
 
-div, form, footer, header, a, ul, ol, li, header, input, button, textarea, label, select, table {
+div, form, footer, header, a, ul, ol, li, header, input, button, textarea, label, select, table, span {
   box-sizing: border-box;
 }
 
@@ -47,7 +47,7 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
 }
 
 .window {
-  @include DEFAULT_FONT;
+  font-size: $DEFAULT_FONT_SIZE;
   display: block;
   width: 100%;
   background-color: map_get($PALETTE, 'white');
@@ -107,15 +107,31 @@ h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
 }
 
 // text & important settings
-@each $text-name-loop, $text-val-loop in (center: center, left: left, right: right, upper: uppercase, lower: lowercase, bold: bold, italic: italic, justify: justify){
-  .text-#{$text-name-loop} {
-    text-align: $text-val-loop;
-  }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+.text-upper { text-transform: uppercase; }
+.text-lower { text-transform: lowercase; }
+.text-bold { font-weight: bold; }
+.text-italic { font-style: italic; }
+.text-strike { text-decoration: line-through; }
+.text-capitalize { text-transform: capitalize; }
+.text-underline { text-decoration-line: underline; }
+.text-overline { text-decoration-line: overline; }
 
-  .text-#{$text-name-loop}-i {
-    text-align: $text-val-loop !important;
-  }
-}
+.text-left-i { text-align: left !important; }
+.text-center-i { text-align: center !important; }
+.text-right-i { text-align: right !important; }
+.text-justify-i { text-align: justify !important; }
+.text-upper-i { text-transform: uppercase !important; }
+.text-lower-i { text-transform: lowercase !important; }
+.text-bold-i { font-weight: bold !important; }
+.text-italic-i { font-style: italic !important; }
+.text-strike-i { text-decoration: line-through !important; }
+.text-capitalize-i { text-transform: capitalize !important; }
+.text-underline-i { text-decoration-line: underline; }
+.text-overline-i { text-decoration-line: overline !important; }
 
 // custom overflow
 .text-overflow {
@@ -154,21 +170,6 @@ nwse-resize, n-resize, e-resize, nw-resize, grab, grabbing, zoom-in, zoom-out {
 
   .cursor-#{$cursor-name-loop}-i {
     cursor: $cursor-name-loop !important;
-  }
-}
-
-// align items & important settings
-@each $align-name-loop in start, center, middle, end {
-  @if($align-name-loop == middle){
-    $align-name-loop: center;
-  }
-
-  .align-items-#{$align-name-loop} {
-    align-items: $align-name-loop;
-  }
-
-  .align-items-#{$align-name-loop}-i {
-    align-items: $align-name-loop !important;
   }
 }
 

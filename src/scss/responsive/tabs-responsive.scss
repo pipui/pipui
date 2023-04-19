@@ -1,39 +1,55 @@
-@import "../globals";
-@import "../mixins";
+@import "../Globals";
+@import "../Mixins";
 
 @include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
   .tabs > .tab-links {
-    padding: $DEFAULT_DIVIDER * 2px;
-    display: grid;
     grid-template-columns: 100%;
-    grid-gap: $DEFAULT_DIVIDER * 2px;
-  }
-
-  .tabs > .tab-links > li {
-    display: block;
-  }
-
-  .tabs > .tab-links > li > .tab-link {
-    line-height: $DEFAULT_DIVIDER * 10px;
-    height: $DEFAULT_DIVIDER * 10px;
-    min-width: $DEFAULT_DIVIDER * 10px;
-    padding: 0 ($DEFAULT_DIVIDER * 3px);
-    width: 100%;
-    display: block;
-  }
-
-  .tabs > .tab-links > li > .tab-link:hover,
-  .tabs > .tab-links > li > .tab-link.active {
-    border: 0;
-    background-color: rgba(0,0,0,0.1);
   }
 
   .tabs.tabs-horizontal {
     grid-template-columns: 100%;
   }
 
+  .tabs > .tab-links,
+  .tabs.tabs-horizontal > .tab-links {
+    border-radius: $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS 0 0;
+    padding: $DEFAULT_DIVIDER * 3px;
+    display: flex;
+    gap: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .tabs > .tab-links > li,
+  .tabs.tabs-horizontal > .tab-links > li {
+    flex-shrink: 0;
+    flex-grow: 1;
+    width: auto;
+  }
+
+  .tabs > .tab-links > li .tab-link,
+  .tabs.tabs-horizontal > .tab-links > li .tab-link{
+    min-height: $DEFAULT_DIVIDER * 12px;
+    min-width: $DEFAULT_DIVIDER * 12px;
+    border: none;
+    border-radius: $DEFAULT_BORDER_RADIUS;
+    background-color: rgba(0,0,0,0.1);
+    padding: $DEFAULT_DIVIDER * 2px $DEFAULT_DIVIDER * 7px;
+  }
+
   .tabs > .tab-links > li .tab-link:hover,
-  .tabs > .tab-links > li .tab-link.active {
-    border: 0;
+  .tabs.tabs-horizontal > .tab-links > li .tab-link:hover {
+    background-color: rgba(0,0,0,0.2);
+  }
+
+  .tabs > .tab-links > li .tab-link.active,
+  .tabs.tabs-horizontal > .tab-links > li .tab-link.active {
+    background-color: rgba(0,0,0,0.4);
+    border: none;
+  }
+
+  .tabs > .tab-links > li .tab-link:after,
+  .tabs.tabs-horizontal > .tab-links > li .tab-link:after {
+    display: none;
   }
 }

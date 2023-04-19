@@ -1,39 +1,122 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
-.bbpanel-target {
+.bbpanel {
+  position: relative;
+}
+
+.bbpanel > .bbcode-list {
+  display: flex;
   background-color: map_get($PALETTE, 'white');
   border-radius: $DEFAULT_BORDER_RADIUS;
   box-shadow: $DEFAULT_BOX_SHADOW;
   overflow: hidden;
-  display: none;
+  padding: #{$DEFAULT_DIVIDER}px;
+  margin-bottom: $DEFAULT_DIVIDER * 5px;
+  transform: scaleY(0);
+  visibility: hidden;
+  pointer-events: none;
+  transition: $DEFAULT_TRANSITION;
+  transform-origin: top center;
+  margin-top: $DEFAULT_DIVIDER * 2px;
 }
 
-.bbpanel-target > ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(#{$DEFAULT_DIVIDER * 8px}, 1fr));
-  grid-template-rows: $DEFAULT_DIVIDER * 8px;
-  align-items: start;
+.bbpanel > .bbcode-list.focus {
+  transform: scaleY(1);
+  visibility: visible;
+  pointer-events: auto;
+  overflow: auto;
 }
 
-.bbpanel-target > ul > li {
-  list-style: none;
-  box-sizing: border-box;
+.bbpanel > .bbcode-list > .bbcode-separator {
+  width: $DEFAULT_DIVIDER * 2 + 1px;
+  position: relative;
+  height: $INPUT_DEFAULT_HEIGHT;
 }
 
-.bbpanel-target > ul > li > a {
+.bbpanel > .bbcode-list > .bbcode-separator:before {
+  content: "";
   display: block;
-  box-sizing: border-box;
-  width: 100%;
+  width: 1px;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: #{$DEFAULT_DIVIDER}px;
+  background-color: map_get($PALETTE, 'gray-300');
+}
+
+.bbpanel > .bbcode-list > .bbcode-trigger {
+  flex-grow: 1;
+  cursor: pointer;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  height: $INPUT_DEFAULT_HEIGHT;
+  min-width: $INPUT_DEFAULT_HEIGHT;
   text-align: center;
-  line-height: $DEFAULT_DIVIDER * 8px;
+  line-height: $INPUT_DEFAULT_HEIGHT;
   color: map_get($PALETTE, 'gray-700');
-  font-size: 12px;
   transition: $DEFAULT_TRANSITION;
 }
 
-.bbpanel-target > ul > li > a:hover {
+.bbpanel > .bbcode-list > .bbcode-trigger:hover {
   background-color: map_get($PALETTE, 'blue');
   color: map_get($PALETTE, 'white');
+}
+
+
+
+.bbpanel > .popup-list {
+  display: flex;
+  position: absolute;
+  background-color: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 4px;
+  border-radius: 2px;
+  z-index: 1;
+  margin-top: -20px;
+  max-width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+}
+
+.bbpanel > .popup-list.popup-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.bbpanel > .popup-list .bbcode-trigger {
+  height: $DEFAULT_DIVIDER * 7px;
+  line-height: $DEFAULT_DIVIDER * 7px + 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 2px;
+  transition: $DEFAULT_TRANSITION;
+  min-width: $DEFAULT_DIVIDER * 7px;
+}
+
+.bbpanel > .popup-list .bbcode-trigger:hover {
+  background-color: map_get($PALETTE, 'blue');
+}
+
+.bbpanel > .popup-list > .bbcode-separator {
+  width: $DEFAULT_DIVIDER * 2 + 1px;
+  position: relative;
+  height: $DEFAULT_DIVIDER * 7px;
+}
+
+.bbpanel > .popup-list > .bbcode-separator:before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: #{$DEFAULT_DIVIDER}px;
+  background-color: map_get($PALETTE, 'gray-300');
 }

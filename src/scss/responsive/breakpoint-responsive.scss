@@ -1,4 +1,4 @@
-@import "../mixins";
+@import "../Mixins";
 
 @each $responsive-loop-key, $responsive-loop-val in $RESPONSIVE_BREAKPOINTS {
   @include BREAKPOINT($responsive-loop-key, 'from') {

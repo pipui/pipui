@@ -1,5 +1,6 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
+
 
 .datepicker {
   position: fixed;
@@ -7,68 +8,391 @@
   left: 0;
   z-index: 1000;
   padding: $DEFAULT_PADDING_WIDTH;
-  text-align: center;
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.4);
   cursor: pointer;
+  pointer-events: none;
+  visibility: hidden;
+  display: flex;
+  opacity: 0;
+  transition: $DEFAULT_TRANSITION;
+  align-items: center;
+  justify-content: center;
+}
+
+.datepicker.datepicker-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .datepicker > .datepicker-wrapper {
-  display: grid;
-  align-items: center;
-  height: 100%;
-}
-
-.datepicker > .datepicker-wrapper > .datepicker-block {
-  width: $DEFAULT_DIVIDER * 90px;
-  margin: auto;
+  background-color: map_get($PALETTE, 'white');
+  color: map_get($PALETTE, 'gray-900');
+  box-sizing: border-box;
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  padding: $DEFAULT_PADDING_WIDTH;
+  width: 360px;
   cursor: auto;
-  z-index: 1;
-  position: relative;
+  overflow: hidden;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block input,
-.datepicker > .datepicker-wrapper > .datepicker-block select {
+.datepicker > .datepicker-wrapper .input {
   margin: 0;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .top {
+.datepicker > .datepicker-wrapper > .datepicker-tabs {
+  position: relative;
+  height: 364px;
   display: grid;
-  grid-gap: $DEFAULT_PADDING_WIDTH;
-  grid-template-columns: 1fr 1fr;
-  align-items: start;
+  grid-template-columns: 100%;
+  align-items: center;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .middle > .daylist {
+
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block {
   display: grid;
-  grid-gap: $DEFAULT_DIVIDER * 2px;
-  align-items: start;
-  grid-template-columns: repeat(7, 1fr);
-  padding: $DEFAULT_PADDING_WIDTH 0;
+  grid-template-columns: 100%;
+  grid-gap: 20px;
+  opacity: 0;
+  transition: $DEFAULT_TRANSITION;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block[data-datepicker-type="date"] > .block-date > .middle > .daylist {
-  padding-bottom: 0;
+.datepicker.date-picker > .datepicker-wrapper > .datepicker-tabs > .date-block.active-tab {
+  opacity: 1;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .middle > .daylist > .day-id {
-  line-height: $DEFAULT_DIVIDER * 9px;
-  height: $DEFAULT_DIVIDER * 9px;
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block {
+  position: relative;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
   text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: map_get($PALETTE, 'gray-800');
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-prev,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-next {
+  padding: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: $DEFAULT_DIVIDER * 9px;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+  color: map_get($PALETTE, 'gray-700');
+  transition: $DEFAULT_TRANSITION;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-next {
+  left: auto;
+  right: 0;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-prev:hover,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .year-block > .year-next:hover {
+  background-color: map_get($PALETTE, 'gray-100');
+}
+
+
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block {
+  position: relative;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: map_get($PALETTE, 'gray-800');
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-prev,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-next {
+  padding: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: $DEFAULT_DIVIDER * 9px;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+  color: map_get($PALETTE, 'gray-700');
+  transition: $DEFAULT_TRANSITION;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-next {
+  left: auto;
+  right: 0;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-prev:hover,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .month-block > .month-next:hover {
+  background-color: map_get($PALETTE, 'gray-100');
+}
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .week-block {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: map_get($PALETTE, 'gray');
+  text-align: center;
+  text-transform: lowercase;
+}
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  color: map_get($PALETTE, 'gray-700');
+  text-align: center;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block > .day-id {
+  height: $DEFAULT_DIVIDER * 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   border-radius: $DEFAULT_BORDER_RADIUS;
   transition: $DEFAULT_TRANSITION;
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .middle > .daylist > .day-id:hover,
-.datepicker > .datepicker-wrapper > .datepicker-block > .block-date > .middle > .daylist > .day-id.selected {
-  box-shadow: $DEFAULT_BOX_SHADOW;
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block > .day-id.day-prev,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block > .day-id.day-next {
+  color: map_get($PALETTE, 'gray-400');
 }
 
-.datepicker > .datepicker-wrapper > .datepicker-block[data-datepicker-type="datetime"] > .block-date > .footer {
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block > .day-id.day-active {
+  background-color: map_get($PALETTE, 'blue');
+  color: map_get($PALETTE, 'white');
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .date-block > .day-block > .day-id:not(.day-active):hover {
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  position: relative;
+  z-index: 1;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-footer {
+  padding-top: $DEFAULT_PADDING_WIDTH;
+  gap: 20px;
+  justify-content: end;
+  align-items: start;
   display: grid;
   grid-gap: $DEFAULT_PADDING_WIDTH;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 3fr 1fr;
+  width: 100%;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-footer .btn {
+  margin: 0;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-footer .datepicker-cancel,
+.datepicker > .datepicker-wrapper > .datepicker-footer .datepicker-prev {
+  background-color: map_get($PALETTE, 'gray-200');
+  color: map_get($PALETTE, 'gray-700');
+}
+
+
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block {
+  height: 100%;
+  z-index: 1;
+  transition: $DEFAULT_TRANSITION;
+  background-color: #fff;
+  width: 100%;
+}
+
+.datepicker.date-picker.time-picker > .datepicker-wrapper > .datepicker-tabs > .time-block {
+  position: absolute;
+  left: calc(100% + #{$DEFAULT_PADDING_WIDTH});
+  top: 0;
+  opacity: 0;
+}
+
+.datepicker.date-picker.time-picker > .datepicker-wrapper > .datepicker-tabs > .time-block.active-tab {
+  left: 0;
+  opacity: 1;
+}
+
+.datepicker.time-picker:not(.date-picker) > .datepicker-wrapper > .datepicker-tabs > .time-block {
+  position: static;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr 40px 1fr;
+  align-items: center;
+  padding-top: 40px;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .visual-block {
+  height: 80px;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: map_get($PALETTE, 'gray-100');
+  color: map_get($PALETTE, 'gray-700');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .time-separator {
+  position: relative;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .time-separator:before,
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .time-separator:after {
+  display: block;
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: map_get($PALETTE, 'gray-200');
+  position: absolute;
+  left: calc(50% - 4px);
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .time-separator:before {
+  bottom: calc(50% + 8px);
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-visual .time-separator:after {
+  top: calc(50% + 8px);
+}
+
+
+
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs {
+  display: grid;
+  grid-gap: $DEFAULT_DIVIDER * 5px;
+  padding-top: 40px;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time {
+  display: grid;
+  grid-gap: $DEFAULT_DIVIDER * 2px;
   align-items: start;
+  position: relative;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time > label {
+  font-size: 11px;
+  font-weight: 500;
+  color: map_get($PALETTE, 'gray');
+  cursor: default;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  outline: none;
+  border: 0;
+  height: $DEFAULT_DIVIDER * 5px;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: #{$DEFAULT_DIVIDER}px;
+  background: map_get($PALETTE, 'gray-200');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  border: 0;
+}
+
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-moz-range-track {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: #{$DEFAULT_DIVIDER}px;
+  cursor: pointer;
+  background: map_get($PALETTE, 'gray-200');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  border: 0;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-ms-track {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: #{$DEFAULT_DIVIDER}px;
+  cursor: pointer;
+  background: map_get($PALETTE, 'gray-200');
+  border-color: transparent;
+  color: transparent;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: $DEFAULT_DIVIDER * 5px;
+  width: $DEFAULT_DIVIDER * 5px;
+  border-radius: 50%;
+  background: map_get($PALETTE, 'blue');
+  cursor: pointer;
+  border: 0;
+  margin-top: $DEFAULT_DIVIDER * -2px;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: $DEFAULT_DIVIDER * 5px;
+  width: $DEFAULT_DIVIDER * 5px;
+  border-radius: 50%;
+  background: map_get($PALETTE, 'blue');
+  cursor: pointer;
+  border: 0;
+}
+
+.datepicker > .datepicker-wrapper > .datepicker-tabs > .time-block > .time-inputs > .block-input-time input[type="range"]::-ms-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: $DEFAULT_DIVIDER * 5px;
+  width: $DEFAULT_DIVIDER * 5px;
+  border-radius: 50%;
+  background: map_get($PALETTE, 'blue');
+  cursor: pointer;
+  border: 0;
 }

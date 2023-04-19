@@ -1,21 +1,35 @@
-@import "../mixins";
+@import "../Globals";
+@import "../Mixins";
 
-@include BREAKPOINT($DEFAULT_BREAKPOINT_FULLWIDTH) {
-  .confirm {
-    padding: $RESPONSIVE_PADDING_WIDTH;
-  }
-
-  .confirm > .confirm-id {
+@include BREAKPOINT($DEFAULT_BREAKPOINT) {
+  .confirm-container > .placement {
     width: 100%;
-    min-width: 100%;
-    padding: $RESPONSIVE_PADDING_WIDTH;
+    height: 100%;
   }
 
-  .confirm > .confirm-id > .confirm-footer {
-    padding: 0;
+  .confirm-container > .placement > .confirm-id {
+    min-width: 0;
   }
 
-  .confirm > .confirm-id > .confirm-footer > .btn {
-    margin-left: 0;
+  .confirm-container > .placement[data-confirm-placement^="bottom-"],
+  .confirm-container > .placement[data-confirm-placement^="center-"],
+  .confirm-container > .placement[data-confirm-placement$="-right"],
+  .confirm-container > .placement[data-confirm-placement$="-center"] {
+    left: 0;
+    top: 0;
+    bottom: auto;
+    right: auto;
+  }
+}
+
+@include BREAKPOINT($BP_SMARTPHONE) {
+  .confirm-container > .placement > .confirm-id {
+    width: 100%;
+  }
+
+  .confirm-container > .placement > .confirm-id > .confirm-wrapper > .confirm-footer {
+    display: grid;
+    grid-gap: $DEFAULT_PADDING_WIDTH;
+    grid-template-columns: 100%;
   }
 }

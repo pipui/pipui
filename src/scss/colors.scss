@@ -1,4 +1,4 @@
-@import "palette";
+@import "Palette";
 
 @each $color-name-loop, $color-val-loop in $PALETTE {
   .text-#{$color-name-loop} {
@@ -10,10 +10,6 @@
   }
 
   .text-#{$color-name-loop}-h:hover {
-    color: $color-val-loop;
-  }
-
-  .text-#{$color-name-loop}-h-i:hover {
     color: $color-val-loop !important;
   }
 
@@ -26,10 +22,6 @@
   }
 
   .bg-#{$color-name-loop}-h:hover {
-    background-color: $color-val-loop !important;
-  }
-
-  .bg-#{$color-name-loop}-h-i:hover {
     background-color: $color-val-loop !important;
   }
 }

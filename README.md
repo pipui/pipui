@@ -32,16 +32,10 @@ npm run dist
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
 
-<!-- JQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-<!-- JQuery Easing -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
 <!-- PipUI -->
-<link rel="stylesheet" href="https://cdn.pipui.ru/latest/dist/css/bundles/pipui.min.css" />
-<link rel="stylesheet" href="https://cdn.pipui.ru/latest/dist/css/bundles/pipui-responsive.min.css" />
-<script src="https://cdn.pipui.ru/latest/dist/js/bundles/pipui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.pipui.ru/2.0.0/dist/css/bundles/pipui.min.css" />
+<link rel="stylesheet" href="https://cdn.pipui.ru/2.0.0/dist/css/bundles/pipui-responsive.min.css" />
+<script src="https://cdn.pipui.ru/2.0.0/dist/js/bundles/pipui.min.js"></script>
 ```
 
 Полную документацию можно найти на странице https://pipui.ru/docs/

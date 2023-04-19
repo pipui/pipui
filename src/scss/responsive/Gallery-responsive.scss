@@ -1,0 +1,77 @@
+@import "../Globals";
+@import "../Mixins";
+
+@include BREAKPOINT($BP_DESKTOP_FULLSCREEN) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 652px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 652px;
+  }
+
+}
+
+@include BREAKPOINT($BP_DESKTOP) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 483px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 483px;
+  }
+}
+
+@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 409px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 409px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-list > .gallery-item {
+    width: 160px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-list > .gallery-item > .gallery-item-image {
+    height: 90px;
+  }
+}
+
+@include BREAKPOINT($BP_TABLET) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 360px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 360px;
+  }
+}
+
+@include BREAKPOINT($BP_SMARTPHONE) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 280px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 280px;
+  }
+}
+
+@include BREAKPOINT($BP_PHONE) {
+
+  .gallery > .gallery-wrapper > .gallery-preview {
+    height: 160px;
+  }
+
+  .gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-height: 160px;
+  }
+}

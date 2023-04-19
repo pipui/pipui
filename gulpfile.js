@@ -11,20 +11,42 @@ const srcScssPath = './src/scss/';
 const srcJsPath = './src/js/';
 const mapPath = './';
 
-const v = '1.6.0';
+const v = '2.0.0';
 
 let scssList = [
-    'base.scss', 'alert.scss', 'alertblock.scss',
-    'autocomplete.scss', 'bbcodes.scss', 'bbpanel.scss',
-    'breadcrumbs.scss', 'button.scss', 'colors.scss',
-    'confirm.scss', 'dropdown.scss', 'form.scss',
-    'formvalidator.scss', 'grid.scss', 'modal.scss',
-    'navbar.scss', 'navmenu.scss', 'pagination.scss',
-    'poplight.scss', 'popup.scss', 'progress.scss',
-    'slider.scss', 'spoiler.scss', 'table.scss',
-    'tabs.scss', 'textarea.scss', 'tooltip.scss',
-    'tagselector.scss', 'datepicker.scss',
-    'size.scss', 'padding.scss'
+    'Base.scss',
+    'Alert.scss',
+    'Alertblock.scss',
+    'Pagination.scss',
+    'Tabs.scss',
+    'Breadcrumbs.scss',
+    'Navbar.scss',
+    'Padding.scss',
+    'Colors.scss',
+    'Dropdown.scss',
+    'Table.scss',
+    'Grid.scss',
+    'Forms.scss',
+    'Size.scss',
+    'Autocomplete.scss',
+    'BBPanel.scss',
+    'BBCodes.scss',
+    'Buttons.scss',
+    'Confirm.scss',
+    'Modal.scss',
+    'Gallery.scss',
+    'Image.scss',
+    'Navmenu.scss',
+    'Popup.scss',
+    'Progress.scss',
+    'Slider.scss',
+    'Collapse.scss',
+    'Tooltip.scss',
+    'Textarea.scss',
+    'Tagselector.scss',
+    'Datepicker.scss',
+    'Validator.scss',
+
 ];
 
 scssList = scssList.map(function(v){
@@ -32,10 +54,20 @@ scssList = scssList.map(function(v){
 });
 
 let scssListResponsive = [
-    'base-responsive.scss', 'alert-responsive.scss', 'button-responsive.scss',
-    'confirm-responsive.scss', 'datepicker-responsive.scss', 'grid-responsive.scss',
-    'modal-responsive.scss', 'navbar-responsive.scss', 'navmenu-responsive.scss',
-    'table-responsive.scss', 'tabs-responsive.scss', 'breakpoint-responsive.scss'
+    'Base-responsive.scss',
+    'Alert-responsive.scss',
+    'Buttons-responsive.scss',
+    'Confirm-responsive.scss',
+    'Datepicker-responsive.scss',
+    'Grid-responsive.scss',
+    'Modal-responsive.scss',
+    'Navbar-responsive.scss',
+    'Navmenu-responsive.scss',
+    'Table-responsive.scss',
+    'Slider-responsive.scss',
+    'Tabs-responsive.scss',
+    'Gallery-responsive.scss',
+    'Breakpoint-responsive.scss'
 ];
 
 scssListResponsive = scssListResponsive.map(function(v){
@@ -43,12 +75,35 @@ scssListResponsive = scssListResponsive.map(function(v){
 });
 
 let jsList = [
-    'base.js', 'navbar.js', 'modal.js', 'alert.js', 'confirm.js',
-    'tabs.js', 'spoiler.js', 'textarea.js', 'bbpanel.js', 'bbcodes.js',
-    'formvalidator.js', 'dropdown.js', 'toggle.js', 'tabindex.js', 'pagination.js',
-    'navmenu.js', 'autocomplete.js', 'poplight.js', 'popup.js', 'slider.js',
-    'tooltip.js', 'alertblock.js', 'tagselector.js', 'anchor.js', 'datepicker.js',
-    'progress.js'
+    'Base.js',
+    'DateComponent.js',
+    'LoggerComponent.js',
+    'StorageComponent.js',
+    'AnimationComponent.js',
+    'AnimationsComponent.js',
+    'TabsComponent.js',
+    'AlertblockComponent.js',
+    'TooltipComponent.js',
+    'NavbarComponent.js',
+    'DropdownComponent.js',
+    'AnchorComponent.js',
+    'PaginationComponent.js',
+    'FormsComponent.js',
+    'ProgressComponent.js',
+    'CollapseComponent.js',
+    'ModalComponent.js',
+    'AlertComponent.js',
+    'ConfirmComponent.js',
+    'BBPanelComponent.js',
+    'DatepickerComponent.js',
+    'ImageComponent.js',
+    'GalleryComponent.js',
+    'PopupComponent.js',
+    'TagselectorComponent.js',
+    'SliderComponent.js',
+    'AutocompleteComponent.js',
+    'TextareaComponent.js',
+    'ValidatorComponent.js',
 ];
 
 jsList = jsList.map(function(v){

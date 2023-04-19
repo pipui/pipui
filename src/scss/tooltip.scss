@@ -1,11 +1,11 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 $TOOLTIP_MAX_WIDTH: $DEFAULT_DIVIDER * 60px;
 
 .tooltip {
   position: absolute;
-  display: none;
+  display: block;
   left: -9999px;
   top: -9999px;
   background-color: rgba(0,0,0,0.8);
@@ -15,28 +15,17 @@ $TOOLTIP_MAX_WIDTH: $DEFAULT_DIVIDER * 60px;
   max-width: $TOOLTIP_MAX_WIDTH;
   word-break: break-word;
   opacity: 0;
-  visibility: hidden;
-  z-index: 10;
+  pointer-events: none;
+  z-index: -9999;
   text-align: center;
   transition: opacity $DEFAULT_TRANSITION_MOVING;
+  margin-top: $DEFAULT_DIVIDER * -1px;
 }
 
-.tooltip.tooltip-pos-left,
-.tooltip.tooltip-pos-right,
-.tooltip.tooltip-pos-top,
-.tooltip.tooltip-pos-bottom,
-.tooltip.tooltip-pos{
-  display: block;
-}
-
-.tooltip.show {
-  visibility: visible;
+.tooltip.tooltip-active {
+  z-index: 10;
   opacity: 1;
-}
-
-.tooltip:not(.show){
-  left: -9999px !important;
-  top: -9999px !important;
+  pointer-events: auto;
 }
 
 .tooltip:after {
@@ -44,37 +33,56 @@ $TOOLTIP_MAX_WIDTH: $DEFAULT_DIVIDER * 60px;
   display: block;
   width: 0;
   height: 0;
-  border-left: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-right: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-top: ($DEFAULT_DIVIDER * 1px) solid rgba(0,0,0,0.8);
+  border-left: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-right: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-top: #{$DEFAULT_DIVIDER}px solid rgba(0,0,0,0.8);
   position: absolute;
   top: 100%;
   left: calc(50% - #{$DEFAULT_DIVIDER}px);
 }
 
-.tooltip.tooltip-pos-left:after {
-  border-right: 0;
-  border-top: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-bottom: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-left: ($DEFAULT_DIVIDER * 1px) solid rgba(0,0,0,0.8);
-  left: 100%;
-  top: calc(50% - #{$DEFAULT_DIVIDER}px);
+
+
+.tooltip[data-tooltip-direction="down"] {
+  margin-top: #{$DEFAULT_DIVIDER}px;
 }
 
-.tooltip.tooltip-pos-right:after {
+.tooltip[data-tooltip-direction="down"]:after {
+  top: $DEFAULT_DIVIDER * -1px;
+  border-top: 0;
+  border-left: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-right: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-bottom: #{$DEFAULT_DIVIDER}px solid rgba(0,0,0,0.8);
+}
+
+
+
+.tooltip[data-tooltip-direction="left"] {
+  margin-top: 0;
+  margin-left: $DEFAULT_DIVIDER * -1px;
+}
+
+.tooltip[data-tooltip-direction="left"]:after {
+  top: calc(50% - #{$DEFAULT_DIVIDER}px);
+  left: 100%;
+  border-right: 0;
+  border-top: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-bottom: #{$DEFAULT_DIVIDER}px solid transparent;
+  border-left: #{$DEFAULT_DIVIDER}px solid rgba(0,0,0,0.8);
+}
+
+
+
+.tooltip[data-tooltip-direction="right"] {
+  margin-top: 0;
+  margin-left: #{$DEFAULT_DIVIDER}px;
+}
+
+.tooltip[data-tooltip-direction="right"]:after {
+  top: calc(50% - #{$DEFAULT_DIVIDER}px);
+  left: $DEFAULT_DIVIDER * -1px;
   border-left: 0;
   border-top: ($DEFAULT_DIVIDER * 1px) solid transparent;
   border-bottom: ($DEFAULT_DIVIDER * 1px) solid transparent;
   border-right: ($DEFAULT_DIVIDER * 1px) solid rgba(0,0,0,0.8);
-  left: -#{$DEFAULT_DIVIDER}px;
-  top: calc(50% - #{$DEFAULT_DIVIDER}px);
-}
-
-.tooltip.tooltip-pos-bottom:after {
-  border-top: 0;
-  border-left: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-right: ($DEFAULT_DIVIDER * 1px) solid transparent;
-  border-bottom: ($DEFAULT_DIVIDER * 1px) solid rgba(0,0,0,0.8);
-  left: calc(50% - #{$DEFAULT_DIVIDER}px);
-  top: -#{$DEFAULT_DIVIDER}px;
 }

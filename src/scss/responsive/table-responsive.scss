@@ -1,6 +1,6 @@
-@import "../mixins";
-@import "../globals";
-@import "../palette";
+@import "../Mixins";
+@import "../Globals";
+@import "../Palette";
 
 @include BREAKPOINT($BP_DESKTOP) {
   .table.table-responsive,

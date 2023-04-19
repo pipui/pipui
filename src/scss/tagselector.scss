@@ -1,33 +1,26 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 $TAGSELECTOR_MAX_HEIGHT: $DEFAULT_DIVIDER * 70px;
 $TAGSELECTOR_LINK_HEIGHT: $DEFAULT_DIVIDER * 8px;
 
 .tagselector {
   display: block;
+  padding-top: $DEFAULT_DIVIDER * 2px;
 }
 
-.tagselector .tagselector-list {
+.tagselector > .tagselector-list {
   font-size: $DEFAULT_FONT_SIZE;
+  display: flex;
+  gap: #{$DEFAULT_DIVIDER}px;
+  flex-wrap: wrap;
 }
 
-.tagselector .tagselector-list .tagselector-item {
-  list-style: none;
-  display: inline-block;
-  vertical-align: top;
-  box-sizing: border-box;
+.tagselector > .tagselector-list > .tagselector-item {
   max-width: $TAGSELECTOR_MAX_HEIGHT;
-  padding: 0 ($DEFAULT_DIVIDER * 1px) ($DEFAULT_DIVIDER * 1px) 0;
-}
-
-.tagselector .tagselector-list .tagselector-item .tagselector-link {
+  padding: 0 ($DEFAULT_DIVIDER * 2px);
   height: $TAGSELECTOR_LINK_HEIGHT;
   line-height: $TAGSELECTOR_LINK_HEIGHT;
-  padding: 0 ($TAGSELECTOR_LINK_HEIGHT / $DEFAULT_DIVIDER * 3);
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
   border-radius: $DEFAULT_BORDER_RADIUS;
   background-color: map_get($PALETTE, 'gray-200');
   color: map_get($PALETTE, 'gray-800');
@@ -35,9 +28,10 @@ $TAGSELECTOR_LINK_HEIGHT: $DEFAULT_DIVIDER * 8px;
   text-overflow: ellipsis;
   overflow: hidden;
   transition: $DEFAULT_TRANSITION;
+  cursor: pointer;
 }
 
-.tagselector .tagselector-list .tagselector-item .tagselector-link:hover {
+.tagselector > .tagselector-list > .tagselector-item:hover {
   text-decoration: line-through;
   color: map_get($PALETTE, 'white');
   background-color: map_get($PALETTE, 'gray-600');

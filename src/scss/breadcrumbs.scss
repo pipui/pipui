@@ -1,5 +1,5 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 .breadcrumbs {
   display: block;
@@ -24,7 +24,7 @@
 .breadcrumbs > .bc-item:after {
   display: inline-block;
   vertical-align: middle;
-  content: "˃";
+  content: "\00BB";
   color: map_get($PALETTE, 'gray-400');
   font-size: 12px;
   line-height: inherit;

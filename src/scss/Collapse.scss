@@ -1,0 +1,81 @@
+@import "Palette";
+@import "Globals";
+
+.collapse {
+  display: none;
+}
+
+.collapse.collapse-active {
+  display: block;
+}
+
+.accordion {
+  background-color: map_get($PALETTE, 'gray');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+.accordion > .accordion-id {
+  display: block;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.accordion > .accordion-id > .accordion-trigger {
+  color: map_get($PALETTE, 'white');
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: ($DEFAULT_PADDING_WIDTH - 4) $DEFAULT_PADDING_WIDTH;
+  border-bottom: 2px solid map_get($PALETTE, 'white');
+  position: relative;
+}
+
+.accordion > .accordion-id:first-child > .accordion-trigger {
+  border-radius: $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS 0 0;
+}
+
+.accordion > .accordion-id:last-child > .accordion-trigger {
+  border-radius: 0 0 $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS;
+  border-bottom: 0;
+}
+
+.accordion > .accordion-id > .accordion-trigger .accordion-trigger-icon {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: map_get($PALETTE, 'gray');
+  width: 28px;
+  height: 28px;
+  display: flex;
+  margin: auto;
+  align-items: center;
+  border-radius: 50%;
+  text-align: center;
+  justify-content: center;
+  background-color: map_get($PALETTE, 'white');
+  transition: $DEFAULT_TRANSITION;
+}
+
+.accordion > .accordion-id > .accordion-trigger.collapse-lock:not(.active) .accordion-trigger-icon,
+.accordion > .accordion-id > .accordion-trigger.active .accordion-trigger-icon {
+  transform: rotate(180deg);
+}
+
+.accordion > .accordion-id > .accordion-trigger.collapse-lock.collapse-active .accordion-trigger-icon {
+  transform: rotate(0);
+}
+
+.accordion > .accordion-id > .accordion-trigger .accordion-trigger-icon > .icon {
+  position: relative;
+  top: 2px;
+  left: 0.5px;
+}
+
+.accordion > .accordion-id > .accordion-target {
+  padding: $DEFAULT_PADDING_WIDTH;
+  display: none;
+  background-color: map_get($PALETTE, 'gray-100');
+}
+
+.accordion > .accordion-id > .accordion-target.collapse-active {
+  display: block;
+}

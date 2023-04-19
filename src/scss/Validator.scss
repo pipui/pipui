@@ -1,0 +1,39 @@
+@import "Palette";
+@import "Globals";
+
+.validator {
+  display: flex;
+  padding: $DEFAULT_PADDING_WIDTH;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  color: map_get($PALETTE, 'white');
+  background-color: map_get($PALETTE, 'amber');
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+  margin-top: $DEFAULT_DIVIDER * 2px;
+  box-shadow: $DEFAULT_BOX_SHADOW;
+}
+
+.validator:after {
+  position: absolute;
+  bottom: 100%;
+  left: $DEFAULT_PADDING_WIDTH;
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: $DEFAULT_DIVIDER * 2px solid transparent;
+  border-right: $DEFAULT_DIVIDER * 2px solid transparent;
+  border-bottom: $DEFAULT_DIVIDER * 2px solid map_get($PALETTE, 'amber');
+}
+
+.validator.visible {
+  position: relative;
+  top: auto;
+  left: auto;
+  pointer-events: auto;
+  opacity: 1;
+}

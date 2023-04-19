@@ -1,0 +1,124 @@
+@import "Palette";
+@import "Globals";
+
+.gallery {
+
+}
+
+.gallery > .gallery-wrapper {
+    overflow: hidden;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview {
+    height: 765px;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin: auto;
+    background-color: map_get($PALETTE, 'gray-800');
+    text-align: center;
+    position: relative;
+    display: grid;
+    align-items: center;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper {
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+    display: grid;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    max-width: 100%;
+    max-height: 765px;
+    margin: auto;
+    opacity: 1;
+    transition: opacity $DEFAULT_TRANSITION_MOVING;
+    vertical-align: bottom;
+}
+
+.gallery.gallery-loading > .gallery-wrapper > .gallery-preview > .gallery-preview-wrapper > img {
+    opacity: 0;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview > .gallery-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.6);
+    padding: $DEFAULT_PADDING_WIDTH;
+    opacity: 0;
+    transition: $DEFAULT_TRANSITION;
+    text-align: left;
+    color: map_get($PALETTE, 'gray-50');
+}
+
+.gallery > .gallery-wrapper > .gallery-preview > .gallery-info > .gallery-info-title {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview > .gallery-info > .gallery-info-text {
+    padding-top: 20px;
+}
+
+.gallery > .gallery-wrapper > .gallery-preview:hover > .gallery-info {
+    opacity: 1;
+}
+
+.gallery > .gallery-wrapper > .gallery-list {
+    display: block;
+    white-space: nowrap;
+    font-size: 0;
+    padding-top: $DEFAULT_PADDING_WIDTH;
+    position: relative;
+    transition: left $DEFAULT_TRANSITION_MOVING;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+.gallery > .gallery-wrapper > .gallery-list > .gallery-item {
+    width: 240px;
+    font-size: $DEFAULT_FONT_SIZE;
+    white-space: normal;
+    display: inline-block;
+    margin-right: $DEFAULT_DIVIDER * 2px;
+    cursor: pointer;
+    transition: $DEFAULT_TRANSITION;
+    border-radius: $DEFAULT_BORDER_RADIUS;
+    padding: #{$DEFAULT_DIVIDER}px;
+    border: 2px solid map_get($PALETTE, 'gray-100');
+}
+
+.gallery > .gallery-wrapper > .gallery-list > .gallery-item:last-child {
+    margin-right: 0;
+}
+
+.gallery > .gallery-wrapper > .gallery-list > .gallery-item.active {
+    padding: #{$DEFAULT_DIVIDER}px;
+    border: 2px solid map_get($PALETTE, 'gray');
+}
+
+.gallery > .gallery-wrapper > .gallery-list > .gallery-item > .gallery-item-image {
+    height: 135px;
+    width: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #212121;
+    border-radius: $DEFAULT_BORDER_RADIUS;
+    overflow: hidden;
+}
+
+.gallery > .gallery-wrapper > .gallery-list > .gallery-item > .gallery-item-title {
+    line-height: $DEFAULT_PADDING_WIDTH;
+    height: $DEFAULT_PADDING_WIDTH;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: $DEFAULT_DIVIDER * 2px;
+}

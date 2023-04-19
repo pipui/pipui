@@ -1,0 +1,294 @@
+@import "Palette";
+@import "Globals";
+
+.input {
+  scrollbar-width: thin;
+}
+
+label,
+input[type="radio"].input,
+input[type="file"].input,
+input[type="checkbox"].input,
+select.input {
+  cursor: pointer;
+  outline: none;
+}
+
+input[type="text"].input,
+input[type="password"].input,
+input[type="email"].input,
+input[type="number"].input,
+input[type="search"].input,
+input[type="checkbox"].input,
+input[type="radio"].input,
+textarea.input,
+select.input {
+  box-sizing: border-box;
+  height: $INPUT_DEFAULT_HEIGHT;
+  padding: 0 $DEFAULT_DIVIDER * 3px;
+  border: 0;
+  outline: none;
+  display: block;
+  font-size: $DEFAULT_FONT_SIZE;
+  width: 100%;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  color: map_get($PALETTE, 'ray-800');
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  transition: $DEFAULT_TRANSITION;
+  transition-property: color, background-color, box-shadow, border, background-position;
+  text-align: left;
+  position: relative;
+  background-color: map_get($PALETTE, 'white');
+}
+
+input[type="text"].input:focus,
+input[type="password"].input:focus,
+input[type="email"].input:focus,
+input[type="number"].input:focus,
+input[type="search"].input:focus,
+input[type="checkbox"].input:focus,
+input[type="radio"].input:focus,
+textarea.input:focus,
+select.input:focus,
+input[type="text"].input.focus,
+input[type="password"].input.focus,
+input[type="email"].input.focus,
+input[type="number"].input.focus,
+input[type="search"].input.focus,
+input[type="checkbox"].input.focus,
+input[type="radio"].input.focus,
+textarea.input.focus,
+select.input.focus {
+  box-shadow: $DEFAULT_BOX_SHADOW_ACTIVE;
+}
+
+input.input:disabled,
+input.input.disabled,
+select.input:disabled,
+select.input.disabled,
+textarea.input:disabled,
+textarea.input.disabled {
+  cursor: not-allowed;
+  background-color: map_get($PALETTE, 'gray-100');
+}
+
+
+/* Select option */
+
+select.input[multiple] {
+  height: 120px;
+  padding: #{$DEFAULT_DIVIDER}px 0;
+}
+
+select.input[multiple] option {
+  padding: $DEFAULT_DIVIDER * 2px $DEFAULT_DIVIDER * 3px;
+}
+
+
+
+/* Radio & Checkbox */
+
+input[type="checkbox"].input,
+input[type="radio"].input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid map_get($PALETTE, 'gray-400');
+  padding: 0;
+  border-radius: $DEFAULT_BORDER_RADIUS * 2;
+  vertical-align: text-top;
+}
+
+input[type="checkbox"].input:hover:not(:disabled),
+input[type="radio"].input:hover:not(:disabled) {
+  border-color: map_get($PALETTE, 'blue');
+}
+
+input[type="checkbox"].input:disabled,
+input[type="radio"].input:disabled {
+  opacity: 0.6;
+}
+
+input[type="radio"].input {
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid map_get($PALETTE, 'gray-400');
+}
+
+input[type="checkbox"].input:checked,
+input[type="radio"].input:checked {
+  border-color: map_get($PALETTE, 'blue');
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/*.input-switch > input[type="checkbox"]:hover:disabled:not(:checked) {
+  border-color: map_get($PALETTE, 'gray-400');
+}*/
+
+input[type="checkbox"].input:checked {
+  background-color: map_get($PALETTE, 'blue');
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-width='2' stroke-linejoin='round' d='m4 8 3 4 6-8'/%3E%3C/svg%3E");
+}
+
+input[type="radio"].input:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 6 6'%3E%3Ccircle r='2' fill='%232196F3'/%3E%3C/svg%3E");
+}
+
+
+
+/* Switches */
+
+.input-switch {
+  position: relative;
+  display: inline-flex;
+  vertical-align: text-top;
+}
+
+.input-switch > input[type="checkbox"] {
+  pointer-events: none;
+  border-radius: 8px;
+  border: 1px solid map_get($PALETTE, 'gray-400');
+  background-color: map_get($PALETTE, 'white');
+  height: 16px;
+  width: 32px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 6 6'%3E%3Ccircle r='2' fill='%23BDBDBD'/%3E%3C/svg%3E");
+}
+
+.input-switch > input[type="checkbox"]:hover:not(:disabled):not(:checked) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 6 6'%3E%3Ccircle r='2' fill='%232196F3'/%3E%3C/svg%3E");
+}
+
+.input-switch > input[type="checkbox"]:checked {
+  background-color: map_get($PALETTE, 'blue');
+  border-color: map_get($PALETTE, 'blue');
+  background-position: right center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 6 6'%3E%3Ccircle r='2' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+
+
+/* File */
+
+.input-file > input[type="file"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: -9999;
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+}
+
+
+
+textarea.input {
+  padding: $DEFAULT_DIVIDER * 3px;
+  height: auto;
+  max-width: 100%;
+  transition-property: outline, color, box-shadow, background-color;
+  scrollbar-width: thin;
+  line-height: $DEFAULT_DIVIDER * 5px;
+  min-height: $INPUT_DEFAULT_HEIGHT;
+}
+
+textarea.input::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+  background-color: map_get($PALETTE, 'gray-300');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  left: 5px;
+}
+
+textarea.input::-webkit-scrollbar-track{
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+textarea.input::-webkit-scrollbar-thumb{
+  background-color: map_get($PALETTE, 'gray-700');
+  border-radius: $DEFAULT_BORDER_RADIUS;
+}
+
+
+
+/* Input block */
+
+.input-block {
+  position: relative;
+  text-align: left;
+  min-height: $DEFAULT_DIVIDER * 7px;
+  display: block;
+}
+
+.input-block .input-helper {
+  display: block;
+  opacity: 0;
+  box-sizing: border-box;
+  padding: $DEFAULT_DIVIDER * 2px 0;
+  font-size: $DEFAULT_FONT_SIZE - 2;
+  color: map_get($PALETTE, 'gray');
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+}
+
+.input-block:hover .input-helper {
+  opacity: 1;
+}
+
+.input-block > label {
+  box-sizing: border-box;
+  display: inline-flex;
+  left: 0;
+  top: 0;
+  font-size: $DEFAULT_FONT_SIZE - 2;
+  color: map_get($PALETTE, 'gray-800');
+  font-weight: 500;
+  order: 1;
+  position: relative;
+  z-index: 2;
+  padding: $DEFAULT_DIVIDER * 2px 0;
+}
+
+
+/* Input prepend/append */
+
+.input-append-prepend {
+  display: flex;
+  flex-direction: row;
+}
+
+.input-append-prepend > .prepend,
+.input-append-prepend > .append {
+  padding: 0 $DEFAULT_DIVIDER * 3px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  background-color: map_get($PALETTE, 'gray-200');
+  color: map_get($PALETTE, 'gray-700');
+  font-weight: 500;
+  min-width: $INPUT_DEFAULT_HEIGHT;
+}
+
+.input-append-prepend > .prepend {
+  order: 1;
+  border-radius: $DEFAULT_BORDER_RADIUS 0 0 $DEFAULT_BORDER_RADIUS;
+}
+
+.input-append-prepend > .append {
+  order: 3;
+  border-radius: 0 $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS 0;
+}
+
+.input-append-prepend > .input {
+  z-index: 2;
+  position: relative;
+  order: 2
+}

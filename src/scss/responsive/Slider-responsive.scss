@@ -1,0 +1,72 @@
+@import "../Globals";
+@import "../Mixins";
+
+@include BREAKPOINT($BP_DESKTOP_FULLSCREEN) {
+
+  .slider {
+    height: 307px;
+  }
+
+
+}
+
+@include BREAKPOINT($BP_DESKTOP) {
+
+  .slider {
+    height: 227px;
+  }
+
+}
+
+@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
+
+  .slider {
+    height: 192px;
+  }
+
+}
+
+@include BREAKPOINT($BP_SMARTPHONE) {
+
+  .slider {
+    height: 116px;
+  }
+
+}
+
+@include BREAKPOINT($BP_PHONE) {
+
+  .slider {
+    height: 74px;
+  }
+
+  .slider:before,
+  .slider:after {
+    top: $DEFAULT_DIVIDER * 2px;
+    right: $DEFAULT_DIVIDER * 2px;
+  }
+
+  .slider:before {
+    margin-right: $DEFAULT_DIVIDER * 2px;
+  }
+
+  .slider > .slider-arrow {
+    top: calc(50% - 16px);
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+
+  .slider > .slider-arrow[data-slider-arrow="prev"] {
+    left: $DEFAULT_DIVIDER * 2px;
+  }
+
+  .slider > .slider-arrow[data-slider-arrow="next"] {
+    right: $DEFAULT_DIVIDER * 2px;
+  }
+
+  .slider > .slider-labels {
+    bottom: $DEFAULT_DIVIDER * 2px;
+  }
+
+}

@@ -1,5 +1,8 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
+
+$POPLIGHT_MESSAGE_ARROW_BORDER: $DEFAULT_DIVIDER * 2px solid transparent;
+$POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE: $DEFAULT_DIVIDER * 2px solid map_get($PALETTE, 'white');
 
 .poplight-overlay {
   background-color: rgba(0,0,0,0.8);
@@ -10,115 +13,206 @@
   width: 100%;
   height: 100%;
   display: block;
-  visibility: hidden;
   opacity: 0;
-  transition: opacity $DEFAULT_TRANSITION_MOVING;
-}
-
-.poplight-overlay.active {
-  visibility: visible;
-  opacity: 1;
-}
-
-.poplight-box {
-  z-index: 8001;
-  background-color: map_get($PALETTE, 'white');
-  box-shadow: rgba(255, 255, 255, 0.12) 0 1px 6px, rgba(255, 255, 255, 0.12) 0 1px 4px;
-}
-
-.poplight-overlay.active.canclose {
+  pointer-events: none;
   cursor: pointer;
-}
-
-.poplight-message {
-  display: block;
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  z-index: 8002;
   transition: opacity $DEFAULT_TRANSITION_MOVING;
-  background-color: map_get($PALETTE, 'white');
-  box-shadow: rgba(255, 255, 255, 0.12) 0 1px 6px, rgba(255, 255, 255, 0.12) 0 1px 4px;
-  border-radius: $DEFAULT_BORDER_RADIUS * 12;
-  padding: $DEFAULT_PADDING_WIDTH;
-  max-width: $DEFAULT_DIVIDER * 80px;
 }
 
-.poplight-message.active {
-  visibility: visible;
-  opacity: 0.7;
-}
-
-.poplight-message.active:hover {
+.poplight-overlay.poplight-active {
   opacity: 1;
+  pointer-events: auto;
 }
 
-.poplight-message:after {
+.poplight-target {
+  box-shadow: rgba(255, 255, 255, 0.2) 0 2px 20px !important;
+  z-index: 8020 !important;
+}
+
+.poplight-content {
+  /*display: none;*/
+  position: absolute;
+  padding: $DEFAULT_DIVIDER * 3px $DEFAULT_DIVIDER * 5px;
+  background-color: map_get($PALETTE, 'white');
+  color: map_get($PALETTE, 'gray-900');
+  /*z-index: 8005;*/
+  border-radius: $DEFAULT_BORDER_RADIUS * 2;
+  transition: background-color $DEFAULT_TRANSITION_MOVING;
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  margin-top: $DEFAULT_DIVIDER * 2px;
+}
+
+.poplight-content.active {
   display: block;
+}
+
+.poplight-content.active:hover {
+  z-index: 8004;
+}
+
+.poplight-content:before {
   content: "";
+  display: block;
+  position: absolute;
+  top: $DEFAULT_DIVIDER * -2px;
+  left: $DEFAULT_DIVIDER * 2px;
   width: 0;
   height: 0;
-  position: absolute;
+  border-left: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-right: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-bottom: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
 }
 
-.poplight-message:hover:after {
+.poplight-content > .poplight-message-close {
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  color: map_get($PALETTE, 'white');
+  width: $DEFAULT_PADDING_WIDTH;
+  height: $DEFAULT_PADDING_WIDTH;
+  text-align: center;
+  line-height: $DEFAULT_PADDING_WIDTH;
+  z-index: 8005;
+  font-size: 18px;
+  text-shadow: 0 2px 8px #000000;
+  opacity: 0.4;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+}
+
+.poplight-content > .poplight-message-close:hover {
   opacity: 1;
 }
 
-.poplight-message.poplight-top.poplight-left {
-  border-radius: $DEFAULT_PADDING_WIDTH $DEFAULT_PADDING_WIDTH 0 $DEFAULT_PADDING_WIDTH;
+
+
+/* Bottom - right */
+.poplight-message.poplight-bottom-right {
+  margin: $DEFAULT_DIVIDER * 2px 0 0 0;
 }
 
-.poplight-message.poplight-top.poplight-left:after {
-  border-top: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'white');
-  border-left: ($DEFAULT_DIVIDER * 4px) solid transparent;
+.poplight-message.poplight-bottom-right:before {
+  top: $DEFAULT_DIVIDER * -2px;
+  left: calc(100% - #{$DEFAULT_DIVIDER * 4px} - #{$DEFAULT_DIVIDER * 2px});
+}
+
+.poplight-message.poplight-bottom-right > .poplight-message-close {
+  left: -#{$DEFAULT_PADDING_WIDTH};
+}
+
+
+
+/* Top - left */
+.poplight-message.poplight-top-left {
+  margin: $DEFAULT_DIVIDER * -2px 0 0 0;
+}
+
+.poplight-message.poplight-top-left:before {
   top: 100%;
-  right: 0;
+  border: 0;
+  border-left: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-right: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
 }
 
-.poplight-message.poplight-top.poplight-right {
-  border-radius: ($DEFAULT_BORDER_RADIUS * 12) ($DEFAULT_BORDER_RADIUS * 12) ($DEFAULT_BORDER_RADIUS * 12) 0;
+.poplight-message.poplight-top-left > .poplight-message-close {
+  top: -#{$DEFAULT_PADDING_WIDTH};
 }
 
-.poplight-message.poplight-top.poplight-right:after {
-  border-top: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'white');
-  border-right: ($DEFAULT_DIVIDER * 4px) solid transparent;
+
+
+/* Top - right */
+.poplight-message.poplight-top-right {
+  margin: $DEFAULT_DIVIDER * -2px 0 0 0;
+}
+
+.poplight-message.poplight-top-right:before {
   top: 100%;
-  left: 0;
+  left: calc(100% - #{$DEFAULT_DIVIDER * 4px} - #{$DEFAULT_DIVIDER * 2px});
+  border: 0;
+  border-left: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-right: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
 }
 
-.poplight-message.poplight-bottom.poplight-left {
-  border-radius: ($DEFAULT_BORDER_RADIUS * 12) 0 ($DEFAULT_BORDER_RADIUS * 12) ($DEFAULT_BORDER_RADIUS * 12);
+.poplight-message.poplight-top-right > .poplight-message-close {
+  top: -#{$DEFAULT_PADDING_WIDTH};
+  left: -#{$DEFAULT_PADDING_WIDTH};
 }
 
-.poplight-message.poplight-bottom.poplight-left:after {
-  border-bottom: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'white');
-  border-left: ($DEFAULT_DIVIDER * 4px) solid transparent;
-  bottom: 100%;
-  right: 0;
+
+
+/* Left - top */
+.poplight-message.poplight-left-top {
+  margin: 0 0 0 $DEFAULT_DIVIDER * -2px;
 }
 
-.poplight-message.poplight-bottom.poplight-right {
-  border-radius: 0 ($DEFAULT_BORDER_RADIUS * 12) ($DEFAULT_BORDER_RADIUS * 12) ($DEFAULT_BORDER_RADIUS * 12);
+.poplight-message.poplight-left-top:before {
+  top: $DEFAULT_DIVIDER * 2px;
+  left: 100%;
+  border: 0;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-left: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
+  border-bottom: $POPLIGHT_MESSAGE_ARROW_BORDER;
 }
 
-.poplight-message.poplight-bottom.poplight-right:after {
-  border-bottom: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'white');
-  border-right: ($DEFAULT_DIVIDER * 4px) solid transparent;
-  bottom: 100%;
-  left: 0;
+.poplight-message.poplight-left-top > .poplight-message-close {
+  left: -#{$DEFAULT_PADDING_WIDTH};
 }
 
-.poplight-message .poplight-message-close {
-  position: absolute;
-  top: ($DEFAULT_DIVIDER * -4px);
-  right: ($DEFAULT_DIVIDER * -4px);
-  width: ($DEFAULT_DIVIDER * 4px);
-  height: ($DEFAULT_DIVIDER * 4px);
-  line-height: ($DEFAULT_DIVIDER * 4px);
-  color: rgba(255,255,255,0.8);
-  text-align: center;
-  font-weight: 500;
-  font-size: $DEFAULT_FONT_SIZE + 6;
-  display: block;
+
+
+/* Left - bottom */
+.poplight-message.poplight-left-bottom {
+  margin: 0 0 0 $DEFAULT_DIVIDER * -2px;
+}
+
+.poplight-message.poplight-left-bottom:before {
+  top: calc(100% - #{$DEFAULT_DIVIDER * 4px} - #{$DEFAULT_DIVIDER * 2px});
+  left: 100%;
+  border: 0;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-left: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
+  border-bottom: $POPLIGHT_MESSAGE_ARROW_BORDER;
+}
+
+.poplight-message.poplight-left-bottom > .poplight-message-close {
+  left: -#{$DEFAULT_PADDING_WIDTH};
+  top: -#{$DEFAULT_PADDING_WIDTH};
+}
+
+
+
+/* Right - top */
+.poplight-message.poplight-right-top {
+  margin: 0 0 0 $DEFAULT_DIVIDER * 2px;
+}
+
+.poplight-message.poplight-right-top:before {
+  top: $DEFAULT_DIVIDER * 2px;
+  left: $DEFAULT_DIVIDER * -2px;
+  border: 0;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-right: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
+  border-bottom: $POPLIGHT_MESSAGE_ARROW_BORDER;
+}
+
+
+
+/* Right - bottom */
+.poplight-message.poplight-right-bottom {
+  margin: 0 0 0 $DEFAULT_DIVIDER * 2px;
+}
+
+.poplight-message.poplight-right-bottom:before {
+  top: calc(100% - #{$DEFAULT_DIVIDER * 4px} - #{$DEFAULT_DIVIDER * 2px});
+  left: $DEFAULT_DIVIDER * -2px;
+  border: 0;
+  border-top: $POPLIGHT_MESSAGE_ARROW_BORDER;
+  border-right: $POPLIGHT_MESSAGE_ARROW_BORDER_ANGLE;
+  border-bottom: $POPLIGHT_MESSAGE_ARROW_BORDER;
+}
+
+.poplight-message.poplight-right-bottom > .poplight-message-close {
+  top: -#{$DEFAULT_PADDING_WIDTH};
+  left: 100%;
 }

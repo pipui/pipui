@@ -1,5 +1,5 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 .bb-bold {
   font-weight: 500;
@@ -51,57 +51,45 @@
   background-color: rgba(158, 158, 158, 0.2);
 }
 
-.bb-spoiler-wrapper {
-  padding: $DEFAULT_PADDING_WIDTH 0;
-}
-
-.bb-spoiler-wrapper > .bb-spoiler {
-  transition: $DEFAULT_TRANSITION;
+.bb-spoiler {
   box-shadow: $DEFAULT_BOX_SHADOW;
   border-radius: $DEFAULT_BORDER_RADIUS;
+  overflow: hidden;
 }
 
-.bb-spoiler-wrapper > .bb-spoiler.open {
-  box-shadow: $DEFAULT_BOX_SHADOW_ACTIVE;
-}
-
-.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger {
+.bb-spoiler > .bb-spoiler-trigger {
+  padding: $DEFAULT_PADDING_WIDTH;
   display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: $DEFAULT_BORDER_RADIUS;
-  padding: 0 $DEFAULT_PADDING_WIDTH;
-  height: $DEFAULT_DIVIDER * 9px;
-  line-height: $DEFAULT_DIVIDER * 9px;
-  position: relative;
   color: map_get($PALETTE, 'gray');
+  position: relative;
 }
 
-.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-trigger:after {
+.bb-spoiler > .bb-spoiler-trigger:after {
   display: block;
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0 $DEFAULT_PADDING_WIDTH;
+  padding: $DEFAULT_PADDING_WIDTH;
   content: '˅';
   font-size: $DEFAULT_FONT_SIZE + 2;
   text-align: center;
-  height: $DEFAULT_DIVIDER * 9px;
-  line-height: $DEFAULT_DIVIDER * 9px;
   transform: rotate(0deg);
   transition: $DEFAULT_TRANSITION;
 }
 
-.bb-spoiler-wrapper > .bb-spoiler.open > .bb-spoiler-trigger {
-  color: map_get($PALETTE, 'gray-600');
-}
-
-.bb-spoiler-wrapper > .bb-spoiler.open > .bb-spoiler-trigger:after {
+.bb-spoiler > .bb-spoiler-trigger.collapse-lock:not(.active):after {
   transform: rotate(180deg);
 }
 
-.bb-spoiler-wrapper > .bb-spoiler > .bb-spoiler-text {
-  display: none;
+.bb-spoiler > .bb-spoiler-trigger.active:after {
+  transform: rotate(180deg);
+}
+
+.bb-spoiler > .bb-spoiler-trigger.active.collapse-lock:after {
+  transform: rotate(0deg);
+}
+
+.bb-spoiler > .bb-spoiler-text {
   padding: $DEFAULT_PADDING_WIDTH;
 }
 

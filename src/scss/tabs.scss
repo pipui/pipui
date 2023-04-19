@@ -1,5 +1,5 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MENU_SIZE = 280px
 
@@ -7,6 +7,7 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
   display: grid;
   align-items: start;
   grid-template-columns: 100%;
+  position: relative;
 }
 
 .tabs.tabs-horizontal {
@@ -14,11 +15,11 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
 }
 
 .tabs > .tab-links {
-  font-size: 0;
   background-color: map_get($PALETTE, 'blue');
   border-radius: $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS 0 0;
   box-sizing: border-box;
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   padding: 0 $DEFAULT_PADDING_WIDTH;
   height: 100%;
 }
@@ -26,10 +27,10 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
 .tabs.tabs-horizontal > .tab-links {
   border-radius: $DEFAULT_BORDER_RADIUS 0 0 $DEFAULT_BORDER_RADIUS;
   padding: 0;
+  flex-direction: column;
 }
 
 .tabs > .tab-links > li {
-  font-size: $DEFAULT_FONT_SIZE - 2;
   display: inline-block;
   vertical-align: top;
 }
@@ -40,26 +41,41 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
 }
 
 .tabs > .tab-links > li .tab-link {
-  line-height: $DEFAULT_DIVIDER * 15px;
-  height: $DEFAULT_DIVIDER * 15px;
+  min-height: $DEFAULT_DIVIDER * 15px;
   min-width: $DEFAULT_DIVIDER * 15px;
   box-sizing: border-box;
-  display: block;
-  padding: 0 ($DEFAULT_DIVIDER * 7px);
+  display: flex;
+  align-items: center;
+  padding: $DEFAULT_DIVIDER * 2px $DEFAULT_DIVIDER * 7px;
   font-weight: 500;
   color: map_get($PALETTE, 'gray-50');
-  transition: $DEFAULT_TRANSITION;
+  transition: all 100ms linear;
   position: relative;
   background: none;
-  border: 0;
+  border-bottom: 0 solid map_get($PALETTE, 'gray-50');
   text-align: left;
   width: 100%;
 }
 
 .tabs.tabs-horizontal > .tab-links > li .tab-link {
-  padding: 0 $DEFAULT_PADDING_WIDTH;
-  border: 0;
-  border-left: ($DEFAULT_DIVIDER * 1px) solid transparent;
+  padding: $DEFAULT_DIVIDER * 2px $DEFAULT_PADDING_WIDTH;
+}
+
+.tabs.tabs-horizontal > .tab-links > li .tab-link:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0;
+  height: 100%;
+  background-color: map_get($PALETTE, 'gray-50');
+  transition: width 100ms linear;
+}
+
+.tabs.tabs-horizontal > .tab-links > li .tab-link:hover:after,
+.tabs.tabs-horizontal > .tab-links > li .tab-link.active:after {
+  width: $DEFAULT_DIVIDER * 1px;
 }
 
 .tabs > .tab-links > li .tab-link:hover,
@@ -70,7 +86,6 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
 .tabs.tabs-horizontal > .tab-links > li .tab-link:hover,
 .tabs.tabs-horizontal > .tab-links > li .tab-link.active {
   border: 0;
-  border-left: ($DEFAULT_DIVIDER * 1px) solid map_get($PALETTE, 'gray-50');
 }
 
 .tabs > .tab-list {
@@ -79,13 +94,12 @@ $TABS_MENU_SIZE: $DEFAULT_DIVIDER * 70px; // if $DEFAULT_DIVIDER = 4 > $TABS_MEN
 
 .tabs > .tab-list > .tab-id {
   display: none;
-  padding: $DEFAULT_PADDING_WIDTH 0;
+  padding: $DEFAULT_PADDING_WIDTH;
   border-radius: 0 0 $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS;
 }
 
 .tabs.tabs-horizontal > .tab-list > .tab-id {
   border-radius: 0 $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS 0;
-  padding: ($DEFAULT_DIVIDER * 2px) $DEFAULT_PADDING_WIDTH;
   height: 100%;
 }
 

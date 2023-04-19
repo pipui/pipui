@@ -1,44 +1,114 @@
-@import "globals";
+@import "Globals";
+@import "Palette";
 
 .slider {
   display: block;
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 360px;
   box-shadow: $DEFAULT_BOX_SHADOW;
   border-radius: $DEFAULT_BORDER_RADIUS;
 }
 
-.slider.paused:after{
+
+//data-slider-pause
+
+.slider:before,
+.slider:after {
+  content: "";
   display: block;
+  background-color: map_get($PALETTE, 'white');
+  width: #{$DEFAULT_DIVIDER}px;
+  height: $DEFAULT_DIVIDER * 3px;
   position: absolute;
-  z-index: 2;
-  content: "❚❚";
-  width: $DEFAULT_DIVIDER * 5px;
-  height: $DEFAULT_DIVIDER * 5px;
-  line-height: $DEFAULT_DIVIDER * 5px;
-  top: 0;
-  right: 0;
+  top: $DEFAULT_PADDING_WIDTH;
+  right: $DEFAULT_PADDING_WIDTH;
+  z-index: 3;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+}
+
+.slider:before {
+  margin-right: $DEFAULT_DIVIDER * 2px;
+}
+
+.slider[data-slider-pause="true"]:before,
+.slider[data-slider-pause="true"]:after {
+  opacity: 1;
+}
+
+
+
+.slider > .slider-arrow {
+  position: absolute;
+  top: calc(50% - 32px);
+  cursor: pointer;
+  z-index: 5;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
   color: #fff;
-  font-size: $DEFAULT_FONT_SIZE;
-  text-align: center;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  text-shadow: $DEFAULT_TEXT_SHADOW;
+  filter: drop-shadow($DEFAULT_TEXT_SHADOW);
 }
 
-.slider.started:after {
-  content: "►";
+.slider > .slider-arrow[data-slider-arrow="prev"] {
+  left: $DEFAULT_PADDING_WIDTH;
 }
 
-.slider > .slider-wrapper {
+.slider > .slider-arrow[data-slider-arrow="next"] {
+  right: $DEFAULT_PADDING_WIDTH;
+}
+
+
+
+.slider > .slider-labels {
+  position: absolute;
+  bottom: $DEFAULT_PADDING_WIDTH;
+  padding: 0 $DEFAULT_PADDING_WIDTH;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.slider > .slider-labels > .slider-label {
+  width: 36px;
+  height: 8px;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  background-color: map_get($PALETTE, 'white');
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: $DEFAULT_TRANSITION;
+}
+
+.slider > .slider-labels > .slider-label.active {
+  box-shadow: $DEFAULT_BOX_SHADOW_ACTIVE;
+  background-color: map_get($PALETTE, 'gray-700');
+}
+
+
+
+.slider > .slider-list {
   overflow: hidden;
   border-radius: $DEFAULT_BORDER_RADIUS;
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 
-.slider > .slider-wrapper > .slider-slide {
+.slider > .slider-list > .slider-slide {
   display: block;
   position: absolute;
-  left: 100%;
+  left: 0;
   top: 0;
   width: 100%;
   height: 100%;
@@ -49,45 +119,112 @@
   padding: $DEFAULT_PADDING_WIDTH;
 }
 
-.slider > .slider-wrapper > .slider-slide.active {
+.slider[data-slider-animation] > .slider-list > .slider-slide.active {
+  z-index: 2;
+}
+
+.slider[data-slider-animation=""] > .slider-list > .slider-slide {
+  opacity: 0;
+}
+
+.slider[data-slider-animation=""] > .slider-list > .slider-slide.active {
+  opacity: 1;
+}
+
+
+
+.slider[data-slider-animation=""].slide-animation > .slider-list > .slider-slide {
+  transition: opacity 1ms;
+}
+
+
+
+.slider[data-slider-animation=""].slide-animation > .slider-list > .slider-slide.slide-animation-left.active,
+.slider[data-slider-animation=""].slide-animation > .slider-list > .slider-slide.slide-animation-right.active {
+  opacity: 0;
+}
+
+.slider[data-slider-animation=""].slide-animation > .slider-list > .slider-slide.slide-animation-left:not(.active),
+.slider[data-slider-animation=""].slide-animation > .slider-list > .slider-slide.slide-animation-right:not(.active) {
+  opacity: 1;
+}
+
+
+/* Animation type "slide" + */
+
+.slider[data-slider-animation="slide"] > .slider-list > .slider-slide {
+  left: 100%;
+}
+
+.slider[data-slider-animation="slide"] > .slider-list > .slider-slide.active {
   left: 0;
 }
 
-.slider > .slider-control {
-  position: absolute;
-  bottom: $DEFAULT_DIVIDER * 5px;
-  right: $DEFAULT_DIVIDER * 5px;
-  z-index: 3;
+.slider[data-slider-animation="slide"] > .slider-list > .slider-slide.slide-animation-left:not(.active) {
+  left: 100%;
 }
 
-.slider > .slider-control > .slider-control-label {
-  display: inline-block;
-  vertical-align: bottom;
-  width: $DEFAULT_DIVIDER * 5px;
-  height: $DEFAULT_DIVIDER * 5px;
-  margin-right: 8px;
-  background-color: #424242;
-  border-radius: 50%;
-  box-shadow: $DEFAULT_BOX_SHADOW;
-  padding: $DEFAULT_DIVIDER + 0px;
+
+.slider[data-slider-animation="slide"] > .slider-list > .slider-slide.slide-animation-right:not(.active) {
+  left: -100%;
 }
 
-.slider > .slider-control > .slider-control-label:last-child {
-  margin-right: 0;
+
+
+.slider[data-slider-animation="slide"].slide-animation > .slider-list > .slider-slide {
+  transition: left 0.8s cubic-bezier(0.83, 0, 0.17, 1);
 }
 
-.slider > .slider-control > .slider-control-label:after {
-  display: block;
+
+
+.slider[data-slider-animation="slide"].slide-animation > .slider-list > .slider-slide.slide-animation-left.active {
+  left: -100%;
+}
+
+.slider[data-slider-animation="slide"].slide-animation > .slider-list > .slider-slide.slide-animation-left:not(.active) {
+  left: 0;
+}
+
+
+
+.slider[data-slider-animation="slide"].slide-animation > .slider-list > .slider-slide.slide-animation-right.active {
+  left: 100%;
+}
+
+.slider[data-slider-animation="slide"].slide-animation > .slider-list > .slider-slide.slide-animation-right:not(.active) {
+  left: 0;
+}
+
+/* Animation type "slide" - */
+
+
+
+/* Animation type "fade" + */
+
+.slider[data-slider-animation="fade"] > .slider-list > .slider-slide {
   opacity: 0;
-  content: "";
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #fff;
-  box-shadow: $DEFAULT_BOX_SHADOW;
-  transition: $DEFAULT_TRANSITION;
 }
 
-.slider > .slider-control > .slider-control-label.active:after {
+.slider[data-slider-animation="fade"] > .slider-list > .slider-slide.active {
   opacity: 1;
 }
+
+
+
+.slider[data-slider-animation="fade"].slide-animation > .slider-list > .slider-slide {
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+}
+
+
+
+.slider[data-slider-animation="fade"].slide-animation > .slider-list > .slider-slide.slide-animation-left.active,
+.slider[data-slider-animation="fade"].slide-animation > .slider-list > .slider-slide.slide-animation-right.active {
+  opacity: 0;
+}
+
+.slider[data-slider-animation="fade"].slide-animation > .slider-list > .slider-slide.slide-animation-left:not(.active),
+.slider[data-slider-animation="fade"].slide-animation > .slider-list > .slider-slide.slide-animation-right:not(.active) {
+  opacity: 1;
+}
+
+/* Animation type "fade" - */

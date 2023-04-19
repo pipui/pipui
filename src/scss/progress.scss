@@ -1,9 +1,14 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
+$LABEL_HEIGHT: $DEFAULT_DIVIDER * 6px;
 
 .progress {
+  margin-top: $LABEL_HEIGHT;
+}
+
+.progress[data-progress-type="linear"] {
   width: 100%;
   height: $PROGRESS_HEIGHT;
   position: relative;
@@ -12,7 +17,7 @@ $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
   padding: $DEFAULT_DIVIDER + 0px;
 }
 
-.progress > .bar {
+.progress[data-progress-type="linear"] > .progress-bar {
   height: 100%;
   width: 0;
   border-radius: $DEFAULT_BORDER_RADIUS;
@@ -22,7 +27,8 @@ $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
   transition: $DEFAULT_TRANSITION;
 }
 
-.progress > .text {
+.progress[data-progress-type="linear"] > .progress-text,
+.progress[data-progress-type="linear"] > .progress-label {
   position: absolute;
   z-index: 1;
   top: 0;
@@ -34,17 +40,28 @@ $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
   line-height: $PROGRESS_HEIGHT;
 }
 
-.progress-radial {
+.progress[data-progress-type="linear"] > .progress-label {
+  top: auto;
+  bottom: 100%;
+  line-height: $LABEL_HEIGHT;
+  color: map_get($PALETTE, 'gray-900');
+}
+
+
+
+
+.progress[data-progress-type="radial"] {
   display: inline-block;
   margin: auto;
   position: relative;
+  border-radius: 50%;
 }
 
-.progress-radial > .bar {
+.progress[data-progress-type="radial"] > .progress-bar {
   display: block;
 }
 
-.progress-radial > .text {
+.progress[data-progress-type="radial"] > .progress-text {
   z-index: 3;
   position: absolute;
   left: 0;
@@ -57,7 +74,7 @@ $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
   text-shadow: 0 0 ($DEFAULT_DIVIDER * 4px) map_get($PALETTE, 'white');
 }
 
-.progress-radial > .subtext {
+.progress[data-progress-type="radial"] > .progress-label {
   z-index: 3;
   position: absolute;
   left: 0;
@@ -68,4 +85,5 @@ $PROGRESS_HEIGHT: $DEFAULT_DIVIDER * 7px;
   text-transform: uppercase;
   font-size: $DEFAULT_FONT_SIZE - 4;
   text-shadow: 0 0 ($DEFAULT_DIVIDER * 3px) map_get($PALETTE, 'white');
+  line-height: $PROGRESS_HEIGHT;
 }

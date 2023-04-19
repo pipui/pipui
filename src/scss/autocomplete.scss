@@ -1,95 +1,43 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
-// Settings
-$AUTOCOMPLETE_INDEX: 100;
-$AUTOCOMPLETE_WIDTH: $DEFAULT_DIVIDER * 60px;
-$AUTOCOMPLETE_MAX_HEIGHT: $DEFAULT_DIVIDER * 72px;
-$AUTOCOMPLETE_BG_COLOR: map_get($PALETTE, 'white');
-$AUTOCOMPLETE_COLOR: map_get($PALETTE, 'gray-700');
-$AUTOCOMPLETE_RADIUS: 0 0 $DEFAULT_BORDER_RADIUS $DEFAULT_BORDER_RADIUS;
-$AUTOCOMPLETE_BOX_SHADOW: $DEFAULT_BOX_SHADOW;
-$AUTOCOMPLETE_PADDING: ($DEFAULT_DIVIDER + 0px) 0;
-$AUTOCOMPLETE_SCROLL_SIZE: $DEFAULT_DIVIDER * 2px;
-
-// Styles
 .autocomplete {
-  display: none;
-  opacity: 0;
-  visibility: hidden;
   position: absolute;
-  z-index: $AUTOCOMPLETE_INDEX;
-  background-color: $AUTOCOMPLETE_BG_COLOR;
-  width: $AUTOCOMPLETE_WIDTH;
-  color: $AUTOCOMPLETE_COLOR;
-  box-shadow: $AUTOCOMPLETE_BOX_SHADOW;
-  border-radius: $AUTOCOMPLETE_RADIUS;
-  padding: $AUTOCOMPLETE_PADDING;
-  top: -9999px;
   left: -9999px;
+  top: -9999px;
+  margin-top: #{$DEFAULT_DIVIDER}px;
+  z-index: 1;
+  background-color: map_get($PALETTE, 'white');
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  padding: #{$DEFAULT_DIVIDER}px 0;
+  width: 200px;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+  pointer-events: none;
+  opacity: 0;
 }
 
-.autocomplete.visible {
-  display: block;
+.autocomplete.autocomplete-active {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 
 .autocomplete > .autocomplete-list {
-  scrollbar-width: thin;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 100%;
+  max-height: 240px;
   overflow: auto;
-  max-height: $AUTOCOMPLETE_MAX_HEIGHT;
-}
-
-.autocomplete > .autocomplete-list::-webkit-scrollbar{
-  width: $AUTOCOMPLETE_SCROLL_SIZE;
-  height: $AUTOCOMPLETE_SCROLL_SIZE;
-  background-color: map_get($PALETTE, 'gray-300');
-  border-radius: $DEFAULT_BORDER_RADIUS;
-  left: 5px;
-}
-
-.autocomplete > .autocomplete-list::-webkit-scrollbar-track{
-  border-radius: $DEFAULT_BORDER_RADIUS;
-}
-
-.autocomplete > .autocomplete-list::-webkit-scrollbar-thumb{
-  background-color: map_get($PALETTE, 'gray-700');
-  border-radius: $DEFAULT_BORDER_RADIUS;
+  scrollbar-width: thin;
 }
 
 .autocomplete > .autocomplete-list > .autocomplete-item {
-  display: block;
-  list-style: none;
-}
-
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link {
-  display: block;
-  box-sizing: border-box;
-  padding: $DEFAULT_DIVIDER * 3px;
-  color: map_get($PALETTE, 'gray-800');
-  position: relative;
-}
-
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link:after {
-  content: "";
-  display: block;
-  width: 0;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: rgba(0,0,0,0.2);
+  display: flex;
+  padding: $DEFAULT_DIVIDER * 2px;
+  cursor: pointer;
   transition: $DEFAULT_TRANSITION;
 }
 
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link.hover:after,
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link:hover:after {
-  width: $DEFAULT_DIVIDER + 0px;
-}
-
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link.hover,
-.autocomplete > .autocomplete-list > .autocomplete-item > .autocomplete-link:hover {
-  background-color: rgba(0,0,0,0.04);
+.autocomplete > .autocomplete-list > .autocomplete-item:hover,
+.autocomplete > .autocomplete-list > .autocomplete-item.hover {
+  background-color: map_get($PALETTE, 'gray-100');
 }

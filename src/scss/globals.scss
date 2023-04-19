@@ -1,4 +1,4 @@
-@import "palette";
+@import "Palette";
 
 $DEFAULT_FONT_FAMILY: 'Roboto', sans-serif;
 
@@ -17,7 +17,12 @@ $DEFAULT_BORDER_RADIUS: 2px;
 $DEFAULT_BOX_SHADOW: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
 $DEFAULT_BOX_SHADOW_ACTIVE: rgba(0, 0, 0, 0.16) 0 4px 12px, rgba(0, 0, 0, 0.24) 0 4px 12px;
 
-$DEFAULT_TRANSITION_MOVING: 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+$DEFAULT_BOX_SHADOW_WHITE: rgba(255, 255, 255, 0.24) 0 1px 6px, rgba(255, 255, 255, 0.24) 0 1px 4px;
+$DEFAULT_BOX_SHADOW_WHITE_ACTIVE: rgba(255, 255, 255, 0.32) 0 4px 12px, rgba(255, 255, 255, 0.48) 0 4px 12px;
+
+$DEFAULT_TEXT_SHADOW: 0 2px 6px rgba(0, 0, 0, 0.48);
+
+$DEFAULT_TRANSITION_MOVING: 450ms cubic-bezier(0.23, 1, 0.32, 1) 10ms;
 
 $DEFAULT_TRANSITION: all $DEFAULT_TRANSITION_MOVING;
 

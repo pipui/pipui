@@ -1,50 +1,126 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
-$CONFIRM_MIN_WIDTH: 300px;
+$CONFIRM_MIN_WIDTH: 320px;
 
-.confirm {
+$CONFIRM_BORDER_RADIUS: $DEFAULT_BORDER_RADIUS;
+
+$CONFIRM_PADDING_WIDTH: $DEFAULT_PADDING_WIDTH;
+
+$CONFIRM_BACKGROUND_COLOR: map_get($PALETTE, 'gray-900');
+
+.confirm-container {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
-  z-index: 9999;
-  padding: $DEFAULT_PADDING_WIDTH;
+  z-index: 9990;
   text-align: center;
-  visibility: visible;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
+  pointer-events: none;
 }
 
-.confirm:empty {
+.confirm-container:empty {
   display: none;
 }
 
-.confirm > .confirm-id {
+.confirm-container.confirm-overlay {
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9980;
+  pointer-events: auto;
+}
+
+.confirm-container > .placement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  pointer-events: none;
+  padding: $DEFAULT_PADDING_WIDTH;
+  width: calc(100% / 3);
+  display: grid;
+  grid-gap: $DEFAULT_DIVIDER * 3px;
+  align-items: start;
+  align-content: start;
+  justify-items: start;
+}
+
+.confirm-container [data-confirm-close] {
+  cursor: pointer;
+}
+
+.confirm-container > .placement > .confirm-id {
   text-align: left;
   display: block;
   vertical-align: top;
-  width: max-content;
+  height: max-content;
   min-width: $CONFIRM_MIN_WIDTH;
   max-width: 100%;
-  visibility: visible;
-  color: #fff;
+  color: map_get($PALETTE, 'white');
   background-color: map_get($PALETTE, 'gray-900');
   box-shadow: $DEFAULT_BOX_SHADOW;
-  padding: $DEFAULT_PADDING_WIDTH;
-  margin: auto auto ($DEFAULT_DIVIDER * 3px) auto;
-  border-radius: $DEFAULT_BORDER_RADIUS;
+  padding: $CONFIRM_PADDING_WIDTH;
+  border-radius: $CONFIRM_BORDER_RADIUS;
+  position: relative;
+  z-index: 9992;
+  pointer-events: none;
+  transition: $DEFAULT_TRANSITION;
+  transition-property: opacity;
+  opacity: 0;
 }
 
-.confirm > .confirm-id > .confirm-text {
-  padding-top: $DEFAULT_DIVIDER * 2px;
+.confirm-container > .placement > .confirm-id.confirm-active {
+  pointer-events: auto;
+  opacity: 1;
 }
 
-.confirm > .confirm-id > .confirm-footer {
-  padding-top: $DEFAULT_PADDING_WIDTH;
-  text-align: right;
+.confirm-container > .placement[data-confirm-placement^="bottom-"] {
+  top: auto;
+  bottom: 0;
+  align-items: end;
+  align-content: end;
 }
 
-.confirm > .confirm-id > .confirm-footer > .btn {
-  margin-left: $DEFAULT_DIVIDER * 2px;
+.confirm-container > .placement[data-confirm-placement^="center-"] {
+  align-items: center;
+  align-content: center;
+}
+
+.confirm-container > .placement[data-confirm-placement$="-right"] {
+  left: auto;
+  right: 0;
+  justify-items: end;
+}
+
+.confirm-container > .placement[data-confirm-placement$="-center"] {
+  left: calc(50% - (100% / 3 / 2));
+  justify-items: center;
+}
+
+.confirm-container > .placement[data-confirm-placement$="-center"] > .confirm-id {
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: start;
+}
+
+.confirm-container > .placement > .confirm-id > .confirm-wrapper {
+  display: grid;
+  grid-gap: $DEFAULT_DIVIDER * 3px;
+  grid-template-columns: 100%;
+}
+
+.confirm-container > .placement > .confirm-id > .confirm-wrapper > .confirm-footer {
+  padding-top: $CONFIRM_PADDING_WIDTH;
+  display: flex;
+  gap: $DEFAULT_PADDING_WIDTH;
+  align-items: center;
+  justify-content: end;
+}
+
+.confirm-container > .placement > .confirm-id > .confirm-wrapper > .confirm-footer .btn {
+  margin: 0;
+}
+
+.confirm-container > .placement > .confirm-id > .confirm-wrapper > .confirm-footer .cancel-btn {
+  color: rgba(255,255,255,0.2);
 }

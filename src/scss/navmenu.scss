@@ -1,5 +1,5 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 $NAVMENU_HEIGHT: $DEFAULT_DIVIDER * 16px;
 
@@ -22,16 +22,15 @@ $NAVMENU_HEIGHT: $DEFAULT_DIVIDER * 16px;
   transition: $DEFAULT_TRANSITION;
   position: relative;
   min-width: $NAVMENU_HEIGHT;
-  min-height: $NAVMENU_HEIGHT;
 }
 
 .nav-menu .nav-menu-link .link-icon {
   position: absolute;
   top: 0;
   right: 0;
-  line-height: $NAVMENU_HEIGHT;
-  height: $NAVMENU_HEIGHT;
+  padding: $DEFAULT_PADDING_WIDTH;
   min-width: $NAVMENU_HEIGHT;
+  display: block;
   text-align: center;
 }
 
@@ -45,7 +44,7 @@ $NAVMENU_HEIGHT: $DEFAULT_DIVIDER * 16px;
   position: absolute;
   right: 0;
   top: 0;
-  width: $DEFAULT_DIVIDER + 0px;
+  width: #{$DEFAULT_DIVIDER}px;
   height: 100%;
   background-color: rgba(0,0,0,0.08);
 }
@@ -59,14 +58,14 @@ $NAVMENU_HEIGHT: $DEFAULT_DIVIDER * 16px;
   width: 0;
   height: 100%;
   background-color: rgba(0,0,0,0.12);
-  transition: $DEFAULT_TRANSITION;
+  transition: width $DEFAULT_TRANSITION_MOVING;
 }
 
 .nav-menu .nav-menu-link:hover:after,
 .nav-menu .nav-menu-link:active:after,
 .nav-menu .nav-menu-link.active:after,
-.nav-menu .nav-menu-item.active > .nav-menu-link:after{
-  width: $DEFAULT_DIVIDER + 0px;
+.nav-menu .nav-sub-menu.collapse-active > .nav-menu-link:after{
+  width: #{$DEFAULT_DIVIDER}px;
 }
 
 .nav-menu .nav-menu-link:active,
@@ -82,13 +81,5 @@ $NAVMENU_HEIGHT: $DEFAULT_DIVIDER * 16px;
 }
 
 .nav-menu .nav-sub-menu {
-  display: none;
-}
-
-.nav-menu .nav-menu-item.active > .nav-sub-menu {
-  display: block;
-}
-
-.nav-menu .nav-sub-menu > .nav-menu-item > .nav-menu-link {
-  padding-left: $DEFAULT_DIVIDER * 9px;
+  padding-left: $DEFAULT_PADDING_WIDTH;
 }

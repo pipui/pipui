@@ -1,16 +1,11 @@
-@import "palette";
-@import "globals";
-@import "mixins";
+@import "Palette";
+@import "Globals";
 
 $ALERTBLOCK_PADDING: $DEFAULT_DIVIDER * 5px;
 
 $ALERTBLOCK_LINE_HEIGHT: $DEFAULT_DIVIDER * 5px;
 
 $ALERTBLOCK_BORDER_RADIUS: $DEFAULT_BORDER_RADIUS;
-
-@mixin ALERTBLOCK_FONT {
-  @include DEFAULT_FONT;
-}
 
 .alertblock {
   background-color: map_get($PALETTE, 'deep-purple-50');
@@ -19,30 +14,34 @@ $ALERTBLOCK_BORDER_RADIUS: $DEFAULT_BORDER_RADIUS;
   position: relative;
   line-height: $ALERTBLOCK_LINE_HEIGHT;
   border-radius: $ALERTBLOCK_BORDER_RADIUS;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
 }
 
-.alertblock.alertblock-before {
-  padding-left: $ALERTBLOCK_PADDING * 3;
+.alertblock.alertblock-hidden,
+.alertblock.alertblock-closed {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.alertblock.alertblock-after {
-  padding-right: $ALERTBLOCK_PADDING * 3;
+.alertblock.alertblock-none {
+  display: none;
 }
 
-.alertblock.alertblock-before > .before,
-.alertblock.alertblock-after > .after {
-  position: absolute;
-  top: $ALERTBLOCK_PADDING;
-  left: $ALERTBLOCK_PADDING;
-  width: $ALERTBLOCK_PADDING * 2;
-  @include DEFAULT_FONT;
+.alertblock > .alertblock-wrapper {
+  width: 100%;
+}
+
+.alertblock > .before,
+.alertblock > .after {
+  min-width: $ALERTBLOCK_PADDING * 2;
+  font-size: $DEFAULT_FONT_SIZE;
   color: rgba(0,0,0,0.4);
-}
-
-.alertblock.alertblock-after > .after {
-  left: auto;
-  right: $ALERTBLOCK_PADDING;
-  text-align: right;
+  text-align: center;
 }
 
 .alertblock .alertblock-close {

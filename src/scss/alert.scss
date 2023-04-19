@@ -1,6 +1,7 @@
-@import "globals";
+@import "Palette";
+@import "Globals";
 
-$ALERT_MIN_WIDTH: 300px;
+$ALERT_MIN_WIDTH: 320px;
 
 $ALERT_BORDER_RADIUS: $DEFAULT_BORDER_RADIUS;
 
@@ -8,112 +9,133 @@ $ALERT_PADDING_WIDTH: $DEFAULT_PADDING_WIDTH;
 
 $ALERT_BACKGROUND_COLOR: map_get($PALETTE, 'gray-900');
 
-.alert {
+.alert-container {
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 9999;
-  padding: $ALERT_PADDING_WIDTH;
+  z-index: 9990;
   text-align: center;
-  visibility: hidden;
-  width: $DEFAULT_RESPONSIVE_BREAKPOINT;
-  margin: auto;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.alert:empty {
+.alert-container:empty {
   display: none;
 }
 
-.alert > .alert-id {
+.alert-container.alert-overlay {
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9980;
+  pointer-events: auto;
+}
+
+.alert-container > .placement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  pointer-events: none;
+  padding: $DEFAULT_PADDING_WIDTH;
+  width: calc(100% / 3);
+  display: grid;
+  grid-gap: $DEFAULT_DIVIDER * 3px;
+  align-items: start;
+  align-content: start;
+  justify-items: start;
+}
+
+.alert-container [data-alert-close] {
+  cursor: pointer;
+}
+
+.alert-container > .placement > .alert-id {
   text-align: left;
-  display: block;
+  display: flex;
   vertical-align: top;
-  width: max-content;
+  height: max-content;
   min-width: $ALERT_MIN_WIDTH;
   max-width: 100%;
-  visibility: visible;
   color: map_get($PALETTE, 'white');
   background-color: map_get($PALETTE, 'gray-900');
   box-shadow: $DEFAULT_BOX_SHADOW;
   padding: $ALERT_PADDING_WIDTH;
-  margin: auto auto $ALERT_PADDING_WIDTH auto;
   border-radius: $ALERT_BORDER_RADIUS;
+  position: relative;
+  z-index: 9992;
+  pointer-events: none;
+  gap: $DEFAULT_PADDING_WIDTH;
+  align-items: center;
+  opacity: 0;
+  transition: $DEFAULT_TRANSITION;
+  transition-property: opacity;
 }
 
-.alert[data-placement^="top-"] {
-  bottom: auto;
-  top: 0;
+.alert-container > .placement > .alert-id.alert-active {
+  pointer-events: auto;
+  opacity: 1;
 }
 
-.alert[data-placement^="bottom-"] {
+.alert-container > .placement > .alert-id > .alert-icon {
+  width: $DEFAULT_DIVIDER * 12px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  color: rgba(255,255,255,0.4);
+  justify-content: center;
+  font-size: 20px;
+}
+
+.alert-container > .placement > .alert-id > .alert-wrapper {
+  flex: 1;
+}
+
+.alert-container > .placement[data-alert-placement^="bottom-"] {
   top: auto;
   bottom: 0;
+  align-items: end;
+  align-content: end;
 }
 
-.alert[data-placement$="-left"] {
-  right: auto;
-  left: 0;
+.alert-container > .placement[data-alert-placement^="center-"] {
+  align-items: center;
+  align-content: center;
 }
 
-.alert[data-placement$="-right"] {
+.alert-container > .placement[data-alert-placement$="-right"] {
   left: auto;
   right: 0;
+  justify-items: end;
 }
 
-.alert[data-placement^="center-"] {
-  bottom: auto;
-  top: 50%;
-  margin-top: -70px;
+.alert-container > .placement[data-alert-placement$="-center"] {
+  left: calc(50% - (100% / 3 / 2));
+  justify-items: center;
 }
 
-.alert[data-placement$="-center"] {
-  right: auto;
-  left: 50%;
-  margin-left: $DEFAULT_RESPONSIVE_BREAKPOINT / 2 * -1;
-}
-
-.alert[data-placement$="-left"] > .alert-id {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.alert[data-placement$="-right"] > .alert-id {
-  margin-left: auto;
-  margin-right: 0;
-}
-
-.alert[data-placement$="-center"] > .alert-id {
+.alert-container > .placement[data-alert-placement$="-center"] > .alert-id {
   margin-left: auto;
   margin-right: auto;
+  justify-items: start;
 }
 
-.alert[data-placement^="top-"] > .alert-id:first-child {
-  margin-top: 0 !important;
-}
 
-.alert[data-placement^="center-"] > .alert-id:last-child {
-  margin-bottom: 0 !important;
-}
 
-.alert[data-placement^="bottom-"] > .alert-id:last-child {
-  margin-bottom: 0 !important;
-}
-
-.alert > .alert-id > .alert-footer {
+.alert-container > .placement > .alert-id > .alert-wrapper > .alert-footer {
   padding-top: $ALERT_PADDING_WIDTH;
-  display: grid;
-  grid-template-columns: calc(100% - 100px - #{$ALERT_PADDING_WIDTH}) 100px;
-  grid-gap: $ALERT_PADDING_WIDTH;
+  display: flex;
+  gap: $DEFAULT_PADDING_WIDTH;
   align-items: center;
+  justify-content: space-between;
 }
 
-.alert > .alert-id > .alert-footer > .block-left {
+.alert-container > .placement > .alert-id:not(.title-include) > .alert-wrapper > .alert-footer > .alert-footer-close {
+  flex: 1;
 }
 
-.alert > .alert-id > .alert-footer > .block-right {
-  text-align: right;
-}
-
-.alert > .alert-id > .alert-footer .btn {
-  margin-top: 0;
+.alert-container > .placement > .alert-id > .alert-wrapper > .alert-footer .btn {
+  margin: 0;
+  display: block;
+  width: 100%;
+  color: rgba(255,255,255,0.2);
 }

@@ -1,0 +1,70 @@
+@import "Palette";
+@import "Globals";
+
+$BUTTON_DEFAULT_HEIGHT: $INPUT_DEFAULT_HEIGHT;
+
+.btn {
+  color: map_get($PALETTE, 'gray-50');
+  text-align: center;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  background-color: map_get($PALETTE, 'blue');
+  border: 0;
+  padding: $DEFAULT_DIVIDER  * 2px $DEFAULT_DIVIDER  * 3px;
+  display: inline-flex;
+  line-height: $DEFAULT_DIVIDER * 5px;
+  align-items: center;
+  justify-content: center;
+  font-size: $DEFAULT_FONT_SIZE;
+  font-family: $DEFAULT_FONT_FAMILY;
+  box-shadow: $DEFAULT_BOX_SHADOW;
+  transition: $DEFAULT_TRANSITION;
+  position: relative;
+  font-weight: 500;
+  min-width: $BUTTON_DEFAULT_HEIGHT;
+  cursor: pointer;
+}
+
+.btn:hover {
+  box-shadow: $DEFAULT_BOX_SHADOW_ACTIVE;
+}
+
+.btn:disabled,
+.btn.disabled {
+  background-color: map_get($PALETTE, 'gray-300');
+  color: map_get($PALETTE, 'gray-800');
+  box-shadow: $DEFAULT_BOX_SHADOW !important;
+  cursor: not-allowed;
+}
+
+.btn:disabled:after,
+.btn.disabled:after {
+  display: none;
+}
+
+.btn:after {
+  display: block;
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: $DEFAULT_TRANSITION;
+  border-radius: inherit;
+}
+
+.btn:active,
+.btn.active{
+  box-shadow: $DEFAULT_BOX_SHADOW;
+}
+
+.btn:active:after,
+.btn.active:after {
+  background-color: rgba(0,0,0,0.16);
+}
+
+.btn.btn-transparent {
+  background-color: transparent;
+  box-shadow: none;
+  color: rgba(0,0,0,0.4);
+}

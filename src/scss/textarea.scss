@@ -1,63 +1,66 @@
-@import "palette";
-@import "globals";
+@import "Palette";
+@import "Globals";
 
 .textarea {
   position: relative;
-  box-sizing: border-box;
-  background-color: map_get($PALETTE, 'white');
 }
 
 .textarea > textarea {
-  line-height: $DEFAULT_DIVIDER * 5px;
-  padding-left: $DEFAULT_DIVIDER * 12px;
-  z-index: 1;
-  background-color: transparent;
-  font-size: $DEFAULT_FONT_SIZE;
-}
-
-.textarea > .textarea-numbers {
-  display: block;
-  position: absolute;
-  max-height: 100%;
-  overflow: hidden;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  width: $DEFAULT_DIVIDER * 10px;
-  border-radius: $DEFAULT_BORDER_RADIUS 0 0 $DEFAULT_BORDER_RADIUS;
-  background-color: map_get($PALETTE, 'gray-600');
   height: 100%;
+  scrollbar-width: thin;
+  padding-left: $DEFAULT_DIVIDER * 3px + 40px;
+  white-space: pre;
 }
 
-.textarea > .textarea-numbers > ul {
-  padding: ($DEFAULT_DIVIDER * 1px) 0;
-  position: relative;
-  box-sizing: border-box;
+.textarea > textarea:focus {
 }
 
-.textarea > .textarea-numbers > ul > li {
+.textarea > .textarea-copy {
+  background-color: map_get($PALETTE, 'gray-100');
+  color: map_get($PALETTE, 'gray-600');
+  padding: #{$DEFAULT_DIVIDER}px $DEFAULT_DIVIDER * 2px;
+  border-radius: $DEFAULT_BORDER_RADIUS;
+  position: absolute;
+  top: $DEFAULT_PADDING_WIDTH;
+  right: $DEFAULT_PADDING_WIDTH;
+  opacity: 0;
   display: block;
-  width: 100%;
-  list-style: none;
-  text-align: center;
-  font-size: $DEFAULT_FONT_SIZE - 4;
-  position: relative;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity $DEFAULT_TRANSITION_MOVING;
+  font-size: $DEFAULT_FONT_SIZE - 2;
 }
 
-.textarea > .textarea-numbers > ul > li > a {
-  color: map_get($PALETTE, 'white');
-  box-sizing: border-box;
-  padding: 0 ($DEFAULT_DIVIDER * 1px);
-  height: ($DEFAULT_DIVIDER * 5px);
-  line-height: ($DEFAULT_DIVIDER * 5px);
+.textarea > .textarea-copy.visible {
+  opacity: 1;
+}
+
+.textarea > .textarea-list {
+  min-width: 40px;
+  background-color: map_get($PALETTE, 'gray-700');
+  position: absolute;
+  padding: $DEFAULT_DIVIDER * 3px 0;
+  top: 0;
+  z-index: 1;
+  left: 0;
+  height: 100%;
+  border-radius: $DEFAULT_BORDER_RADIUS 0 0 $DEFAULT_BORDER_RADIUS;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: block;
-  width: 100%;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: $DEFAULT_FONT_SIZE - 2;
+  color: map_get($PALETTE, 'gray-400');
+  line-height: $DEFAULT_DIVIDER * 5px;
 }
 
-.textarea > .textarea-numbers > ul > li:last-child > a {
-  border: 0;
+.textarea > .textarea-list > .textarea-list-item {
+  list-style: none;
+  padding: 0 $DEFAULT_DIVIDER * 2px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  transition: color $DEFAULT_TRANSITION_MOVING;
+}
+
+.textarea > .textarea-list > .textarea-list-item:hover {
+  color: map_get($PALETTE, 'gray-200');
 }
