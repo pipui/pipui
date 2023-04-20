@@ -16,7 +16,7 @@
   transform: scaleY(0);
   visibility: hidden;
   pointer-events: none;
-  transition: all $DEFAULT_TRANSITION_MOVING, height 0ms cubic-bezier(0.23, 1, 0.32, 1) 450ms;
+  transition: $DEFAULT_TRANSITION;
   transform-origin: top center;
   height: 0;
   margin-top: $DEFAULT_DIVIDER * 2px;
