@@ -562,17 +562,25 @@ PipUI.ready(document, () => {
 
 		let parent = target.closest('.dropdown:not([data-dropdown-id]) > .dropdown-trigger');
 
+		let showed;
+
 		if(parent){
 			e.preventDefault();
 
-			new DropdownComponent(parent.closest('.dropdown')).show();
+			showed = new DropdownComponent(parent.closest('.dropdown')).show();
 		}
 
 		if(!target.closest('.dropdown')){
 			let opened = PipUI.Storage.get('dropdown');
 
 			if(typeof opened == 'object'){
-				Object.keys(opened).forEach(key => { opened[key].hide(); });
+				Object.keys(opened).forEach(key => {
+					if(typeof showed != 'undefined' && showed.getID() == opened[key].getID()){
+						return;
+					}
+
+					opened[key].hide();
+				});
 			}
 		}
 	});
