@@ -1,0 +1,22 @@
+@import "../Mixins";
+@import "../Globals";
+
+@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
+  .bbpanel > .bbcode-list {
+    flex-wrap: wrap;
+  }
+
+  .bbpanel > .bbcode-list.focus {
+    height: 84px;
+  }
+
+  .bbpanel > .bbcode-list > .bbcode-separator {
+    display: none;
+  }
+}
+
+@include BREAKPOINT($BP_SMARTPHONE) {
+  .bbpanel > .bbcode-list.focus {
+    height: auto;
+  }
+}

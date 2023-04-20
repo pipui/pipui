@@ -10,24 +10,25 @@
   background-color: map_get($PALETTE, 'white');
   border-radius: $DEFAULT_BORDER_RADIUS;
   box-shadow: $DEFAULT_BOX_SHADOW;
+  padding: 0;
   overflow: hidden;
-  padding: #{$DEFAULT_DIVIDER}px;
-  margin-bottom: $DEFAULT_DIVIDER * 5px;
-  transform: scaleY(0);
-  visibility: hidden;
-  pointer-events: none;
-  transition: $DEFAULT_TRANSITION;
-  transform-origin: top center;
   height: 0;
-  margin-top: $DEFAULT_DIVIDER * 2px;
+  pointer-events: none;
+  transition: height 450ms cubic-bezier(0.23, 1, 0.32, 1) 10ms;
+  transition-property: height, margin, padding;
+  transform-origin: top center;
+  margin: 0;
+  gap: 4px;
 }
 
 .bbpanel > .bbcode-list.focus {
-  transform: scaleY(1);
   visibility: visible;
-  height: 100%;
+  padding: #{$DEFAULT_DIVIDER}px;
+  height: 44px;
   pointer-events: auto;
-  overflow: auto;
+  overflow: unset;
+  margin-top: $DEFAULT_DIVIDER * 2px;
+  margin-bottom: $DEFAULT_DIVIDER * 5px;
 }
 
 .bbpanel > .bbcode-list > .bbcode-separator {

@@ -99,7 +99,7 @@ $NAVBAR_HEIGHT: $DEFAULT_DIVIDER * 20px;
   position: relative;
   gap: 4px;
   padding: $DEFAULT_DIVIDER * 2px 0;
-  transition: $DEFAULT_TRANSITION;
+  transition: color $DEFAULT_TRANSITION_MOVING;
 }
 
 .navbar .navbar-container > .navbar-wrapper .navbar-menu > .nav-item > .nav-link:after {

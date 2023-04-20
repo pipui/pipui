@@ -16,16 +16,14 @@ $TOOLTIP_MAX_WIDTH: $DEFAULT_DIVIDER * 60px;
   word-break: break-word;
   opacity: 0;
   pointer-events: none;
-  z-index: -9999;
+  z-index: 10;
   text-align: center;
   transition: opacity $DEFAULT_TRANSITION_MOVING;
   margin-top: $DEFAULT_DIVIDER * -1px;
 }
 
 .tooltip.tooltip-active {
-  z-index: 10;
   opacity: 1;
-  pointer-events: auto;
 }
 
 .tooltip:after {

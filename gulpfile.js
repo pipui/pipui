@@ -65,6 +65,7 @@ let scssListResponsive = [
     'Navmenu-responsive.scss',
     'Table-responsive.scss',
     'Slider-responsive.scss',
+    'BBPanel-responsive.scss',
     'Tabs-responsive.scss',
     'Gallery-responsive.scss',
     'Breakpoint-responsive.scss'
