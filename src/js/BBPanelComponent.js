@@ -637,6 +637,8 @@ class BBPanelComponent {
 
 		PipUI.trigger(this.#form, 'show-bbpanel-pipui', this.#id, this.#options, this);
 
+		this.#form.focus();
+
 		return this;
 	}
 
