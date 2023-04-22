@@ -1,21 +1,14 @@
 @import "../Mixins";
 @import "../Globals";
 
-@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
-  .bbpanel > .bbcode-list {
-    flex-wrap: wrap;
-  }
-
-  .bbpanel > .bbcode-list.focus {
-    height: 84px;
-  }
-
+@include BREAKPOINT($BP_DESKTOP) {
   .bbpanel > .bbcode-list > .bbcode-separator {
     display: none;
   }
 }
 
-@include BREAKPOINT($BP_SMARTPHONE) {
+@include BREAKPOINT($BP_TABLET_FULLSCREEN) {
+
   .bbpanel > .bbcode-list.focus {
     height: auto;
   }
