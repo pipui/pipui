@@ -540,7 +540,7 @@ class DatepickerComponent {
 		}
 
 		if(typeof callback != 'function'){
-			callback = this.#options.changeCallback(this);
+			callback = this.#options.changeCallback;
 		}
 
 		if(typeof callback == 'function'){
