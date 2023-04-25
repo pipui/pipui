@@ -38,6 +38,7 @@
   padding: $DEFAULT_DIVIDER * 2px;
   cursor: pointer;
   transition: $DEFAULT_TRANSITION;
+  color: map_get($PALETTE, 'gray-800');
 }
 
 .autocomplete > .autocomplete-list > .autocomplete-item:hover,
