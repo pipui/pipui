@@ -140,7 +140,7 @@ class AutocompleteComponent {
 
 		this.#container.append(this.#list);
 
-		this.#updateEvents().request(this.input.value);
+		this.#updateEvents();
 
 		PipUI.Storage.set('autocomplete', this, this.#id);
 	}
