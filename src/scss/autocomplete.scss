@@ -12,13 +12,16 @@
   border-radius: $DEFAULT_BORDER_RADIUS;
   padding: #{$DEFAULT_DIVIDER}px 0;
   width: 200px;
-  transition: opacity $DEFAULT_TRANSITION_MOVING;
+  visibility: hidden;
+  transition: $DEFAULT_TRANSITION;
+  transition-property: opacity, visibility;
   pointer-events: none;
   opacity: 0;
 }
 
 .autocomplete.autocomplete-active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 

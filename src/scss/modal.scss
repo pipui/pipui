@@ -13,13 +13,15 @@
   padding: $DEFAULT_PADDING_WIDTH;
   cursor: pointer;
   pointer-events: none;
+  visibility: hidden;
   z-index: 20;
   transition: $DEFAULT_TRANSITION;
-  transition-property: opacity;
+  transition-property: opacity, visibility;
 }
 
 .modal.modal-active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 

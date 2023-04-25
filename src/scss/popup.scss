@@ -14,13 +14,16 @@ $POPUP_ARROW_BORDER_ACTIVE: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'gr
   pointer-events: none;
   top: -9999px;
   left: -9999px;
+  visibility: hidden;
   box-shadow: $DEFAULT_BOX_SHADOW;
   text-align: left;
-  transition: opacity $DEFAULT_TRANSITION_MOVING;
+  transition: $DEFAULT_TRANSITION;
+  transition-property: opacity, visibility;
 }
 
 .popup.popup-active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
