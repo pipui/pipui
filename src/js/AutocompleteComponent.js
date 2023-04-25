@@ -260,37 +260,42 @@ class AutocompleteComponent {
 		fetch(this.#options.source.url, {
 			method: this.#options.source.method,
 			body: formData,
+			credentials: "same-origin"
 		})
 			.then(response => {
 
-				if(PipUI.Logger && this.#options.debug){
-					PipUI.Logger.info(PipUI.i18n().get('autocomplete.d_response_handler'), response, this.#options);
+				if(PipUI.Logger && self.#options.debug){
+					PipUI.Logger.info(PipUI.i18n().get('autocomplete.d_response_handler'), response, self.#options);
 				}
 
 				if(typeof callback == 'undefined'){
-					callback = this.#options.requestCallback;
+					callback = self.#options.requestCallback;
 				}
 
 				if(typeof callback == 'function'){
-					callback(this, response, value);
+					callback(self, response, value);
 				}
 
-				PipUI.trigger(this.input, 'request-autocomplete-pipui', response, value, this.#id, this.#options, this);
+				PipUI.trigger(self.input, 'request-autocomplete-pipui', response, value, self.#id, self.#options, self);
 
 				return response.json();
 			})
 			.then(result => {
 
-				if(PipUI.Logger && this.#options.debug){
-					PipUI.Logger.info(PipUI.i18n().get('autocomplete.d_response_result'), result.list, this.#options);
+				if(PipUI.Logger && self.#options.debug){
+					PipUI.Logger.info(PipUI.i18n().get('autocomplete.d_response_result'), result.list, self.#options);
 				}
 
-				this.#options.list = result.list;
+				self.#options.list = result.list;
+
+				self.update(value);
 			})
 			.catch(error => {
 				if(PipUI.Logger && self.#options.debug){
 					PipUI.Logger.error(PipUI.i18n().get('autocomplete.d_request_error'), self.#options, error);
 				}
+
+				self.update(value);
 			});
 	}
 
@@ -511,7 +516,6 @@ if(typeof PipUI != 'undefined'){
 		.set('autocomplete.d_http_request', '[Autocomplete] HTTP запрос к серверу')
 		.set('autocomplete.d_response_handler', '[Autocomplete] Запуск обработчика ответа')
 		.set('autocomplete.d_response_result', '[Autocomplete] Изменение списка')
-		.set('autocomplete.d_request_error', '[Autocomplete] Произошла ошибка запроса')
 		.set('autocomplete.d_update_list', '[Autocomplete] Обновление DOM списка')
 		.set('autocomplete.d_update_position', '[Autocomplete] Обновление позиции')
 		.set('autocomplete.d_choise', '[Autocomplete] Выбор элемента списка');
