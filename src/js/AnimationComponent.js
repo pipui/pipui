@@ -57,11 +57,11 @@ class AnimationComponent {
 
         this.setOptions(options);
 
-        if(this.#options.debug){ PipUI.Logger.info('[Animations] Animations inited'); }
+        if(this.#options.debug){ PipUI.Logger.info('[Animation] Animation inited'); }
     }
 
     #run(name, keyframes, options, finishCallback, completeCallback){
-        if(this.#options.debug){ PipUI.Logger.info('[Animations] Starting '+name+' animation'); }
+        if(this.#options.debug){ PipUI.Logger.info('[Animation] Starting '+name+' animation'); }
 
         for(let i = 0; i < this.#target.length; i++){
 
@@ -73,6 +73,8 @@ class AnimationComponent {
 
             keyframes = keyframes(target);
 
+            let self = this;
+
             this.#effects[target.animation_id] = new KeyframeEffect(target, keyframes, options);
 
             this.#animations[target.animation_id] = new Animation(this.#effects[target.animation_id], target.ownerDocument.timeline);
@@ -80,7 +82,7 @@ class AnimationComponent {
             this.#animations[target.animation_id].play();
 
             this.#callbacks[target.animation_id] = () => {
-                if(AnimationsComponent.debug){ PipUI.Logger.info('[Animations] Animation '+name+' complete'); }
+                if(self.#options.debug){ PipUI.Logger.info('[Animation] Animation '+name+' complete'); }
 
                 if(typeof finishCallback == 'function'){
                     finishCallback(target);

@@ -11,6 +11,8 @@ class CollapseComponent {
 
 	#lock = false;
 
+	#animation;
+
 	/** @return {function|undefined} */
 	#eventCallback = function(e){
 		e.preventDefault();
@@ -127,6 +129,8 @@ class CollapseComponent {
 
 		this.update();
 
+		this.#animation = new PipUI.Animation(this.#target);
+
 		PipUI.Storage.set('collapse', this, this.#id);
 
 
@@ -225,13 +229,29 @@ class CollapseComponent {
 
 		PipUI.addClass(this.#triggers, 'collapse-lock');
 
-		let animation = PipUI.Animations[this.#options.animation.show.type];
+		//this.#options.animation.show.type
 
-		if(typeof animation == 'undefined'){
-			animation = PipUI.Animations['show'];
-		}
+		this.#animation[this.#options.animation.show.type]({duration: this.#options.animation.show.duration}, () => {
+			self.#lock = false;
 
-		animation(this.#target, {
+			PipUI.addClass(self.#target, self.#options.toggleTargetClass);
+
+			if(typeof self.#options.showEndCallback == 'function'){
+				self.#options.showEndCallback(self);
+			}
+
+			PipUI.trigger(self.#target, 'show-end-collapse-pipui', self.#id, self.#options);
+
+			if(PipUI.Logger && self.#options.debug){
+				PipUI.Logger.info(PipUI.i18n().get('collapse.d_show_complete'), self.#id, self.#options);
+			}
+
+			PipUI.addClass(self.#triggers, self.#options.toggleTriggerClass);
+
+			PipUI.removeClass(self.#triggers, 'collapse-lock');
+		});
+
+		/*animation(this.#target, {
 			duration: self.#options.animation.show.duration
 		}, () => {
 
@@ -252,7 +272,7 @@ class CollapseComponent {
 			PipUI.addClass(this.#triggers, self.#options.toggleTriggerClass);
 
 			PipUI.removeClass(this.#triggers, 'collapse-lock');
-		});
+		});*/
 
 		if(typeof callback == 'undefined'){
 			callback = this.#options.showStartCallback;
@@ -299,13 +319,25 @@ class CollapseComponent {
 
 		PipUI.addClass(this.#triggers, 'collapse-lock');
 
-		let animation = PipUI.Animations[this.#options.animation.hide.type];
+		this.#animation[this.#options.animation.hide.type]({duration: this.#options.animation.hide.duration}, () => {
+			self.#lock = false;
 
-		if(typeof animation == 'undefined'){
-			animation = PipUI.Animations['hide'];
-		}
+			PipUI.removeClass(self.#target, self.#options.toggleTargetClass);
 
-		animation(this.#target, {
+			if(typeof this.#options.hideEndCallback == 'function'){
+				this.#options.hideEndCallback(self);
+			}
+
+			PipUI.trigger(self.#target, 'hide-end-collapse-pipui', self.#id, self.#options);
+
+			if(PipUI.Logger && self.#options.debug){
+				PipUI.Logger.info(PipUI.i18n().get('collapse.d_hide_complete'), self.#id, self.#options);
+			}
+
+			PipUI.removeClass(self.#triggers, 'collapse-lock '+self.#options.toggleTriggerClass);
+		});
+
+		/*animation(this.#target, {
 			duration: self.#options.animation.hide.duration
 		}, () => {
 
@@ -324,7 +356,7 @@ class CollapseComponent {
 			}
 
 			PipUI.removeClass(this.#triggers, 'collapse-lock '+self.#options.toggleTriggerClass);
-		});
+		});*/
 
 		if(typeof callback == 'undefined'){
 			callback = this.#options.hideStartCallback;
@@ -362,7 +394,7 @@ PipUI.ready(document, () => {
 if(typeof PipUI != 'undefined'){
 	PipUI.addComponent('Collapse', CollapseComponent.VERSION);
 	PipUI.required('Collapse', 'Storage', '1.0.0', '>=');
-	PipUI.required('Collapse', 'Animations', '1.0.0', '>=');
+	PipUI.required('Collapse', 'Animation', '1.0.0', '>=');
 	/** @return {CollapseComponent} */
 	PipUI.Collapse = CollapseComponent;
 
