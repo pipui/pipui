@@ -462,7 +462,7 @@ class PopupComponent {
         if(this.#options.overlay){
             PipUI.addClass(this.#overlay, this.#options.openedOverlayClass);
 
-            this.#oldPosition = PipUI.style(this.#box, 'position');
+            this.#oldPosition = PipUI.style(this.#box, 'position')[0].position;
 
             if(this.#oldPosition == 'static'){
                 PipUI.style(this.#box, {'position': 'relative'});

@@ -467,7 +467,7 @@ PipUI.ready(document, () => {
             if(gallery.getOptions().scroll){
                 touch = {
                     transition: PipUI.style(list, 'transition'),
-                    left: parseInt(PipUI.style(list, 'left')),
+                    left: parseInt(PipUI.style(list, 'left')[0].left),
                     clientX: e.clientX,
                     list: list
                 };

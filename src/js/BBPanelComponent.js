@@ -17,6 +17,8 @@ class BBPanelComponent {
 
 	#pressed = {};
 
+	#animation;
+
 	#popupPositions = {top: 0, left: 0};
 
 	#history = [];
@@ -151,6 +153,8 @@ class BBPanelComponent {
 		this.#form.setAttribute('data-bbpanel-id', this.#id);
 
 		this.#render();
+
+		this.#animation = new PipUI.Animation(this.#panel);
 
 		PipUI.Storage.set('bbpanel', this, this.#id);
 	}

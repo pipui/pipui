@@ -351,13 +351,17 @@ class PipUI {
 
 
 	/**
-	 * @param {HTMLElement|NodeList|HTMLCollection|Array} elements
+	 * @param {HTMLElement|NodeList|HTMLCollection|Array<HTMLElement>|string} elements
 	 *
 	 * @param {string} classname
 	 *
-	 * @return {HTMLElement|NodeList|HTMLCollection|Array}
+	 * @return {HTMLElement|NodeList|HTMLCollection|Array<HTMLElement>}
 	 * */
 	static addClass(elements, classname) {
+		if(typeof elements == 'string'){
+			elements = this.e(elements);
+		}
+
 		if(typeof elements != 'object' || elements === null){ return elements; }
 
 		classname = classname.replaceAll(/\s+/g, ' ').trim();
@@ -382,13 +386,17 @@ class PipUI {
 
 
 	/**
-	 * @param {HTMLElement|NodeList|HTMLCollection|Array} elements
+	 * @param {HTMLElement|NodeList|HTMLCollection|Array|string} elements
 	 *
 	 * @param {string} classname
 	 *
 	 * @return {HTMLElement|NodeList|HTMLCollection|Array}
 	 * */
 	static removeClass(elements, classname) {
+		if(typeof elements == 'string'){
+			elements = this.e(elements);
+		}
+
 		if(typeof elements != 'object' || elements === null){ return elements; }
 
 		classname = classname.replaceAll(/\s+/g, ' ').trim();
@@ -428,43 +436,69 @@ class PipUI {
 
 
 	/**
-	 * @param {HTMLElement} element
+	 * @param {HTMLElement|string|Array<HTMLElement>|HTMLCollection} element
 	 *
-	 * @param {string|object} key
+	 * @param {string|object|array} key
 	 *
 	 * @param {any} value
 	 *
 	 * @return {HTMLElement|string|array.<string>}
 	 * */
 	static style(element, key, value) {
-		if(typeof element != 'object' || element === null){ return element; }
-
-		if(typeof value != 'undefined'){
-			element.style[key] = value;
-
-			return element;
-		}else if(typeof key == 'object'){
-			if(!Array.isArray(key)){
-
-				Object.assign(element.style, key);
-
-				return element
-			}
-
-			let computed = window.getComputedStyle(element);
-
-			let styles = {};
-
-			for(let i = 0; i < key.length; i++){
-				let style = key[i];
-
-				styles[style] = computed.getPropertyValue(style);
-			}
-
-			return styles;
+		if(typeof element == 'string'){
+			element = this.e(element);
 		}
 
-		return window.getComputedStyle(element).getPropertyValue(key);
+		if(HTMLElement.prototype.isPrototypeOf(element)){
+			element = [element];
+		}
+
+		if(typeof element != 'object' || element === null){ return element; }
+
+		if(typeof value == 'undefined'){
+
+			if(Array.isArray(key)){
+
+				let list = [];
+
+				element.forEach((item, k) => {
+					list[k] = {};
+
+					let computed = window.getComputedStyle(item);
+
+					key.forEach(value => {
+						list[k][value] = computed.getPropertyValue(value);
+					});
+				});
+
+				return list;
+			}else if(typeof key == 'string'){
+
+				let list = [];
+
+				element.forEach(item => {
+					let obj = {};
+
+					obj[key] = window.getComputedStyle(item).getPropertyValue(key);
+
+					list.push(obj);
+				});
+
+				return list;
+			}
+
+			element.forEach(item => {
+				Object.assign(item.style, key);
+			});
+
+			return element;
+		}
+
+		element.forEach(item => {
+			item.style[key] = value;
+		});
+
+		return element;
 	}
 
 
@@ -507,13 +541,17 @@ class PipUI {
 
 
 	/**
-	 * @param {HTMLElement} element
+	 * @param {HTMLElement|Array<HTMLElement>|string} element
 	 *
 	 * @param {string} eventName
 	 *
 	 * @param {any} details
 	 * */
 	static trigger(element, eventName, ...details) {
+		if(typeof element == 'string'){
+			element = this.e(element);
+		}
+
 		if(typeof element != 'object' || element === null){ return; }
 
 		let params = {
@@ -522,7 +560,14 @@ class PipUI {
 			detail: details
 		};
 
-		element.dispatchEvent(new CustomEvent(eventName, params));
+		if(HTMLElement.prototype.isPrototypeOf(element)){
+			element.dispatchEvent(new CustomEvent(eventName, params));
+		}else{
+			element.forEach(item => {
+				item.dispatchEvent(new CustomEvent(eventName, params));
+			});
+		}
+
 	}
 
 
@@ -535,7 +580,7 @@ class PipUI {
 	static isVisible(element) {
 		if(typeof element != 'object' || element === null){ return false; }
 
-		let styles = this.style(element, ['display', 'visibility', 'opacity', 'width', 'height']);
+		let styles = this.style(element, ['display', 'visibility', 'opacity', 'width', 'height'])[0];
 
 		return !(styles.display == 'none' ||
 			styles.visibility == 'hidden' ||
@@ -561,19 +606,33 @@ class PipUI {
 
 
 	/**
-	 * @param {HTMLElement} element
+	 * @param {HTMLElement|string|Array<HTMLElement>} element
 	 *
 	 * @param {string} classname
 	 *
 	 * @return {HTMLElement}
 	 * */
 	static toggleClass(element, classname) {
-
-		if(this.hasClass(element, classname)){
-			this.removeClass(element, classname);
-		}else{
-			this.addClass(element, classname);
+		if(typeof element == 'string'){
+			element = this.e(element);
 		}
+
+		if(HTMLElement.prototype.isPrototypeOf(element)){
+			if(this.hasClass(element, classname)){
+				this.removeClass(element, classname);
+			}else{
+				this.addClass(element, classname);
+			}
+		}else{
+			element.forEach(item => {
+				if(PipUI.hasClass(item)){
+					this.removeClass(item, classname);
+				}else{
+					this.addClass(item, classname);
+				}
+			});
+		}
+
 
 		return element;
 	}

@@ -125,7 +125,7 @@ class AnimationComponent {
      * */
     fadeIn(options, complete){
         return this.#run('fadeIn', target => {
-            let styles = PipUI.style(target, ['display', 'opacity', 'visibility']);
+            let styles = PipUI.style(target, ['display', 'opacity', 'visibility'])[0];
 
             PipUI.style(target, {
                 display: styles.display == 'none' ? 'block' : null,
@@ -159,7 +159,7 @@ class AnimationComponent {
     slideDown(options, complete){
 
         return this.#run('slideDown', target => {
-            let styles = PipUI.style(target, ['height', 'display', 'min-height', 'visibility', 'padding-top', 'padding-bottom', 'margin-top', 'margin-bottom', 'border-width']);
+            let styles = PipUI.style(target, ['height', 'display', 'min-height', 'visibility', 'padding-top', 'padding-bottom', 'margin-top', 'margin-bottom', 'border-width'])[0];
 
             PipUI.style(target, {
                 display: styles.display == 'none' ? 'block' : null,
@@ -227,7 +227,7 @@ class AnimationComponent {
     slideRight(options, complete){
 
         return this.#run('slideRight', target => {
-            let styles = PipUI.style(target, ['width', 'height', 'min-width', 'visibility', 'display', 'padding-left', 'padding-right', 'margin-left', 'margin-right', 'border-width']);
+            let styles = PipUI.style(target, ['width', 'height', 'min-width', 'visibility', 'display', 'padding-left', 'padding-right', 'margin-left', 'margin-right', 'border-width'])[0];
 
             PipUI.style(target, {
                 display: styles.display == 'none' ? 'block' : null,
@@ -284,7 +284,7 @@ class AnimationComponent {
                 overflow: 'hidden'
             });
 
-            let styles = PipUI.style(target, ['opacity', 'min-width', 'min-height', 'visibility', 'font-size', 'display', 'padding', 'margin', 'border-width']);
+            let styles = PipUI.style(target, ['opacity', 'min-width', 'min-height', 'visibility', 'font-size', 'display', 'padding', 'margin', 'border-width'])[0];
 
             return [
                 {width: 0, height: 0, opacity: 0, fontSize: 0, minWidth: 0, minHeight: 0, margin: 0, padding: 0, borderWidth: 0},

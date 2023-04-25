@@ -9,7 +9,7 @@ $POPUP_ARROW_BORDER_ACTIVE: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'gr
   max-width: $DEFAULT_DIVIDER * 70px;
   min-width: $DEFAULT_DIVIDER * 40px;
   position: absolute;
-  z-index: -9999;
+  z-index: 1000;
   opacity: 0;
   pointer-events: none;
   top: -9999px;
@@ -20,7 +20,6 @@ $POPUP_ARROW_BORDER_ACTIVE: ($DEFAULT_DIVIDER * 2px) solid map_get($PALETTE, 'gr
 }
 
 .popup.popup-active {
-  z-index: 1000;
   opacity: 1;
   pointer-events: auto;
 }
