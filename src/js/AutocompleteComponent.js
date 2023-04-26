@@ -147,6 +147,14 @@ class AutocompleteComponent {
 
 
 
+	#scroll(item) {
+		this.#list.scrollTop = item.offsetTop;
+
+		return this;
+	}
+
+
+
 	#next() {
 		if(!this.isOpenedContainer()){ return this; }
 
@@ -169,7 +177,7 @@ class AutocompleteComponent {
 
 		PipUI.addClass(item, 'hover');
 
-		item.scrollIntoView();
+		this.#scroll(item);
 
 		if(typeof this.#options.nextCallback == 'function'){
 			this.#options.nextCallback(this, item, current);
@@ -203,7 +211,7 @@ class AutocompleteComponent {
 
 		PipUI.addClass(item, 'hover');
 
-		item.scrollIntoView();
+		this.#scroll(item);
 
 		if(typeof this.#options.prevCallback == 'function'){
 			this.#options.prevCallback(this, item, current);
@@ -286,7 +294,7 @@ class AutocompleteComponent {
 					PipUI.Logger.info(PipUI.i18n().get('autocomplete.d_response_result'), result.list, self.#options);
 				}
 
-				self.#options.list = result.list;
+				self.#options.list = typeof result.list == 'undefined' ? [] : result.list;
 
 				self.update(value);
 			})
