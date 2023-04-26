@@ -6,7 +6,7 @@
   left: -9999px;
   top: -9999px;
   margin-top: #{$DEFAULT_DIVIDER}px;
-  z-index: 1;
+  z-index: 8;
   background-color: map_get($PALETTE, 'white');
   box-shadow: $DEFAULT_BOX_SHADOW;
   border-radius: $DEFAULT_BORDER_RADIUS;

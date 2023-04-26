@@ -363,6 +363,9 @@ PipUI.ready(document, () => {
 	});
 
 	PipUI.body('click', '.modal > .modal-wrapper [data-modal-close]', (e, target) => {
+		e.preventDefault();
+
+
 		let modal = target.closest('.modal');
 
 		let id = modal.getAttribute('data-modal-id');
