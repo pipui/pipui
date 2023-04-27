@@ -14,6 +14,7 @@ select.input {
   outline: none;
 }
 
+input[type="tel"].input,
 input[type="text"].input,
 input[type="password"].input,
 input[type="email"].input,
@@ -42,6 +43,7 @@ select.input {
 }
 
 input[type="text"].input:focus,
+input[type="tel"].input:focus,
 input[type="password"].input:focus,
 input[type="email"].input:focus,
 input[type="number"].input:focus,
@@ -51,6 +53,7 @@ input[type="radio"].input:focus,
 textarea.input:focus,
 select.input:focus,
 input[type="text"].input.focus,
+input[type="tel"].input.focus,
 input[type="password"].input.focus,
 input[type="email"].input.focus,
 input[type="number"].input.focus,
