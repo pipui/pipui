@@ -738,7 +738,7 @@ class PipUI {
 
 		if(typeof callback != 'function'){ return; }
 
-		document.body.addEventListener(event, (e) => {
+		document.body.addEventListener(event, e => {
 
 			let target = e.target;
 

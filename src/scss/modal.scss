@@ -33,9 +33,16 @@
   align-items: center;
   grid-template-columns: 100%;
   padding: 0 $DEFAULT_PADDING_WIDTH;
-  height: calc(100vh - #{$DEFAULT_PADDING_WIDTH * 2}); /* 100 vertical height - 20px(x2) padding */
+  max-height: calc(100vh - #{$DEFAULT_PADDING_WIDTH * 2}); /* 100 vertical height - 20px(x2) padding */
   overflow: auto;
+  position: relative;
+  z-index: 21;
+  scrollbar-width: thin;
   pointer-events: none;
+}
+
+.modal.modal-active > .modal-wrapper {
+  pointer-events: auto;
 }
 
 .modal > .modal-wrapper > .modal-content {
