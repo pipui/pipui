@@ -306,8 +306,6 @@ PipUI.ready(document, () => {
 
 	PipUI.body('mouseover', '[data-tooltip], [data-tooltip-left], [data-tooltip-right], [data-tooltip-up], [data-tooltip-down]', (e, target) => {
 
-		if(target != e.target){ return; }
-
 		if(e.relatedTarget && PipUI.closest(target, e.relatedTarget.parentNode)){ return; }
 
 		let targetLink = target.getAttribute('data-tooltip-target');
@@ -332,6 +330,10 @@ PipUI.ready(document, () => {
 			content = target.getAttribute('data-tooltip-right');
 
 			direction = 'right';
+		}else if(target.hasAttribute('data-tooltip-up')){
+			content = target.getAttribute('data-tooltip-up');
+
+			direction = 'up';
 		}
 
 		let options = {content: content}
